@@ -16,14 +16,17 @@ namespace MapLocationApp.Services
         private readonly ITTSService _ttsService;
         private readonly IRouteTrackingService _routeTrackingService;
         private readonly ITelegramNotificationService _telegramService;
+        private readonly ITrafficService _trafficService;
 
         private NavigationSession _currentSession;
         private NavigationInstruction _currentInstruction;
         private NavigationPreferences _preferences;
         private Timer _navigationUpdateTimer;
+        private Timer _trafficUpdateTimer;
         private CancellationTokenSource _cancellationTokenSource;
 
         private const int NAVIGATION_UPDATE_INTERVAL_MS = 5000; // 5 seconds
+        private const int TRAFFIC_UPDATE_INTERVAL_MS = 120000; // 2 minutes
         private const int ARRIVAL_THRESHOLD_METERS = 20;
 
         public bool IsNavigating => _currentSession?.IsActive == true;
@@ -47,13 +50,15 @@ namespace MapLocationApp.Services
             ILocationService locationService,
             ITTSService ttsService,
             IRouteTrackingService routeTrackingService,
-            ITelegramNotificationService telegramService)
+            ITelegramNotificationService telegramService,
+            ITrafficService trafficService = null)
         {
             _routeService = routeService;
             _locationService = locationService;
             _ttsService = ttsService;
             _routeTrackingService = routeTrackingService;
             _telegramService = telegramService;
+            _trafficService = trafficService;
             _preferences = new NavigationPreferences();
 
             // Subscribe to location updates
@@ -105,6 +110,16 @@ namespace MapLocationApp.Services
                     TimeSpan.FromMilliseconds(NAVIGATION_UPDATE_INTERVAL_MS),
                     TimeSpan.FromMilliseconds(NAVIGATION_UPDATE_INTERVAL_MS));
 
+                // Setup traffic update timer if traffic service is available
+                if (_trafficService != null)
+                {
+                    _trafficUpdateTimer = new Timer(
+                        OnTrafficTimerTick,
+                        null,
+                        TimeSpan.FromMilliseconds(TRAFFIC_UPDATE_INTERVAL_MS),
+                        TimeSpan.FromMilliseconds(TRAFFIC_UPDATE_INTERVAL_MS));
+                }
+
                 // Configure TTS
                 await _ttsService.SetSpeechRateAsync(Preferences.SpeechRate);
                 await _ttsService.SetVolumeAsync(Preferences.SpeechVolume);
@@ -148,6 +163,9 @@ namespace MapLocationApp.Services
                     // Stop timer
                     _navigationUpdateTimer?.Dispose();
                     _navigationUpdateTimer = null;
+
+                    _trafficUpdateTimer?.Dispose();
+                    _trafficUpdateTimer = null;
 
                     _cancellationTokenSource?.Cancel();
                     _cancellationTokenSource?.Dispose();
@@ -286,6 +304,31 @@ namespace MapLocationApp.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Navigation timer error: {ex.Message}");
+            }
+        }
+
+        private async void OnTrafficTimerTick(object state)
+        {
+            if (!IsNavigating || _trafficService == null)
+                return;
+
+            try
+            {
+                // Check traffic conditions along the route
+                var routeTrafficInfo = await _trafficService.GetRouteTrafficAsync(_currentSession.Route);
+                
+                if (routeTrafficInfo != null && ShouldRecalculateForTraffic(routeTrafficInfo))
+                {
+                    var currentLocation = await _locationService.GetCurrentLocationAsync();
+                    if (currentLocation != null)
+                    {
+                        await HandleTrafficBasedRecalculation(currentLocation, routeTrafficInfo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Traffic timer error: {ex.Message}");
             }
         }
 
@@ -535,6 +578,71 @@ namespace MapLocationApp.Services
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
             return earthRadius * c; // Distance in kilometers
+        }
+
+        private bool ShouldRecalculateForTraffic(RouteTrafficInfo routeTrafficInfo)
+        {
+            // Recalculate if there's significant traffic delay
+            return routeTrafficInfo.EstimatedDelayMinutes > 10 ||
+                   routeTrafficInfo.OverallCondition == TrafficCondition.Heavy;
+        }
+
+        private async Task HandleTrafficBasedRecalculation(AppLocation currentLocation, RouteTrafficInfo trafficInfo)
+        {
+            try
+            {
+                // Announce traffic recalculation
+                if (Preferences.IsVoiceEnabled)
+                {
+                    await _ttsService.SpeakAsync($"偵測到交通壅塞，預計延誤 {trafficInfo.EstimatedDelayMinutes} 分鐘，正在尋找更快路線", 
+                        Preferences.PreferredLanguage);
+                }
+
+                // Try to find a better route
+                var destination = _currentSession.Route;
+                var routeResult = await _routeService.CalculateRouteAsync(
+                    currentLocation.Latitude, currentLocation.Longitude,
+                    destination.EndLatitude, destination.EndLongitude,
+                    destination.Type);
+
+                if (routeResult?.Success == true && routeResult.Route != null)
+                {
+                    // Compare the new route with current route considering traffic
+                    var newRouteTrafficInfo = await _trafficService.GetRouteTrafficAsync(routeResult.Route);
+                    
+                    if (IsNewRouteBetter(trafficInfo, newRouteTrafficInfo, routeResult.Route))
+                    {
+                        _currentSession.Route = routeResult.Route;
+                        _currentSession.CurrentStepIndex = 0;
+
+                        await UpdateNavigationInstruction();
+
+                        if (Preferences.IsVoiceEnabled)
+                        {
+                            await _ttsService.SpeakAsync("已找到更快路線，正在重新導航", Preferences.PreferredLanguage);
+                        }
+
+                        System.Diagnostics.Debug.WriteLine("Route recalculated due to traffic conditions");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Traffic-based recalculation error: {ex.Message}");
+            }
+        }
+
+        private bool IsNewRouteBetter(RouteTrafficInfo currentRouteTraffic, RouteTrafficInfo newRouteTraffic, Route newRoute)
+        {
+            if (newRouteTraffic == null)
+                return false;
+
+            // Calculate total time including traffic delays
+            var currentRouteTime = _currentSession.Route.EstimatedDuration.TotalMinutes + currentRouteTraffic.EstimatedDelayMinutes;
+            var newRouteTime = newRoute.EstimatedDuration.TotalMinutes + newRouteTraffic.EstimatedDelayMinutes;
+
+            // New route is better if it saves at least 5 minutes
+            return newRouteTime < currentRouteTime - 5;
         }
     }
 }

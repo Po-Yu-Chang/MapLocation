@@ -51,7 +51,12 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITTSService, TTSService>();
 		builder.Services.AddSingleton<IRouteTrackingService, RouteTrackingService>();
 		builder.Services.AddSingleton<ILaneGuidanceService, LaneGuidanceService>();
+		builder.Services.AddSingleton<IAdvancedLocationService, AdvancedLocationService>();
+		builder.Services.AddSingleton<ITrafficService, TrafficService>();
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+		// 註冊 ViewModels
+		builder.Services.AddTransient<ViewModels.NavigationViewModel>();
 
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
