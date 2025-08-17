@@ -53,6 +53,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ILaneGuidanceService, LaneGuidanceService>();
 		builder.Services.AddSingleton<IAdvancedLocationService, AdvancedLocationService>();
 		builder.Services.AddSingleton<ITrafficService, TrafficService>();
+		builder.Services.AddSingleton<IDestinationArrivalService, DestinationArrivalService>();
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
 
 		// 註冊 ViewModels

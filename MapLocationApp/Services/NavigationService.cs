@@ -17,6 +17,7 @@ namespace MapLocationApp.Services
         private readonly IRouteTrackingService _routeTrackingService;
         private readonly ITelegramNotificationService _telegramService;
         private readonly ITrafficService _trafficService;
+        private readonly IDestinationArrivalService _destinationArrivalService;
 
         private NavigationSession _currentSession;
         private NavigationInstruction _currentInstruction;
@@ -51,7 +52,8 @@ namespace MapLocationApp.Services
             ITTSService ttsService,
             IRouteTrackingService routeTrackingService,
             ITelegramNotificationService telegramService,
-            ITrafficService trafficService = null)
+            ITrafficService trafficService = null,
+            IDestinationArrivalService destinationArrivalService = null)
         {
             _routeService = routeService;
             _locationService = locationService;
@@ -59,6 +61,7 @@ namespace MapLocationApp.Services
             _routeTrackingService = routeTrackingService;
             _telegramService = telegramService;
             _trafficService = trafficService;
+            _destinationArrivalService = destinationArrivalService;
             _preferences = new NavigationPreferences();
 
             // Subscribe to location updates
@@ -440,13 +443,15 @@ namespace MapLocationApp.Services
         {
             try
             {
+                var destinationLocation = new AppLocation
+                {
+                    Latitude = _currentSession.Route.EndLatitude,
+                    Longitude = _currentSession.Route.EndLongitude
+                };
+
                 var arrivalArgs = new DestinationArrivalEventArgs
                 {
-                    DestinationLocation = new AppLocation
-                    {
-                        Latitude = _currentSession.Route.EndLatitude,
-                        Longitude = _currentSession.Route.EndLongitude
-                    },
+                    DestinationLocation = destinationLocation,
                     DistanceToDestinationMeters = CalculateDistance(
                         currentLocation.Latitude, currentLocation.Longitude,
                         _currentSession.Route.EndLatitude, _currentSession.Route.EndLongitude) * 1000,
@@ -468,18 +473,16 @@ namespace MapLocationApp.Services
 
                 InstructionUpdated?.Invoke(this, _currentInstruction);
 
-                // Announce arrival
-                if (Preferences.IsVoiceEnabled)
+                // Use destination arrival service for comprehensive handling
+                if (_destinationArrivalService != null)
                 {
-                    await _ttsService.SpeakAsync("您已到達目的地", Preferences.PreferredLanguage);
+                    await _destinationArrivalService.HandleArrivalAsync(currentLocation, destinationLocation, _currentSession);
                 }
-
-                // Vibrate
-                await VibrateDevice();
-
-                // Send notification
-                await _telegramService.SendDestinationArrivedNotificationAsync(
-                    _currentSession.Route.ToAddress);
+                else
+                {
+                    // Fallback to basic arrival handling
+                    await BasicArrivalHandling();
+                }
 
                 // Stop navigation
                 await StopNavigationAsync();
@@ -487,6 +490,25 @@ namespace MapLocationApp.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling destination arrival: {ex.Message}");
+            }
+        }
+
+        private async Task BasicArrivalHandling()
+        {
+            // Announce arrival
+            if (Preferences.IsVoiceEnabled)
+            {
+                await _ttsService.SpeakAsync("您已到達目的地", Preferences.PreferredLanguage);
+            }
+
+            // Vibrate
+            await VibrateDevice();
+
+            // Send notification
+            if (_telegramService != null)
+            {
+                await _telegramService.SendDestinationArrivedNotificationAsync(
+                    _currentSession.Route.ToAddress);
             }
         }
 
