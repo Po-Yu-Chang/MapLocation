@@ -8,6 +8,8 @@ public partial class CheckInPage : ContentPage
 {
     private readonly ILocationService _locationService;
     private readonly IGeofenceService _geofenceService;
+    private readonly IGeocodingService _geocodingService;
+    private readonly ICheckInStorageService _checkInStorageService;
     
     private AppLocation? _currentLocation;
     private List<GeofenceRegion> _allGeofences = new();
@@ -15,12 +17,14 @@ public partial class CheckInPage : ContentPage
     private readonly ObservableCollection<CheckInRecordDisplay> _todayRecords = new();
     private CheckInRecord? _currentCheckIn;
 
-    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService)
+    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService, IGeocodingService geocodingService, ICheckInStorageService checkInStorageService)
     {
         InitializeComponent();
         
         _locationService = locationService;
         _geofenceService = geofenceService;
+        _geocodingService = geocodingService;
+        _checkInStorageService = checkInStorageService;
         
         NearbyGeofencesCollectionView.ItemsSource = _nearbyGeofences;
         TodayRecordsCollectionView.ItemsSource = _todayRecords;
@@ -32,7 +36,7 @@ public partial class CheckInPage : ContentPage
     {
         await LoadCurrentLocation();
         await LoadGeofences();
-        LoadTodayRecords();
+        await LoadTodayRecords();
     }
 
     private async Task LoadCurrentLocation()
@@ -52,10 +56,28 @@ public partial class CheckInPage : ContentPage
             
             if (_currentLocation != null)
             {
-                CurrentLocationLabel.Text = $"{_currentLocation.Latitude:F6}, {_currentLocation.Longitude:F6}";
+                // 顯示座標
+                var coordinateText = $"{_currentLocation.Latitude:F6}, {_currentLocation.Longitude:F6}";
                 AccuracyLabel.Text = $"精確度: ±{_currentLocation.Accuracy:F0} 公尺";
                 
-                await UpdateNearbyGeofences();
+                // 開始地址解析
+                CurrentLocationLabel.Text = "正在解析地址...";
+                
+                try
+                {
+                    var address = await _geocodingService.GetAddressFromCoordinatesAsync(
+                        _currentLocation.Latitude, 
+                        _currentLocation.Longitude);
+                    
+                    CurrentLocationLabel.Text = address;
+                }
+                catch (Exception geocodingEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"地址解析失敗: {geocodingEx.Message}");
+                    CurrentLocationLabel.Text = coordinateText; // 回退到座標顯示
+                }
+                
+                UpdateNearbyGeofences();
             }
             else
             {
@@ -82,7 +104,7 @@ public partial class CheckInPage : ContentPage
             GeofencePicker.ItemsSource = geofenceNames;
             GeofencePicker.SelectedIndex = 0;
             
-            await UpdateNearbyGeofences();
+            UpdateNearbyGeofences();
         }
         catch (Exception ex)
         {
@@ -90,7 +112,7 @@ public partial class CheckInPage : ContentPage
         }
     }
 
-    private async Task UpdateNearbyGeofences()
+    private void UpdateNearbyGeofences()
     {
         if (_currentLocation == null) return;
 
@@ -123,22 +145,85 @@ public partial class CheckInPage : ContentPage
         }
     }
 
-    private void LoadTodayRecords()
+    private async Task LoadTodayRecords()
     {
-        // 這裡應該從本地存儲或服務器載入今日記錄
-        // 暫時使用模擬資料
+        // 清空現有記錄
         _todayRecords.Clear();
         
-        // 模擬一些今日記錄
-        var sampleRecord = new CheckInRecordDisplay
+        try
         {
-            GeofenceName = "台北101辦公區",
-            CheckInTimeText = "上午 09:00",
-            Notes = "準時上班",
-            DurationText = "4小時30分鐘"
-        };
+            var today = DateTime.Today;
+            var records = await _checkInStorageService.GetCheckInRecordsAsync(today);
+            
+            foreach (var record in records)
+            {
+                // 解析地址
+                var address = "未知位置";
+                try
+                {
+                    address = await _geocodingService.GetAddressFromCoordinatesAsync(
+                        record.Latitude, record.Longitude);
+                }
+                catch
+                {
+                    address = $"位置 ({record.Latitude:F4}, {record.Longitude:F4})";
+                }
+                
+                var displayRecord = new CheckInRecordDisplay
+                {
+                    GeofenceName = record.GeofenceName ?? address,
+                    CheckInTimeText = record.CheckInTime.ToString("HH:mm"),
+                    Notes = record.Notes ?? "",
+                    DurationText = CalculateDuration(record.CheckInTime)
+                };
+                
+                _todayRecords.Add(displayRecord);
+            }
+            
+            // 如果沒有記錄，顯示提示訊息
+            if (!_todayRecords.Any())
+            {
+                var noRecordMessage = new CheckInRecordDisplay
+                {
+                    GeofenceName = "今日尚無打卡記錄",
+                    CheckInTimeText = "",
+                    Notes = "請選擇地點進行打卡",
+                    DurationText = ""
+                };
+                _todayRecords.Add(noRecordMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"載入今日記錄失敗: {ex.Message}");
+            
+            var errorMessage = new CheckInRecordDisplay
+            {
+                GeofenceName = "載入記錄時發生錯誤",
+                CheckInTimeText = "",
+                Notes = ex.Message,
+                DurationText = ""
+            };
+            _todayRecords.Add(errorMessage);
+        }
+    }
+    
+    private string CalculateDuration(DateTime checkInTime)
+    {
+        var duration = DateTime.Now - checkInTime;
         
-        _todayRecords.Add(sampleRecord);
+        if (duration.TotalDays >= 1)
+        {
+            return $"{duration.Days}天前";
+        }
+        else if (duration.TotalHours >= 1)
+        {
+            return $"{duration.Hours}小時{duration.Minutes}分鐘前";
+        }
+        else
+        {
+            return $"{duration.Minutes}分鐘前";
+        }
     }
 
     private void OnGeofenceSelected(object sender, EventArgs e)
@@ -191,6 +276,7 @@ public partial class CheckInPage : ContentPage
             // 建立打卡記錄
             _currentCheckIn = new CheckInRecord
             {
+                Id = Guid.NewGuid().ToString(),
                 UserId = "user123", // 實際應用中應該從認證服務獲取
                 GeofenceId = selectedGeofence.Id,
                 GeofenceName = selectedGeofence.Name,
@@ -201,17 +287,25 @@ public partial class CheckInPage : ContentPage
                 Type = CheckInType.Manual
             };
 
-            // 這裡應該保存到本地存儲或發送到服務器
+            // 保存打卡記錄到本地存儲
+            var saveSuccess = await _checkInStorageService.SaveCheckInRecordAsync(_currentCheckIn);
             
-            await DisplayAlert("打卡成功", 
-                $"已在 {selectedGeofence.Name} 打卡\n時間: {DateTime.Now:HH:mm}", 
-                "確定");
-
-            CheckInButton.IsEnabled = false;
-            CheckOutButton.IsEnabled = true;
-            
-            // 重新載入今日記錄
-            LoadTodayRecords();
+            if (saveSuccess)
+            {
+                await DisplayAlert("打卡成功", 
+                    $"已在 {selectedGeofence.Name} 打卡\n時間: {DateTime.Now:HH:mm}", 
+                    "確定");
+                    
+                CheckInButton.IsEnabled = false;
+                CheckOutButton.IsEnabled = true;
+                
+                // 重新載入今日記錄
+                _ = Task.Run(async () => await LoadTodayRecords());
+            }
+            else
+            {
+                await DisplayAlert("錯誤", "打卡記錄保存失敗", "確定");
+            }
         }
         catch (Exception ex)
         {
@@ -243,7 +337,7 @@ public partial class CheckInPage : ContentPage
             _currentCheckIn = null;
             
             // 重新載入今日記錄
-            LoadTodayRecords();
+            _ = Task.Run(async () => await LoadTodayRecords());
         }
         catch (Exception ex)
         {
@@ -260,7 +354,7 @@ public partial class CheckInPage : ContentPage
         {
             await LoadCurrentLocation();
             await LoadGeofences();
-            LoadTodayRecords();
+            await LoadTodayRecords();
         }
         finally
         {

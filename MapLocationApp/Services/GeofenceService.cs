@@ -23,34 +23,54 @@ public class GeofenceService : IGeofenceService
 
     private void InitializeDefaultGeofences()
     {
-        // 台北101 區域（範例）
+        // 保留一些基本的地理圍欄作為範例
+        // 但不要只限於台北地區
+        
+        // 工作場所範例（用戶可以自己新增）
         _geofences.Add(new GeofenceRegion
         {
-            Id = "taipei-101",
-            Name = "台北101辦公區",
+            Id = "workplace-1",
+            Name = "我的工作場所",
             Latitude = 25.0339,
             Longitude = 121.5645,
-            RadiusMeters = 200,
+            RadiusMeters = 100,
             Category = "Office",
-            Description = "台北101商業區域"
-        });
-
-        // 台北車站區域（範例）
-        _geofences.Add(new GeofenceRegion
-        {
-            Id = "taipei-station",
-            Name = "台北車站",
-            Latitude = 25.0478,
-            Longitude = 121.5170,
-            RadiusMeters = 300,
-            Category = "Transport",
-            Description = "台北車站交通樞紐"
+            Description = "主要工作地點"
         });
 
         // 初始化狀態
         foreach (var geofence in _geofences)
         {
             _geofenceStates[geofence.Id] = false;
+        }
+    }
+    
+    // 新增：為當前位置建立地理圍欄
+    public async Task<GeofenceRegion?> CreateGeofenceForCurrentLocationAsync(string name, string category = "Custom", int radiusMeters = 100)
+    {
+        try
+        {
+            var location = await _locationService.GetCurrentLocationAsync();
+            if (location == null)
+                return null;
+                
+            var geofence = new GeofenceRegion
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = name,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude,
+                RadiusMeters = radiusMeters,
+                Category = category,
+                Description = $"於 {DateTime.Now:yyyy-MM-dd HH:mm} 建立"
+            };
+            
+            await AddGeofenceAsync(geofence);
+            return geofence;
+        }
+        catch
+        {
+            return null;
         }
     }
 

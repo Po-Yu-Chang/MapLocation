@@ -19,4 +19,7 @@ public interface IGeofenceService
     
     // 計算距離（米）
     double CalculateDistance(double lat1, double lon1, double lat2, double lon2);
+    
+    // 為當前位置建立地理圍欄
+    Task<GeofenceRegion?> CreateGeofenceForCurrentLocationAsync(string name, string category = "Custom", int radiusMeters = 100);
 }

@@ -2,86 +2,148 @@
 <ContentPage x:Class="MapLocationApp.Views.PrivacyPolicyPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="隱私政策">
+             Title="🔒 隱私政策"
+             Background="{StaticResource BackgroundGradient}">
 
     <ScrollView>
-        <StackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="24" Spacing="20">
             
-            <Label Text="隱私政策"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+            <!-- 標題區域 -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="🔒" FontSize="48"/>
+                <Label Text="隱私政策" Style="{StaticResource PageTitle}"/>
+                <Label Text="保護您的隱私是我們的承諾" Style="{StaticResource BodyText}" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
 
-            <Label Text="最後更新日期: 2025年8月17日"
-                   FontSize="12"
-                   TextColor="Gray"
-                   HorizontalOptions="Center" />
+            <!-- 政策內容 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="20">
+                    
+                    <!-- 資料收集 -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📊" FontSize="20"/>
+                            <Label Text="資料收集" Style="{StaticResource SectionTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BodyText}">
+                            <Label.Text>
+我們僅收集提供服務所必需的資料：
+• GPS位置資訊（用於打卡功能）
+• 打卡時間和地點記錄
+• 裝置識別資訊（用於同步）
+                            </Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
 
-            <BoxView Height="1" BackgroundColor="Gray" />
+                    <!-- 資料使用 -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🎯" FontSize="20"/>
+                            <Label Text="資料使用" Style="{StaticResource SectionTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BodyText}">
+                            <Label.Text>
+您的資料僅用於：
+• 提供位置打卡服務
+• 生成考勤報告
+• 改善應用程式功能
+• 確保服務安全性
+                            </Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
 
-            <Label FontSize="16" LineHeight="1.5">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="1. 位置資料收集與使用" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;我們可能會收集您裝置的地理位置資訊（精確位置或粗略位置），用於提供以下功能：&#x0a;" />
-                        <Span Text="• 驗證與記錄打卡時間與地點&#x0a;" />
-                        <Span Text="• 地理圍欄事件判斷與通知&#x0a;" />
-                        <Span Text="• 地圖顯示與導航功能&#x0a;" />
-                        <Span Text="• 依使用者同意進行匿名化分析（例如熱力圖）&#x0a;&#x0a;" />
-                        
-                        <Span Text="2. 資料保存與刪除" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;我們只在達到服務目的所需的最短時間內保留位置資料（例如 30 天），除非法律或合約要求另行保存。您可以隨時要求匯出或刪除您的位置資料。&#x0a;&#x0a;" />
-                        
-                        <Span Text="3. 資料安全" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;我們採用業界標準的安全措施保護您的個人資料，包括：&#x0a;" />
-                        <Span Text="• 傳輸過程中的數據加密&#x0a;" />
-                        <Span Text="• 存儲數據的安全防護&#x0a;" />
-                        <Span Text="• 定期安全審查與更新&#x0a;&#x0a;" />
-                        
-                        <Span Text="4. 權限控制" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;您可以通過以下方式控制位置資料的使用：&#x0a;" />
-                        <Span Text="• 在設備設定中關閉位置服務&#x0a;" />
-                        <Span Text="• 在應用程式中停用特定功能&#x0a;" />
-                        <Span Text="• 要求刪除已收集的資料&#x0a;&#x0a;" />
-                        
-                        <Span Text="5. 第三方服務" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;本應用程式使用以下第三方服務：&#x0a;" />
-                        <Span Text="• OpenStreetMap（地圖圖磚服務）&#x0a;" />
-                        <Span Text="• Microsoft MAUI（應用程式框架）&#x0a;" />
-                        <Span Text="• Mapsui（地圖控制項）&#x0a;&#x0a;" />
-                        
-                        <Span Text="6. 聯絡我們" FontAttributes="Bold" />
-                        <Span Text="&#x0a;&#x0a;如果您對此隱私政策有任何疑問或需要行使您的資料權利，請聯絡我們：&#x0a;" />
-                        <Span Text="電子郵件: privacy@mapLocationApp.com&#x0a;" />
-                        <Span Text="電話: (02) 1234-5678" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+                    <!-- 資料保護 -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🛡️" FontSize="20"/>
+                            <Label Text="資料保護" Style="{StaticResource SectionTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BodyText}">
+                            <Label.Text>
+我們採用多重保護措施：
+• 本地加密存儲
+• 安全傳輸協議
+• 定期安全審查
+• 最小權限原則
+                            </Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
 
-            <BoxView Height="1" BackgroundColor="Gray" />
+                    <!-- 使用者權利 -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="👤" FontSize="20"/>
+                            <Label Text="您的權利" Style="{StaticResource SectionTitle}"/>
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BodyText}">
+                            <Label.Text>
+您擁有以下權利：
+• 查看個人資料
+• 修正不正確資料
+• 刪除個人資料
+• 匯出資料副本
+• 撤回同意
+                            </Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
 
-            <StackLayout Orientation="Horizontal" Spacing="10">
-                <Button x:Name="AcceptButton"
-                        Text="接受"
-                        BackgroundColor="Green"
-                        TextColor="White"
-                        HorizontalOptions="FillAndExpand"
-                        Clicked="OnAcceptClicked" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 聯絡資訊 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="📧" FontSize="24"/>
+                        <Label Text="聯絡我們" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource BodyText}">
+                        <Label.Text>
+如果您對隱私政策有任何疑問或需要行使您的權利，請聯絡我們：
+
+📧 電子郵件: privacy@maplocation.com
+📞 電話: +886-2-1234-5678
+📍 地址: 台北市信義區信義路五段7號
+                        </Label.Text>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 政策更新 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🔄" FontSize="24"/>
+                        <Label Text="政策更新" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Style="{StaticResource BodyText}">
+                        <Label.Text>
+本隱私政策可能會不定期更新。我們將在重大變更前通知您，並在應用程式中公布最新版本。
+                        </Label.Text>
+                    </Label>
+                    
+                    <Label Text="最後更新: 2025年8月17日" Style="{StaticResource CaptionText}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 操作按鈕 -->
+            <VerticalStackLayout Spacing="12">
+                <Button Text="✅ 我已閱讀並同意"
+                        Style="{StaticResource SuccessButton}"
+                        Clicked="OnAcceptClicked"/>
                 
-                <Button x:Name="DeclineButton"
-                        Text="拒絕"
-                        BackgroundColor="Red"
-                        TextColor="White"
-                        HorizontalOptions="FillAndExpand"
-                        Clicked="OnDeclineClicked" />
-            </StackLayout>
+                <Button Text="📄 匯出我的資料"
+                        Style="{StaticResource OutlineButton}"
+                        Clicked="OnExportDataClicked"/>
+                
+                <Button Text="🗑️ 刪除我的資料"
+                        Style="{StaticResource DangerButton}"
+                        Clicked="OnDeleteDataClicked"/>
+            </VerticalStackLayout>
 
-            <Label Text="※ 拒絕位置權限將影響應用程式的核心功能"
-                   FontSize="12"
-                   TextColor="Red"
-                   HorizontalOptions="Center" />
-
-        </StackLayout>
+        </VerticalStackLayout>
     </ScrollView>
 
 </ContentPage>

@@ -13,10 +13,18 @@ public class LocationService : ILocationService
     {
         try
         {
+            // 首先檢查權限
+            var hasPermission = await RequestLocationPermissionAsync();
+            if (!hasPermission)
+            {
+                System.Diagnostics.Debug.WriteLine("位置權限未授權");
+                return null;
+            }
+
             var request = new GeolocationRequest
             {
                 DesiredAccuracy = GeolocationAccuracy.Best,
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(30) // 增加超時時間
             };
 
             var location = await Geolocation.Default.GetLocationAsync(request);
@@ -35,9 +43,20 @@ public class LocationService : ILocationService
                 };
             }
         }
+        catch (FeatureNotSupportedException)
+        {
+            System.Diagnostics.Debug.WriteLine("裝置不支援位置服務");
+        }
+        catch (FeatureNotEnabledException)
+        {
+            System.Diagnostics.Debug.WriteLine("位置服務未啟用");
+        }
+        catch (PermissionException)
+        {
+            System.Diagnostics.Debug.WriteLine("位置權限被拒絕");
+        }
         catch (Exception ex)
         {
-            // 記錄錯誤
             System.Diagnostics.Debug.WriteLine($"位置獲取失敗: {ex.Message}");
         }
 
@@ -48,13 +67,28 @@ public class LocationService : ILocationService
     {
         try
         {
-            var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            // 檢查當前權限狀態
+            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            
+            if (status == PermissionStatus.Granted)
+                return true;
+
+            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.WinUI)
+            {
+                // Windows 平台的特殊處理
+                System.Diagnostics.Debug.WriteLine("Windows 平台：請在系統設定中啟用位置權限");
+                
+                // 可以顯示提示讓使用者手動開啟設定
+                return false;
+            }
+
+            // 請求權限
+            status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             
             if (status != PermissionStatus.Granted)
             {
-                // 如果需要背景位置，也要請求
-                var backgroundStatus = await Permissions.RequestAsync<Permissions.LocationAlways>();
-                return backgroundStatus == PermissionStatus.Granted;
+                System.Diagnostics.Debug.WriteLine($"位置權限請求失敗: {status}");
+                return false;
             }
             
             return true;
@@ -86,7 +120,11 @@ public class LocationService : ILocationService
         try
         {
             var hasPermission = await RequestLocationPermissionAsync();
-            if (!hasPermission) return;
+            if (!hasPermission) 
+            {
+                System.Diagnostics.Debug.WriteLine("無法開始位置追蹤：權限未授權");
+                return;
+            }
 
             _isTracking = true;
             _cancelTokenSource = new CancellationTokenSource();

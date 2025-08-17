@@ -3,71 +3,135 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             Title="地圖">
+             Title="🗺️ 地圖導航"
+             Background="{StaticResource BackgroundGradient}">
     
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- 地圖控制項 -->
-        <mapsui:MapControl x:Name="MapControl" 
-                           Grid.Row="0"
-                           VerticalOptions="FillAndExpand"
-                           HorizontalOptions="FillAndExpand" />
+        <!-- 地圖區域 -->
+        <Border Grid.Row="0" 
+                StrokeShape="RoundRectangle 20" 
+                Stroke="Transparent" 
+                Margin="16,16,16,8">
+            <Grid>
+                <!-- 地圖控制項 -->
+                <mapsui:MapControl x:Name="MapControl" 
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="Fill" />
 
-        <!-- Attribution 顯示 -->
-        <Label x:Name="AttributionLabel"
-               Grid.Row="0"
-               Text="© OpenStreetMap contributors"
-               FontSize="10"
-               TextColor="Gray"
-               BackgroundColor="White"
-               Padding="4"
-               HorizontalOptions="End"
-               VerticalOptions="End"
-               Margin="8" />
-
-        <!-- 控制面板 -->
-        <StackLayout Grid.Row="1" 
-                     Orientation="Horizontal" 
-                     Padding="10"
-                     BackgroundColor="LightGray">
-            
-            <Button x:Name="LocationButton"
-                    Text="我的位置"
-                    Clicked="OnLocationButtonClicked" />
-            
-            <Picker x:Name="TileProviderPicker"
-                    Title="圖磚供應商"
-                    SelectedIndexChanged="OnTileProviderChanged"
-                    HorizontalOptions="FillAndExpand" />
-            
-            <Button x:Name="GeofenceButton"
-                    Text="地理圍欄"
-                    Clicked="OnGeofenceButtonClicked" />
+                <!-- 浮動控制按鈕 -->
+                <VerticalStackLayout HorizontalOptions="End" 
+                                     VerticalOptions="Start" 
+                                     Margin="16" 
+                                     Spacing="8">
+                    <Button x:Name="LocationButton"
+                            Text="📍"
+                            FontSize="20"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            Clicked="OnLocationButtonClicked" />
                     
-        </StackLayout>
+                    <Button x:Name="ZoomInButton"
+                            Text="+"
+                            FontSize="20"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource CardBackground}"
+                            TextColor="{StaticResource Primary}"
+                            Clicked="OnZoomInClicked" />
+                    
+                    <Button x:Name="ZoomOutButton"
+                            Text="-"
+                            FontSize="20"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource CardBackground}"
+                            TextColor="{StaticResource Primary}"
+                            Clicked="OnZoomOutClicked" />
+                </VerticalStackLayout>
 
-        <!-- 狀態列 -->
-        <StackLayout Grid.Row="2" 
-                     Orientation="Horizontal" 
-                     Padding="10"
-                     BackgroundColor="DarkGray">
-            
-            <Label x:Name="StatusLabel"
-                   Text="準備就緒"
-                   TextColor="White"
-                   HorizontalOptions="StartAndExpand" />
-                   
-            <Label x:Name="LocationLabel"
-                   Text="位置: 未知"
-                   TextColor="White"
-                   HorizontalOptions="End" />
-                   
-        </StackLayout>
+                <!-- Attribution 標籤 -->
+                <Border HorizontalOptions="End"
+                        VerticalOptions="End"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        StrokeShape="RoundRectangle 8"
+                        Stroke="Transparent"
+                        Padding="8"
+                        Margin="16"
+                        Opacity="0.9">
+                    <Label x:Name="AttributionLabel"
+                           Text="© OpenStreetMap contributors"
+                           FontSize="10"
+                           TextColor="{StaticResource Gray600}" />
+                </Border>
+
+                <!-- 狀態指示器 -->
+                <Border HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        BackgroundColor="{StaticResource CardBackground}"
+                        StrokeShape="RoundRectangle 8"
+                        Stroke="Transparent"
+                        Padding="12"
+                        Margin="16">
+                    <Label x:Name="StatusLabel"
+                           Text="🔄 準備就緒"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 底部控制面板 -->
+        <Border Grid.Row="1" 
+                Style="{StaticResource ModernCard}" 
+                Margin="16,8,16,16">
+            <VerticalStackLayout Spacing="16">
+                
+                <!-- 位置資訊 -->
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="4" ColumnSpacing="12">
+                    <Label Grid.Row="0" Grid.Column="0" Text="📍" FontSize="16"/>
+                    <Label Grid.Row="0" Grid.Column="1" x:Name="LocationLabel" 
+                           Text="位置: 準備獲取..." 
+                           Style="{StaticResource BodyText}"/>
+                    
+                    <Label Grid.Row="1" Grid.Column="0" Text="🎯" FontSize="16"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="AccuracyLabel"
+                           Text="精確度: 未知"
+                           Style="{StaticResource CaptionText}"/>
+                </Grid>
+
+                <!-- 控制按鈕群組 -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <Button Grid.Column="0"
+                            Text="🎯 定位"
+                            Style="{StaticResource PrimaryButton}"
+                            Clicked="OnLocationButtonClicked" />
+                    
+                    <Picker Grid.Column="1"
+                            x:Name="TileProviderPicker"
+                            Title="🗺️ 地圖類型"
+                            Style="{StaticResource ModernPicker}"
+                            SelectedIndexChanged="OnTileProviderChanged" />
+                    
+                    <Button Grid.Column="2"
+                            x:Name="GeofenceButton"
+                            Text="🔍 圍欄"
+                            Style="{StaticResource SecondaryButton}"
+                            Clicked="OnGeofenceButtonClicked" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
 
     </Grid>
 

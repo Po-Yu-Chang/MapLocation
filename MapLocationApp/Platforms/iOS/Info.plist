@@ -12,6 +12,8 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
+		<string>location-services</string>
+		<string>gps</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -44,14 +46,6 @@
 	<array>
 		<string>location</string>
 		<string>background-fetch</string>
-	</array>
-	
-	<!-- GPS 硬體需求 -->
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-		<string>location-services</string>
-		<string>gps</string>
 	</array>
 	
 </dict>

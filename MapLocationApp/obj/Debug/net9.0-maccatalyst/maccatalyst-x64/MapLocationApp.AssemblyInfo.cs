@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MapLocationApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+306216e825451ae2b640fac430e2f772edc8cc33")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+1d42bc7581d4a9da76acd8db0545110c1a60d493")]
 [assembly: System.Reflection.AssemblyProductAttribute("MapLocationApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MapLocationApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

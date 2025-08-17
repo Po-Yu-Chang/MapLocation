@@ -71,6 +71,20 @@ public partial class MapPage : ContentPage
         if (!_isLocationTracking)
         {
             // 開始位置追蹤
+            StatusLabel.Text = "正在檢查位置權限...";
+            
+            // 先檢查權限
+            var hasPermission = await _locationService.RequestLocationPermissionAsync();
+            if (!hasPermission)
+            {
+                StatusLabel.Text = "位置權限被拒絕";
+                await DisplayAlert("權限需求", 
+                    "無法取得位置權限。請在系統設定中允許此應用程式存取位置資訊。\n\n" +
+                    "Windows 設定路徑：設定 > 隱私權與安全性 > 位置", 
+                    "確定");
+                return;
+            }
+            
             StatusLabel.Text = "正在獲取位置...";
             
             var location = await _locationService.GetCurrentLocationAsync();
@@ -80,8 +94,8 @@ public partial class MapPage : ContentPage
                 _mapService.AddLocationMarker(MapControl.Map, location.Latitude, location.Longitude, "我的位置");
                 _mapService.CenterMap(MapControl, location.Latitude, location.Longitude, 15);
                 
-                LocationLabel.Text = $"位置: {location.Latitude:F6}, {location.Longitude:F6}";
-                StatusLabel.Text = "位置已更新";
+                LocationLabel.Text = $"位置: {location.Latitude:F6}, {location.Longitude:F6} (精確度: {location.Accuracy:F0}m)";
+                StatusLabel.Text = $"位置已更新 - {location.Timestamp:HH:mm:ss}";
                 
                 await _locationService.StartLocationUpdatesAsync();
                 await _geofenceService.StartMonitoringAsync();
@@ -92,7 +106,16 @@ public partial class MapPage : ContentPage
             else
             {
                 StatusLabel.Text = "無法獲取位置";
-                await DisplayAlert("錯誤", "無法獲取您的位置，請檢查GPS設定", "確定");
+                
+                // 提供更詳細的錯誤資訊和解決建議
+                var errorMessage = "無法獲取您的位置。可能的原因：\n\n" +
+                    "1. GPS 功能未啟用\n" +
+                    "2. 位置權限未授權\n" +
+                    "3. 裝置不支援定位服務\n" +
+                    "4. 需要更好的 GPS 信號（請移動到戶外）\n\n" +
+                    "請檢查系統設定並重試。";
+                
+                await DisplayAlert("位置服務錯誤", errorMessage, "確定");
             }
         }
         else
@@ -178,6 +201,35 @@ public partial class MapPage : ContentPage
         {
             await _locationService.StopLocationUpdatesAsync();
             await _geofenceService.StopMonitoringAsync();
+        }
+    }
+
+    // 新增縮放控制方法
+    private void OnZoomInClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var currentZoom = MapControl.Map.Navigator.Viewport.Resolution;
+            MapControl.Map.Navigator.ZoomIn();
+            StatusLabel.Text = "🔍 放大地圖";
+        }
+        catch (Exception ex)
+        {
+            StatusLabel.Text = $"❌ 縮放失敗: {ex.Message}";
+        }
+    }
+
+    private void OnZoomOutClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var currentZoom = MapControl.Map.Navigator.Viewport.Resolution;
+            MapControl.Map.Navigator.ZoomOut();
+            StatusLabel.Text = "🔍 縮小地圖";
+        }
+        catch (Exception ex)
+        {
+            StatusLabel.Text = $"❌ 縮放失敗: {ex.Message}";
         }
     }
 }

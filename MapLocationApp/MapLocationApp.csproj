@@ -20,6 +20,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<!-- 修復 Android 路徑長度問題 -->
+		<IntermediateOutputPath Condition="'$(TargetFramework)' == 'net9.0-android'">obj\droid\</IntermediateOutputPath>
+		<UseShortFileNames>true</UseShortFileNames>
+		<AndroidLinkTool Condition="'$(TargetFramework)' == 'net9.0-android'">r8</AndroidLinkTool>
+
 		<!-- Display name -->
 		<ApplicationTitle>MapLocationApp</ApplicationTitle>
 

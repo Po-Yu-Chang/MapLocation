@@ -3,10 +3,9 @@ using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Providers;
 using Mapsui.Styles;
-using Mapsui.Tiling;
+using Mapsui.Tiling.Layers;
 using Mapsui.UI.Maui;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
+using Mapsui.Projections;
 
 namespace MapLocationApp.Services;
 
@@ -52,15 +51,8 @@ public class MapService : IMapService
 
     private TileLayer CreateTileLayer(TileProvider provider)
     {
-        var httpTileSource = new HttpTileSource(
-            new GlobalSphericalMercator(0, provider.MaxZoom),
-            provider.UrlTemplate,
-            serverNodes: new[] { "a", "b", "c" },
-            name: provider.Name,
-            attribution: new Attribution(provider.Attribution)
-        );
-
-        return new TileLayer(httpTileSource) { Name = provider.Name };
+        // 使用預設的 OSM 圖磚層
+        return Mapsui.Tiling.OpenStreetMap.CreateTileLayer();
     }
 
     public void UpdateAttribution(MapControl mapControl, string attribution)
@@ -88,22 +80,13 @@ public class MapService : IMapService
 
         if (!geofences.Any()) return;
 
-        var features = new List<IFeature>();
+        var features = new List<Mapsui.IFeature>();
 
         foreach (var geofence in geofences)
         {
-            // 建立圓形幾何
-            var point = new Point(geofence.Longitude, geofence.Latitude);
-            var circle = point.Buffer(geofence.RadiusMeters / 111320.0); // 概略轉換為度數
-
-            var feature = new Feature
-            {
-                Geometry = circle,
-                ["Name"] = geofence.Name,
-                ["Id"] = geofence.Id,
-                ["Category"] = geofence.Category
-            };
-
+            // 建立點特徵
+            var center = SphericalMercator.FromLonLat(geofence.Longitude, geofence.Latitude);
+            var feature = new PointFeature(new MPoint(center.x, center.y));
             features.Add(feature);
         }
 
@@ -113,8 +96,8 @@ public class MapService : IMapService
             DataSource = memoryProvider,
             Style = new VectorStyle
             {
-                Fill = new Brush { Color = Color.FromArgb(50, 0, 123, 255) },
-                Outline = new Pen { Color = Color.Blue, Width = 2 }
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(50, 0, 123, 255) },
+                Outline = new Pen { Color = Mapsui.Styles.Color.Blue, Width = 2 }
             }
         };
 
@@ -128,22 +111,18 @@ public class MapService : IMapService
         if (existingLayer != null)
             map.Layers.Remove(existingLayer);
 
-        var point = new Point(longitude, latitude);
-        var feature = new Feature
-        {
-            Geometry = point,
-            ["Label"] = label ?? "Current Location"
-        };
+        var position = SphericalMercator.FromLonLat(longitude, latitude);
+        var feature = new PointFeature(new MPoint(position.x, position.y));
 
-        var memoryProvider = new MemoryProvider(new[] { feature });
+        var memoryProvider = new MemoryProvider(feature);
         var markerLayer = new Layer("LocationMarker")
         {
             DataSource = memoryProvider,
             Style = new SymbolStyle
             {
                 SymbolScale = 0.8,
-                Fill = new Brush { Color = Color.Red },
-                Outline = new Pen { Color = Color.White, Width = 2 }
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.Red },
+                Outline = new Pen { Color = Mapsui.Styles.Color.White, Width = 2 }
             }
         };
 
@@ -154,8 +133,11 @@ public class MapService : IMapService
     {
         if (mapControl.Map == null) return;
 
-        var sphericalMercatorCoordinate = Mapsui.Projections.SphericalMercator.FromLonLat(longitude, latitude);
-        mapControl.Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, mapControl.Map.Resolutions[zoomLevel]);
-        mapControl.Map.Home(mapControl.Map.Navigator);
+        var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(longitude, latitude);
+        var point = new MPoint(sphericalMercatorCoordinate.x, sphericalMercatorCoordinate.y);
+        
+        // 直接設定地圖中心和縮放等級
+        mapControl.Map.Navigator.CenterOn(point);
+        mapControl.Map.Navigator.ZoomTo(mapControl.Map.Navigator.Resolutions[Math.Min(zoomLevel, mapControl.Map.Navigator.Resolutions.Count - 1)]);
     }
 }
