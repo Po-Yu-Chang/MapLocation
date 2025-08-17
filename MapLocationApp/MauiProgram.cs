@@ -65,6 +65,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
 		builder.Services.AddSingleton<IDestinationArrivalService, DestinationArrivalService>();
 		builder.Services.AddSingleton<INavigationPreferencesService, NavigationPreferencesService>();
+		builder.Services.AddSingleton<ILaneGuidanceService, LaneGuidanceService>();
+		builder.Services.AddSingleton<INavigationPerformanceMonitor, NavigationPerformanceMonitor>();
+		builder.Services.AddSingleton<INavigationErrorHandler, NavigationErrorHandler>();
 
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
@@ -73,6 +76,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<PrivacyPolicyPage>();
 		builder.Services.AddTransient<SettingsPage>();
 		builder.Services.AddTransient<RoutePlanningPage>();
+		builder.Services.AddTransient<NavigationPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
