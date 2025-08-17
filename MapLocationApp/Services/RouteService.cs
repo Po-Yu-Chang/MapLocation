@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MapLocationApp.Models;
 
 namespace MapLocationApp.Services
 {
@@ -348,12 +349,22 @@ namespace MapLocationApp.Services
         public double StartLongitude { get; set; }
         public double EndLatitude { get; set; }
         public double EndLongitude { get; set; }
+        public string? StartAddress { get; set; } // 新增：起點地址
+        public string? EndAddress { get; set; } // 新增：終點地址
         public RouteType Type { get; set; }
         public double Distance { get; set; } // 公尺
+        public double DistanceInMeters => Distance; // 方便存取的屬性
         public TimeSpan EstimatedDuration { get; set; }
         public DateTime CreatedDate { get; set; }
         public List<RouteStep> Steps { get; set; } = new();
         public List<RouteCoordinate> Coordinates { get; set; } = new();
+        
+        // Google Maps 風格的顯示屬性
+        public string FromAddress => StartAddress ?? $"{StartLatitude:F6}, {StartLongitude:F6}";
+        public string ToAddress => EndAddress ?? $"{EndLatitude:F6}, {EndLongitude:F6}";
+        public string Duration => EstimatedDuration.TotalHours >= 1 
+            ? $"{EstimatedDuration.Hours}小時{EstimatedDuration.Minutes}分鐘"
+            : $"{EstimatedDuration.Minutes}分鐘";
     }
 
     public class RouteStep
@@ -373,17 +384,6 @@ namespace MapLocationApp.Services
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-    }
-
-    public class NavigationSession
-    {
-        public string Id { get; set; }
-        public string RouteId { get; set; }
-        public Route Route { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
-        public int CurrentStepIndex { get; set; }
-        public bool IsActive { get; set; }
     }
 
     public class NavigationUpdate
