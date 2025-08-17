@@ -69,3 +69,15 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.PrivacyPolicyPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\PrivacyPolicyPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\PrivacyPolicyPage.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Views/RoutePlanningPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.RoutePlanningPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RoutePlanningPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RoutePlanningPage.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Views/SettingsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.SettingsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SettingsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SettingsPage.xaml

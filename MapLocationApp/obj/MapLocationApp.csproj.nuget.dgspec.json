@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[4.1.9, )"
             },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.0, )"
@@ -132,6 +136,10 @@
               "target": "Package",
               "version": "[4.1.9, )"
             },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.0, )"
@@ -182,6 +190,10 @@
             "Mapsui.Maui": {
               "target": "Package",
               "version": "[4.1.9, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
@@ -234,6 +246,10 @@
             "Mapsui.Maui": {
               "target": "Package",
               "version": "[4.1.9, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",

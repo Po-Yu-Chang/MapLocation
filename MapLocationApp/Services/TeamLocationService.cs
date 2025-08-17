@@ -5,6 +5,8 @@ namespace MapLocationApp.Services
 {
     public interface ITeamLocationService
     {
+        event EventHandler<TeamLocationEventArgs>? LocationShared;
+        
         Task<bool> CreateTeamAsync(string teamName, string description);
         Task<bool> JoinTeamAsync(string teamCode, string memberName);
         Task<bool> LeaveTeamAsync(string teamId);
@@ -31,6 +33,8 @@ namespace MapLocationApp.Services
         private readonly string _settingsFile;
         private readonly Dictionary<string, System.Timers.Timer> _locationTimers;
         private readonly Dictionary<string, LocationSharingSettings> _sharingSettings;
+
+        public event EventHandler<TeamLocationEventArgs>? LocationShared;
 
         public TeamLocationService(ILocationService locationService)
         {
@@ -211,6 +215,20 @@ namespace MapLocationApp.Services
 
                 locations.Add(location);
                 await SaveMemberLocationsAsync(locations);
+
+                // 觸發位置分享事件
+                var teams = await GetUserTeamsAsync();
+                var team = teams.FirstOrDefault(t => t.Id == teamId);
+                var userName = Preferences.Get("UserName", "使用者");
+                
+                LocationShared?.Invoke(this, new TeamLocationEventArgs
+                {
+                    TeamName = team?.Name ?? "未知團隊",
+                    UserName = userName,
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    UpdateTime = DateTime.Now
+                });
 
                 return true;
             }

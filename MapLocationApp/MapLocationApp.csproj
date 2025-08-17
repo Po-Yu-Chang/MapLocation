@@ -62,10 +62,14 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		
+		<!-- Configuration file -->
+		<MauiAsset Include="appsettings.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Mapsui.Maui" Version="4.1.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 		<PackageReference Include="SkiaSharp" Version="2.88.9" />

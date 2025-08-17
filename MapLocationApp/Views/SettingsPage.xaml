@@ -113,6 +113,67 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Telegram 推播通知設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="📱" FontSize="24"/>
+                        <Label Text="Telegram 推播通知" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout>
+                            <Label Text="啟用 Telegram 通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="TelegramEnabledSwitch" HorizontalOptions="EndAndExpand" Toggled="OnTelegramEnabledToggled"/>
+                        </HorizontalStackLayout>
+                        
+                        <VerticalStackLayout x:Name="TelegramConfigLayout" Spacing="12" IsVisible="False">
+                            <Label Text="機器人設定" Style="{StaticResource BodyText}" FontAttributes="Bold"/>
+                            
+                            <Entry x:Name="TelegramBotTokenEntry"
+                                   Placeholder="輸入 Telegram Bot Token"
+                                   IsPassword="True"
+                                   Style="{StaticResource ModernEntry}"/>
+                            
+                            <Entry x:Name="TelegramChatIdEntry"
+                                   Placeholder="輸入 Chat ID 或 @頻道名稱"
+                                   Style="{StaticResource ModernEntry}"/>
+                            
+                            <Label Text="📝 設定說明：" Style="{StaticResource BodyText}" FontAttributes="Bold"/>
+                            <Label Text="1. 在 Telegram 搜尋 @BotFather → /start → /newbot 建立機器人" Style="{StaticResource BodyText}" FontSize="12"/>
+                            <Label Text="2. 取得 Bot Token（形如 123456789:AA...）" Style="{StaticResource BodyText}" FontSize="12"/>
+                            <Label Text="3. 讓 Bot 能傳訊息給您：" Style="{StaticResource BodyText}" FontSize="12"/>
+                            <Label Text="   • 個人：搜尋您的 Bot 名稱，按 Start" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            <Label Text="   • 群組：把 Bot 加進群組，給他權限" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            <Label Text="   • 頻道：把 Bot 加進頻道並設為管理員" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            <Label Text="4. 取得 Chat ID：" Style="{StaticResource BodyText}" FontSize="12"/>
+                            <Label Text="   • 開瀏覽器 GET: https://api.telegram.org/bot&lt;YOUR_BOT_TOKEN&gt;/getUpdates" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            <Label Text="   • 找到 message.chat.id（群組/頻道通常是負數）" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,10,0,0">
+                                <Button Grid.Column="0"
+                                        x:Name="TelegramTestButton"
+                                        Text="🧪 測試連線"
+                                        Style="{StaticResource OutlineButton}"
+                                        Clicked="OnTelegramTestClicked"/>
+                                
+                                <Button Grid.Column="1"
+                                        x:Name="TelegramSaveButton"
+                                        Text="💾 儲存設定"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Clicked="OnTelegramSaveClicked"/>
+                            </Grid>
+                            
+                            <Label x:Name="TelegramStatusLabel"
+                                   Text="📡 狀態: 未設定"
+                                   Style="{StaticResource BodyText}"
+                                   FontSize="12"
+                                   Margin="0,5,0,0"/>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- 資料管理卡片 -->
             <Border Style="{StaticResource ModernCard}">
                 <VerticalStackLayout Spacing="16">

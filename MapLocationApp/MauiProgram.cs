@@ -1,12 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using MapLocationApp.Services;
 using MapLocationApp.Views;
+using System.Reflection;
 
 namespace MapLocationApp;
 
 public static class MauiProgram
 {
+	public static IServiceProvider Services { get; private set; } = null!;
+
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -18,6 +22,9 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+
+		// 新增配置檔案支援 - 使用簡化的方式
+		builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 		// 註冊核心服務
 		builder.Services.AddSingleton<IMapService, MapService>();
@@ -37,6 +44,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITeamLocationService, TeamLocationService>();
 		builder.Services.AddSingleton<IReportService, ReportService>();
 		builder.Services.AddSingleton<LocalizationService>();
+		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
+		builder.Services.AddSingleton<INotificationIntegrationService, NotificationIntegrationService>();
 
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
@@ -44,11 +53,14 @@ public static class MauiProgram
 		builder.Services.AddTransient<CheckInPage>();
 		builder.Services.AddTransient<PrivacyPolicyPage>();
 		builder.Services.AddTransient<SettingsPage>();
+		builder.Services.AddTransient<RoutePlanningPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+		var app = builder.Build();
+		Services = app.Services;
+		return app;
 	}
 }

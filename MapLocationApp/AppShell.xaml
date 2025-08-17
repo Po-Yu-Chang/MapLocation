@@ -21,6 +21,12 @@
             Route="MapPage" />
 
         <ShellContent
+            Title="路線"
+            Icon="route.png"
+            ContentTemplate="{DataTemplate views:RoutePlanningPage}"
+            Route="RoutePlanning" />
+
+        <ShellContent
             Title="打卡"
             Icon="checkin.png"
             ContentTemplate="{DataTemplate views:CheckInPage}"

@@ -6,11 +6,13 @@ namespace MapLocationApp.Views;
 public partial class SettingsPage : ContentPage
 {
     private readonly LocalizationService _localizationService;
+    private readonly ITelegramNotificationService _telegramService;
 
     public SettingsPage()
     {
         InitializeComponent();
         _localizationService = LocalizationService.Instance;
+        _telegramService = ServiceHelper.GetService<ITelegramNotificationService>();
         LoadCurrentSettings();
     }
 
@@ -28,12 +30,12 @@ public partial class SettingsPage : ContentPage
             _ => 0
         };
 
-        // 載入當前主題設定
-        var currentTheme = Application.Current?.RequestedTheme ?? AppTheme.Unspecified;
-        ThemePicker.SelectedIndex = currentTheme switch
+        // 載入當前主題設定（從 Preferences 讀取，而不是直接從 Application）
+        var savedTheme = Preferences.Get("AppTheme", (int)AppTheme.Unspecified);
+        ThemePicker.SelectedIndex = savedTheme switch
         {
-            AppTheme.Light => 0,
-            AppTheme.Dark => 1,
+            (int)AppTheme.Light => 0,
+            (int)AppTheme.Dark => 1,
             _ => 2
         };
 
@@ -44,6 +46,36 @@ public partial class SettingsPage : ContentPage
         CheckInNotificationSwitch.IsToggled = Preferences.Get("CheckInNotification", true);
         GeofenceNotificationSwitch.IsToggled = Preferences.Get("GeofenceNotification", true);
         TeamNotificationSwitch.IsToggled = Preferences.Get("TeamNotification", true);
+
+        // 載入 Telegram 設定
+        LoadTelegramSettings();
+    }
+
+    private async void LoadTelegramSettings()
+    {
+        try
+        {
+            var isConfigured = await _telegramService.IsConfiguredAsync();
+            TelegramEnabledSwitch.IsToggled = isConfigured;
+            TelegramConfigLayout.IsVisible = isConfigured;
+
+            if (isConfigured)
+            {
+                TelegramBotTokenEntry.Text = Preferences.Get("TelegramBotToken", string.Empty);
+                TelegramChatIdEntry.Text = Preferences.Get("TelegramChatId", string.Empty);
+                TelegramStatusLabel.Text = "📡 狀態: 已設定並啟用";
+                TelegramStatusLabel.TextColor = Colors.Green;
+            }
+            else
+            {
+                TelegramStatusLabel.Text = "📡 狀態: 未設定";
+                TelegramStatusLabel.TextColor = Colors.Gray;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"載入 Telegram 設定錯誤: {ex.Message}");
+        }
     }
 
     private async void OnLanguageChanged(object sender, EventArgs e)
@@ -86,20 +118,25 @@ public partial class SettingsPage : ContentPage
 
         try
         {
+            // 只儲存設定，不立即套用主題
+            Preferences.Set("AppTheme", (int)selectedTheme);
+            
+            var themeName = selectedTheme switch
+            {
+                AppTheme.Light => "淺色模式",
+                AppTheme.Dark => "深色模式",
+                _ => "自動模式（跟隨系統）"
+            };
+
+            // 延遲套用主題變更，避免 UI 閃爍
+            await Task.Delay(100);
+            
             if (Application.Current != null)
             {
                 Application.Current.UserAppTheme = selectedTheme;
-                Preferences.Set("AppTheme", (int)selectedTheme);
-                
-                var themeName = selectedTheme switch
-                {
-                    AppTheme.Light => "淺色模式",
-                    AppTheme.Dark => "深色模式",
-                    _ => "自動模式"
-                };
-
-                await DisplayAlert("主題設定", $"已切換到{themeName}", "確定");
             }
+
+            await DisplayAlert("主題設定", $"已切換到{themeName}", "確定");
         }
         catch (Exception ex)
         {
@@ -135,6 +172,115 @@ public partial class SettingsPage : ContentPage
     private void OnTeamNotificationToggled(object sender, ToggledEventArgs e)
     {
         Preferences.Set("TeamNotification", e.Value);
+    }
+
+    private void OnTelegramEnabledToggled(object sender, ToggledEventArgs e)
+    {
+        TelegramConfigLayout.IsVisible = e.Value;
+        
+        if (!e.Value)
+        {
+            // 停用 Telegram 通知
+            TelegramBotTokenEntry.Text = string.Empty;
+            TelegramChatIdEntry.Text = string.Empty;
+            Preferences.Remove("TelegramBotToken");
+            Preferences.Remove("TelegramChatId");
+            TelegramStatusLabel.Text = "📡 狀態: 已停用";
+            TelegramStatusLabel.TextColor = Colors.Gray;
+        }
+    }
+
+    private async void OnTelegramTestClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(TelegramBotTokenEntry.Text) || 
+                string.IsNullOrWhiteSpace(TelegramChatIdEntry.Text))
+            {
+                await DisplayAlert("❌ 輸入錯誤", "請填入 Bot Token 和 Chat ID", "確定");
+                return;
+            }
+
+            TelegramTestButton.IsEnabled = false;
+            TelegramTestButton.Text = "🔄 測試中...";
+
+            var success = await _telegramService.InitializeAsync(
+                TelegramBotTokenEntry.Text.Trim(),
+                TelegramChatIdEntry.Text.Trim()
+            );
+
+            if (success)
+            {
+                // 發送測試訊息
+                await _telegramService.SendMessageAsync("🧪 <b>MapLocation 測試訊息</b>\n\nTelegram 通知設定成功！");
+                
+                TelegramStatusLabel.Text = "📡 狀態: 連線成功 ✅";
+                TelegramStatusLabel.TextColor = Colors.Green;
+                await DisplayAlert("✅ 成功", "Telegram 連線測試成功！已發送測試訊息。", "確定");
+            }
+            else
+            {
+                TelegramStatusLabel.Text = "📡 狀態: 連線失敗 ❌";
+                TelegramStatusLabel.TextColor = Colors.Red;
+                await DisplayAlert("❌ 失敗", "Telegram 連線測試失敗，請檢查 Bot Token 和 Chat ID 是否正確。", "確定");
+            }
+        }
+        catch (Exception ex)
+        {
+            TelegramStatusLabel.Text = "📡 狀態: 錯誤 ❌";
+            TelegramStatusLabel.TextColor = Colors.Red;
+            await DisplayAlert("❌ 錯誤", $"測試連線時發生錯誤: {ex.Message}", "確定");
+        }
+        finally
+        {
+            TelegramTestButton.IsEnabled = true;
+            TelegramTestButton.Text = "🧪 測試連線";
+        }
+    }
+
+    private async void OnTelegramSaveClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(TelegramBotTokenEntry.Text) || 
+                string.IsNullOrWhiteSpace(TelegramChatIdEntry.Text))
+            {
+                await DisplayAlert("❌ 輸入錯誤", "請填入 Bot Token 和 Chat ID", "確定");
+                return;
+            }
+
+            TelegramSaveButton.IsEnabled = false;
+            TelegramSaveButton.Text = "💾 儲存中...";
+
+            var success = await _telegramService.InitializeAsync(
+                TelegramBotTokenEntry.Text.Trim(),
+                TelegramChatIdEntry.Text.Trim()
+            );
+
+            if (success)
+            {
+                TelegramStatusLabel.Text = "📡 狀態: 已儲存並啟用 ✅";
+                TelegramStatusLabel.TextColor = Colors.Green;
+                await DisplayAlert("✅ 成功", "Telegram 設定已成功儲存！", "確定");
+            }
+            else
+            {
+                TelegramStatusLabel.Text = "📡 狀態: 儲存失敗 ❌";
+                TelegramStatusLabel.TextColor = Colors.Red;
+                await DisplayAlert("❌ 失敗", "Telegram 設定儲存失敗，請檢查設定是否正確。", "確定");
+            }
+        }
+        catch (Exception ex)
+        {
+            TelegramStatusLabel.Text = "📡 狀態: 錯誤 ❌";
+            TelegramStatusLabel.TextColor = Colors.Red;
+            await DisplayAlert("❌ 錯誤", $"儲存設定時發生錯誤: {ex.Message}", "確定");
+        }
+        finally
+        {
+            TelegramSaveButton.IsEnabled = true;
+            TelegramSaveButton.Text = "💾 儲存設定";
+        }
     }
 
     private async void OnExportDataClicked(object sender, EventArgs e)

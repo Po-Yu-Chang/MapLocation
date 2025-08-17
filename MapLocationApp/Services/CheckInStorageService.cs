@@ -14,6 +14,8 @@ public interface ICheckInStorageService
 public class CheckInStorageService : ICheckInStorageService
 {
     private const string CheckInRecordsKey = "CheckInRecords";
+    
+    public event EventHandler<CheckInEventArgs>? CheckInRecorded;
 
     public async Task<List<CheckInRecord>> GetCheckInRecordsAsync(DateTime date)
     {
@@ -36,6 +38,8 @@ public class CheckInStorageService : ICheckInStorageService
             
             // 檢查是否已存在相同ID的記錄
             var existingIndex = allRecords.FindIndex(r => r.Id == record.Id);
+            bool isNewRecord = existingIndex < 0;
+            
             if (existingIndex >= 0)
             {
                 allRecords[existingIndex] = record;
@@ -47,6 +51,19 @@ public class CheckInStorageService : ICheckInStorageService
 
             var json = JsonSerializer.Serialize(allRecords);
             await SecureStorage.SetAsync(CheckInRecordsKey, json);
+            
+            // 只有新記錄才觸發事件
+            if (isNewRecord)
+            {
+                CheckInRecorded?.Invoke(this, new CheckInEventArgs
+                {
+                    Latitude = record.Latitude,
+                    Longitude = record.Longitude,
+                    CheckInTime = record.CheckInTime,
+                    Note = record.Notes
+                });
+            }
+            
             return true;
         }
         catch (Exception ex)
