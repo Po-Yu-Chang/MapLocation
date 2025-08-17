@@ -47,6 +47,12 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
 		builder.Services.AddSingleton<INotificationIntegrationService, NotificationIntegrationService>();
 
+		// 註冊導航相關服務
+		builder.Services.AddSingleton<ITTSService, TTSService>();
+		builder.Services.AddSingleton<IRouteTrackingService, RouteTrackingService>();
+		builder.Services.AddSingleton<ILaneGuidanceService, LaneGuidanceService>();
+		builder.Services.AddSingleton<INavigationService, NavigationService>();
+
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MapPage>();

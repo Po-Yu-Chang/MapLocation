@@ -19,6 +19,7 @@ namespace MapLocationApp.Views
         private readonly ILocationService _locationService;
         private readonly IGeocodingService _geocodingService;
         private readonly ITelegramNotificationService _telegramService;
+        private readonly INavigationService _navigationService;
         private Route _currentCalculatedRoute;
         private Route _currentRoute;
         private NavigationSession _currentNavigationSession;
@@ -63,6 +64,7 @@ namespace MapLocationApp.Views
             _locationService = ServiceHelper.GetService<ILocationService>();
             _geocodingService = ServiceHelper.GetService<IGeocodingService>();
             _telegramService = ServiceHelper.GetService<ITelegramNotificationService>();
+            _navigationService = ServiceHelper.GetService<INavigationService>();
             
             // 初始化集合
             SavedRoutes = new ObservableCollection<Route>();
@@ -671,34 +673,31 @@ namespace MapLocationApp.Views
         {
             try
             {
-                // 開始導航
-                _currentNavigationSession = new NavigationSession
+                if (route == null)
                 {
-                    Route = route,
-                    StartTime = DateTime.Now,
-                    IsActive = true
-                };
-
-                // 發送Telegram通知 - 使用現有的方法
-                if (_telegramService != null)
-                {
-                    await _telegramService.SendRouteNotificationAsync(
-                        "使用者", 
-                        "導航路線", 
-                        route.StartLatitude, 
-                        route.StartLongitude, 
-                        route.EndLatitude, 
-                        route.EndLongitude);
+                    await DisplayAlert("❌ 錯誤", "路線資料無效", "確定");
+                    return;
                 }
 
-                // 開始位置更新計時器
-                StartNavigationUpdates();
+                // 使用新的 NavigationService 開始導航
+                _currentNavigationSession = await _navigationService.StartNavigationAsync(route);
 
-                await DisplayAlert("✅ 導航開始", $"已開始導航至目的地", "確定");
+                // 訂閱導航事件
+                _navigationService.InstructionUpdated += OnNavigationInstructionUpdated;
+                _navigationService.LocationUpdated += OnNavigationLocationUpdated;
+                _navigationService.RouteDeviationDetected += OnRouteDeviationDetected;
+                _navigationService.DestinationArrived += OnDestinationArrived;
+                _navigationService.NavigationCompleted += OnNavigationCompleted;
+
+                await DisplayAlert("✅ 導航開始", 
+                    $"已開始導航至 {route.ToAddress}\n將會提供語音指引", "確定");
+
+                System.Diagnostics.Debug.WriteLine($"Enhanced navigation started for route: {route.Name}");
             }
             catch (Exception ex)
             {
                 await DisplayAlert("❌ 錯誤", $"開始導航時發生錯誤: {ex.Message}", "確定");
+                System.Diagnostics.Debug.WriteLine($"Start navigation error: {ex}");
             }
         }
 
@@ -783,7 +782,115 @@ namespace MapLocationApp.Views
             
             // 清理計時器
             _navigationUpdateTimer?.Dispose();
+            
+            // 取消訂閱導航事件
+            if (_navigationService != null)
+            {
+                _navigationService.InstructionUpdated -= OnNavigationInstructionUpdated;
+                _navigationService.LocationUpdated -= OnNavigationLocationUpdated;
+                _navigationService.RouteDeviationDetected -= OnRouteDeviationDetected;
+                _navigationService.DestinationArrived -= OnDestinationArrived;
+                _navigationService.NavigationCompleted -= OnNavigationCompleted;
+            }
         }
+
+        #region Navigation Event Handlers
+
+        private void OnNavigationInstructionUpdated(object sender, NavigationInstruction instruction)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation instruction: {instruction.Text} - {instruction.Distance}");
+                    
+                    // Update UI with navigation instruction
+                    // This would update navigation UI elements if they exist
+                    DisplayAlert("🗣️ 導航指示", instruction.Text, "確定");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation instruction UI update error: {ex.Message}");
+                }
+            });
+        }
+
+        private void OnNavigationLocationUpdated(object sender, AppLocation location)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation location update: {location.Latitude:F6}, {location.Longitude:F6}");
+                    
+                    // Update location-based UI elements
+                    // This would update map position and navigation progress
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation location UI update error: {ex.Message}");
+                }
+            });
+        }
+
+        private void OnRouteDeviationDetected(object sender, RouteDeviationEventArgs e)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"Route deviation detected: {e.Message}");
+                    
+                    if (e.RequiresRecalculation)
+                    {
+                        await DisplayAlert("🔄 路線重新規劃", e.Message, "確定");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Route deviation UI update error: {ex.Message}");
+                }
+            });
+        }
+
+        private void OnDestinationArrived(object sender, DestinationArrivalEventArgs e)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    var totalTime = e.TotalNavigationTime.TotalMinutes;
+                    await DisplayAlert("🎉 到達目的地", 
+                        $"您已成功到達目的地！\n導航時間：{totalTime:F0} 分鐘", "完成");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Destination arrival UI update error: {ex.Message}");
+                }
+            });
+        }
+
+        private void OnNavigationCompleted(object sender, NavigationCompletedEventArgs e)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation completed: {e.Reason}");
+                    
+                    // Reset navigation state
+                    _currentNavigationSession = null;
+                    
+                    // Update UI to reflect navigation completion
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Navigation completion UI update error: {ex.Message}");
+                }
+            });
+        }
+
+        #endregion
 
         #region INotifyPropertyChanged Implementation
         
