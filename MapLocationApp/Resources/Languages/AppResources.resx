@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- App General -->
+  <data name="AppName" xml:space="preserve">
+    <value>MapLocation</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Smart Location Check-In App</value>
+  </data>
+
+  <!-- Navigation -->
+  <data name="MainPage" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="MapPage" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="CheckInPage" xml:space="preserve">
+    <value>Check In</value>
+  </data>
+  <data name="PrivacyPage" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="ReportsPage" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="SettingsPage" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+
+  <!-- Check In -->
+  <data name="CheckInTitle" xml:space="preserve">
+    <value>Location Check In</value>
+  </data>
+  <data name="CheckInButton" xml:space="preserve">
+    <value>Check In Now</value>
+  </data>
+  <data name="CheckInSuccess" xml:space="preserve">
+    <value>Check-in successful!</value>
+  </data>
+  <data name="CheckInError" xml:space="preserve">
+    <value>Check-in failed. Please try again.</value>
+  </data>
+  <data name="CurrentLocation" xml:space="preserve">
+    <value>Current Location</value>
+  </data>
+  <data name="LocationAccuracy" xml:space="preserve">
+    <value>Accuracy</value>
+  </data>
+  <data name="CheckInHistory" xml:space="preserve">
+    <value>Check-In History</value>
+  </data>
+
+  <!-- Map -->
+  <data name="MapTitle" xml:space="preserve">
+    <value>Location Map</value>
+  </data>
+  <data name="MyLocation" xml:space="preserve">
+    <value>My Location</value>
+  </data>
+  <data name="FindRoute" xml:space="preserve">
+    <value>Find Route</value>
+  </data>
+  <data name="OfflineMode" xml:space="preserve">
+    <value>Offline Mode</value>
+  </data>
+  <data name="DownloadMaps" xml:space="preserve">
+    <value>Download Maps</value>
+  </data>
+
+  <!-- Reports -->
+  <data name="ReportsTitle" xml:space="preserve">
+    <value>Check-In Reports</value>
+  </data>
+  <data name="DailyReport" xml:space="preserve">
+    <value>Daily Report</value>
+  </data>
+  <data name="WeeklyReport" xml:space="preserve">
+    <value>Weekly Report</value>
+  </data>
+  <data name="MonthlyReport" xml:space="preserve">
+    <value>Monthly Report</value>
+  </data>
+  <data name="ExportReport" xml:space="preserve">
+    <value>Export Report</value>
+  </data>
+
+  <!-- Settings -->
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="LightTheme" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="DarkTheme" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SystemTheme" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="LocationPermission" xml:space="preserve">
+    <value>Location Permission</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+
+  <!-- Team -->
+  <data name="TeamTitle" xml:space="preserve">
+    <value>Team Members</value>
+  </data>
+  <data name="ShareLocation" xml:space="preserve">
+    <value>Share Location</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>Team Members</value>
+  </data>
+  <data name="InviteMembers" xml:space="preserve">
+    <value>Invite Members</value>
+  </data>
+
+  <!-- Privacy -->
+  <data name="PrivacyTitle" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="DataCollection" xml:space="preserve">
+    <value>Data Collection</value>
+  </data>
+  <data name="DataUsage" xml:space="preserve">
+    <value>Data Usage</value>
+  </data>
+  <data name="DataProtection" xml:space="preserve">
+    <value>Data Protection</value>
+  </data>
+  <data name="UserRights" xml:space="preserve">
+    <value>Your Rights</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="AcceptPolicy" xml:space="preserve">
+    <value>I have read and agree</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>Export My Data</value>
+  </data>
+  <data name="DeleteData" xml:space="preserve">
+    <value>Delete My Data</value>
+  </data>
+</root>

@@ -25,6 +25,17 @@
             Icon="checkin.png"
             ContentTemplate="{DataTemplate views:CheckInPage}"
             Route="CheckInPage" />
+
+        <ShellContent
+            Title="設定"
+            Icon="settings.png"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="SettingsPage" />
     </TabBar>
+
+    <!-- 新增其他頁面的路由 -->
+    <ShellContent
+        ContentTemplate="{DataTemplate views:PrivacyPolicyPage}"
+        Route="PrivacyPolicy" />
 
 </Shell>

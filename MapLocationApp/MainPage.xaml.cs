@@ -26,7 +26,7 @@ public partial class MainPage : ContentPage
 
 	private async void OnSettingsClicked(object? sender, EventArgs e)
 	{
-		await DisplayAlert("設定", "設定功能開發中...", "確定");
+		await Shell.Current.GoToAsync("//SettingsPage");
 	}
 
 	private async void OnQuickLocationClicked(object? sender, EventArgs e)

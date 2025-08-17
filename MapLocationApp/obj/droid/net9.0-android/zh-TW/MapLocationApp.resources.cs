@@ -11,14 +11,13 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("MapLocationApp")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute(" ")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+5a1f5fc68afb1abcbb7553560683f8234c60e2b4")]
 [assembly: System.Reflection.AssemblyProductAttribute("MapLocationApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MapLocationApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Android35.0")]
-[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Android21.0")]
+[assembly: System.Reflection.AssemblyCultureAttribute("zh-TW")]
 
 // 由 MSBuild WriteCodeFragment 類別產生。
 

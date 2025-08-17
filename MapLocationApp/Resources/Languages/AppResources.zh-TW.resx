@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- App General -->
+  <data name="AppName" xml:space="preserve">
+    <value>地圖定位</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>智慧位置打卡應用程式</value>
+  </data>
+
+  <!-- Navigation -->
+  <data name="MainPage" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="MapPage" xml:space="preserve">
+    <value>地圖</value>
+  </data>
+  <data name="CheckInPage" xml:space="preserve">
+    <value>打卡</value>
+  </data>
+  <data name="PrivacyPage" xml:space="preserve">
+    <value>隱私</value>
+  </data>
+  <data name="ReportsPage" xml:space="preserve">
+    <value>報表</value>
+  </data>
+  <data name="SettingsPage" xml:space="preserve">
+    <value>設定</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>載入中...</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+
+  <!-- Check In -->
+  <data name="CheckInTitle" xml:space="preserve">
+    <value>位置打卡</value>
+  </data>
+  <data name="CheckInButton" xml:space="preserve">
+    <value>立即打卡</value>
+  </data>
+  <data name="CheckInSuccess" xml:space="preserve">
+    <value>打卡成功！</value>
+  </data>
+  <data name="CheckInError" xml:space="preserve">
+    <value>打卡失敗，請重試。</value>
+  </data>
+  <data name="CurrentLocation" xml:space="preserve">
+    <value>目前位置</value>
+  </data>
+  <data name="LocationAccuracy" xml:space="preserve">
+    <value>精確度</value>
+  </data>
+  <data name="CheckInHistory" xml:space="preserve">
+    <value>打卡記錄</value>
+  </data>
+
+  <!-- Map -->
+  <data name="MapTitle" xml:space="preserve">
+    <value>位置地圖</value>
+  </data>
+  <data name="MyLocation" xml:space="preserve">
+    <value>我的位置</value>
+  </data>
+  <data name="FindRoute" xml:space="preserve">
+    <value>尋找路線</value>
+  </data>
+  <data name="OfflineMode" xml:space="preserve">
+    <value>離線模式</value>
+  </data>
+  <data name="DownloadMaps" xml:space="preserve">
+    <value>下載地圖</value>
+  </data>
+
+  <!-- Reports -->
+  <data name="ReportsTitle" xml:space="preserve">
+    <value>打卡報表</value>
+  </data>
+  <data name="DailyReport" xml:space="preserve">
+    <value>日報表</value>
+  </data>
+  <data name="WeeklyReport" xml:space="preserve">
+    <value>週報表</value>
+  </data>
+  <data name="MonthlyReport" xml:space="preserve">
+    <value>月報表</value>
+  </data>
+  <data name="ExportReport" xml:space="preserve">
+    <value>匯出報表</value>
+  </data>
+
+  <!-- Settings -->
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>主題</value>
+  </data>
+  <data name="LightTheme" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="DarkTheme" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SystemTheme" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="LocationPermission" xml:space="preserve">
+    <value>位置權限</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+
+  <!-- Team -->
+  <data name="TeamTitle" xml:space="preserve">
+    <value>團隊成員</value>
+  </data>
+  <data name="ShareLocation" xml:space="preserve">
+    <value>分享位置</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>團隊成員</value>
+  </data>
+  <data name="InviteMembers" xml:space="preserve">
+    <value>邀請成員</value>
+  </data>
+
+  <!-- Privacy -->
+  <data name="PrivacyTitle" xml:space="preserve">
+    <value>隱私政策</value>
+  </data>
+  <data name="DataCollection" xml:space="preserve">
+    <value>資料收集</value>
+  </data>
+  <data name="DataUsage" xml:space="preserve">
+    <value>資料使用</value>
+  </data>
+  <data name="DataProtection" xml:space="preserve">
+    <value>資料保護</value>
+  </data>
+  <data name="UserRights" xml:space="preserve">
+    <value>您的權利</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>聯絡我們</value>
+  </data>
+  <data name="AcceptPolicy" xml:space="preserve">
+    <value>我已閱讀並同意</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>匯出我的資料</value>
+  </data>
+  <data name="DeleteData" xml:space="preserve">
+    <value>刪除我的資料</value>
+  </data>
+</root>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="設定"
+             Background="{StaticResource BackgroundBrush}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- 頁面標題 -->
+            <Label Text="應用程式設定" Style="{StaticResource PageTitle}"/>
+
+            <!-- 語言設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🌍" FontSize="24"/>
+                        <Label Text="語言設定" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="選擇應用程式語言" Style="{StaticResource BodyText}"/>
+                        <Picker x:Name="LanguagePicker"
+                                Style="{StaticResource ModernPicker}"
+                                SelectedIndexChanged="OnLanguageChanged">
+                            <Picker.Items>
+                                <x:String>繁體中文 (Traditional Chinese)</x:String>
+                                <x:String>简体中文 (Simplified Chinese)</x:String>
+                                <x:String>English</x:String>
+                                <x:String>日本語 (Japanese)</x:String>
+                                <x:String>한국어 (Korean)</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 主題設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🎨" FontSize="24"/>
+                        <Label Text="主題設定" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="選擇外觀主題" Style="{StaticResource BodyText}"/>
+                        <Picker x:Name="ThemePicker"
+                                Style="{StaticResource ModernPicker}"
+                                SelectedIndexChanged="OnThemeChanged">
+                            <Picker.Items>
+                                <x:String>🌞 淺色模式</x:String>
+                                <x:String>🌙 深色模式</x:String>
+                                <x:String>🔄 自動 (跟隨系統)</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 位置設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="📍" FontSize="24"/>
+                        <Label Text="位置服務" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout>
+                            <Label Text="啟用高精度定位" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="HighAccuracySwitch" HorizontalOptions="EndAndExpand" Toggled="OnHighAccuracyToggled"/>
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout>
+                            <Label Text="背景位置更新" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="BackgroundLocationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnBackgroundLocationToggled"/>
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout>
+                            <Label Text="自動地理圍欄檢測" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="GeofenceDetectionSwitch" HorizontalOptions="EndAndExpand" Toggled="OnGeofenceDetectionToggled"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 通知設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🔔" FontSize="24"/>
+                        <Label Text="通知設定" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout>
+                            <Label Text="打卡提醒" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="CheckInNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnCheckInNotificationToggled"/>
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout>
+                            <Label Text="地理圍欄進出通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="GeofenceNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnGeofenceNotificationToggled"/>
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout>
+                            <Label Text="團隊位置分享通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Switch x:Name="TeamNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnTeamNotificationToggled"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 資料管理卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="💾" FontSize="24"/>
+                        <Label Text="資料管理" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Button Grid.Column="0"
+                                    Text="📤 匯出資料"
+                                    Style="{StaticResource OutlineButton}"
+                                    Clicked="OnExportDataClicked"/>
+                            
+                            <Button Grid.Column="1"
+                                    Text="📥 匯入資料"
+                                    Style="{StaticResource OutlineButton}"
+                                    Clicked="OnImportDataClicked"/>
+                        </Grid>
+                        
+                        <Button Text="🗑️ 清除快取"
+                                Style="{StaticResource SecondaryButton}"
+                                Clicked="OnClearCacheClicked"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 關於資訊卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="ℹ️" FontSize="24"/>
+                        <Label Text="應用程式資訊" Style="{StaticResource SectionTitle}"/>
+                    </HorizontalStackLayout>
+                    
+                    <VerticalStackLayout Spacing="8">
+                        <HorizontalStackLayout>
+                            <Label Text="版本:" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Label Text="1.0.0" Style="{StaticResource BodyText}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout>
+                            <Label Text="建置:" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
+                            <Label Text="20241201" Style="{StaticResource BodyText}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
+                        </HorizontalStackLayout>
+                        
+                        <Button Text="📄 查看隱私政策"
+                                Style="{StaticResource OutlineButton}"
+                                Clicked="OnPrivacyPolicyClicked"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

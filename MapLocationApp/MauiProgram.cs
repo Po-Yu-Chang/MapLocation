@@ -19,7 +19,7 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-		// 註冊服務
+		// 註冊核心服務
 		builder.Services.AddSingleton<IMapService, MapService>();
 #if WINDOWS
 		builder.Services.AddSingleton<ILocationService, Platforms.Windows.WindowsLocationService>();
@@ -28,12 +28,22 @@ public static class MauiProgram
 #endif
 		builder.Services.AddSingleton<IGeofenceService, GeofenceService>();
 		builder.Services.AddSingleton<IGeocodingService, GeocodingService>();
-		builder.Services.AddSingleton<ICheckInStorageService, CheckInStorageService>();
+		builder.Services.AddSingleton<CheckInStorageService>();
+		builder.Services.AddSingleton<ICheckInStorageService>(provider => provider.GetRequiredService<CheckInStorageService>());
+
+		// 註冊新功能服務
+		builder.Services.AddSingleton<IOfflineMapService, OfflineMapService>();
+		builder.Services.AddSingleton<IRouteService, RouteService>();
+		builder.Services.AddSingleton<ITeamLocationService, TeamLocationService>();
+		builder.Services.AddSingleton<IReportService, ReportService>();
+		builder.Services.AddSingleton<LocalizationService>();
 
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MapPage>();
 		builder.Services.AddTransient<CheckInPage>();
+		builder.Services.AddTransient<PrivacyPolicyPage>();
+		builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

@@ -43,9 +43,9 @@
                                     MaximumHeightRequest="200">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="{StaticResource Gray50}" 
+                                <Border BackgroundColor="{StaticResource SurfaceBrush}" 
                                         StrokeShape="RoundRectangle 12"
-                                        Stroke="Transparent"
+                                        Stroke="{StaticResource BorderBrush}"
                                         Padding="16" 
                                         Margin="0,4">
                                     <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
@@ -124,9 +124,9 @@
                                     MaximumHeightRequest="300">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="{StaticResource Gray50}" 
+                                <Border BackgroundColor="{StaticResource SurfaceBrush}" 
                                         StrokeShape="RoundRectangle 12"
-                                        Stroke="Transparent"
+                                        Stroke="{StaticResource BorderBrush}"
                                         Padding="16" 
                                         Margin="0,4">
                                     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
