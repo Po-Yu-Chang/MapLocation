@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+	
+	<!-- 網路權限 -->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	
+	<!-- 位置權限 -->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	
+	<!-- 背景位置權限 (Android 10+) -->
+	<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+	
+	<!-- 前景服務權限 (用於背景位置監控) -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+	
+	<!-- Wake Lock 權限 (保持應用程式在背景運行) -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	
+	<!-- 開機自動啟動 (選用) -->
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+</manifest>

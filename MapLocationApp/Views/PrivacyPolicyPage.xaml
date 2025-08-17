@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.PrivacyPolicyPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="隱私政策">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            
+            <Label Text="隱私政策"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Label Text="最後更新日期: 2025年8月17日"
+                   FontSize="12"
+                   TextColor="Gray"
+                   HorizontalOptions="Center" />
+
+            <BoxView Height="1" BackgroundColor="Gray" />
+
+            <Label FontSize="16" LineHeight="1.5">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="1. 位置資料收集與使用" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;我們可能會收集您裝置的地理位置資訊（精確位置或粗略位置），用於提供以下功能：&#x0a;" />
+                        <Span Text="• 驗證與記錄打卡時間與地點&#x0a;" />
+                        <Span Text="• 地理圍欄事件判斷與通知&#x0a;" />
+                        <Span Text="• 地圖顯示與導航功能&#x0a;" />
+                        <Span Text="• 依使用者同意進行匿名化分析（例如熱力圖）&#x0a;&#x0a;" />
+                        
+                        <Span Text="2. 資料保存與刪除" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;我們只在達到服務目的所需的最短時間內保留位置資料（例如 30 天），除非法律或合約要求另行保存。您可以隨時要求匯出或刪除您的位置資料。&#x0a;&#x0a;" />
+                        
+                        <Span Text="3. 資料安全" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;我們採用業界標準的安全措施保護您的個人資料，包括：&#x0a;" />
+                        <Span Text="• 傳輸過程中的數據加密&#x0a;" />
+                        <Span Text="• 存儲數據的安全防護&#x0a;" />
+                        <Span Text="• 定期安全審查與更新&#x0a;&#x0a;" />
+                        
+                        <Span Text="4. 權限控制" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;您可以通過以下方式控制位置資料的使用：&#x0a;" />
+                        <Span Text="• 在設備設定中關閉位置服務&#x0a;" />
+                        <Span Text="• 在應用程式中停用特定功能&#x0a;" />
+                        <Span Text="• 要求刪除已收集的資料&#x0a;&#x0a;" />
+                        
+                        <Span Text="5. 第三方服務" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;本應用程式使用以下第三方服務：&#x0a;" />
+                        <Span Text="• OpenStreetMap（地圖圖磚服務）&#x0a;" />
+                        <Span Text="• Microsoft MAUI（應用程式框架）&#x0a;" />
+                        <Span Text="• Mapsui（地圖控制項）&#x0a;&#x0a;" />
+                        
+                        <Span Text="6. 聯絡我們" FontAttributes="Bold" />
+                        <Span Text="&#x0a;&#x0a;如果您對此隱私政策有任何疑問或需要行使您的資料權利，請聯絡我們：&#x0a;" />
+                        <Span Text="電子郵件: privacy@mapLocationApp.com&#x0a;" />
+                        <Span Text="電話: (02) 1234-5678" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <BoxView Height="1" BackgroundColor="Gray" />
+
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Button x:Name="AcceptButton"
+                        Text="接受"
+                        BackgroundColor="Green"
+                        TextColor="White"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnAcceptClicked" />
+                
+                <Button x:Name="DeclineButton"
+                        Text="拒絕"
+                        BackgroundColor="Red"
+                        TextColor="White"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnDeclineClicked" />
+            </StackLayout>
+
+            <Label Text="※ 拒絕位置權限將影響應用程式的核心功能"
+                   FontSize="12"
+                   TextColor="Red"
+                   HorizontalOptions="Center" />
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.CheckInPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="打卡">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            
+            <!-- 標題 -->
+            <Label Text="位置打卡"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- 目前位置資訊 -->
+            <Frame BackgroundColor="LightBlue" Padding="15" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="目前位置"
+                           FontAttributes="Bold"
+                           FontSize="16" />
+                    <Label x:Name="CurrentLocationLabel"
+                           Text="正在獲取位置..."
+                           FontSize="14" />
+                    <Label x:Name="AccuracyLabel"
+                           Text=""
+                           FontSize="12"
+                           TextColor="Gray" />
+                </StackLayout>
+            </Frame>
+
+            <!-- 附近的地理圍欄 -->
+            <Frame BackgroundColor="LightGreen" Padding="15" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="附近區域"
+                           FontAttributes="Bold"
+                           FontSize="16" />
+                    <CollectionView x:Name="NearbyGeofencesCollectionView">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackLayout Grid.Column="0">
+                                        <Label Text="{Binding Name}"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Description}"
+                                               FontSize="12"
+                                               TextColor="Gray" />
+                                    </StackLayout>
+                                    
+                                    <Label Grid.Column="1"
+                                           Text="{Binding DistanceText}"
+                                           FontSize="12"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </Frame>
+
+            <!-- 打卡選項 -->
+            <StackLayout>
+                <Label Text="打卡選項"
+                       FontAttributes="Bold"
+                       FontSize="16" />
+                
+                <Picker x:Name="GeofencePicker"
+                        Title="選擇打卡地點"
+                        SelectedIndexChanged="OnGeofenceSelected" />
+                
+                <Entry x:Name="NotesEntry"
+                       Placeholder="備註 (選填)"
+                       MaxLength="200" />
+                
+            </StackLayout>
+
+            <!-- 打卡按鈕 -->
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Button x:Name="CheckInButton"
+                        Text="打卡"
+                        BackgroundColor="Green"
+                        TextColor="White"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnCheckInClicked" />
+                
+                <Button x:Name="CheckOutButton"
+                        Text="打卡下班"
+                        BackgroundColor="Orange"
+                        TextColor="White"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnCheckOutClicked"
+                        IsEnabled="False" />
+            </StackLayout>
+
+            <!-- 今日打卡記錄 -->
+            <Frame BackgroundColor="LightYellow" Padding="15" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="今日記錄"
+                           FontAttributes="Bold"
+                           FontSize="16" />
+                    <CollectionView x:Name="TodayRecordsCollectionView">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackLayout Grid.Column="0">
+                                            <Label Text="{Binding GeofenceName}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Notes}"
+                                                   FontSize="12"
+                                                   TextColor="Gray" />
+                                        </StackLayout>
+                                        
+                                        <StackLayout Grid.Column="1">
+                                            <Label Text="{Binding CheckInTimeText}"
+                                                   FontSize="12"
+                                                   HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding DurationText}"
+                                                   FontSize="10"
+                                                   TextColor="Gray"
+                                                   HorizontalTextAlignment="End" />
+                                        </StackLayout>
+                                    </Grid>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </Frame>
+
+            <!-- 重新整理按鈕 -->
+            <Button x:Name="RefreshButton"
+                    Text="重新整理"
+                    BackgroundColor="LightGray"
+                    TextColor="Black"
+                    Clicked="OnRefreshClicked" />
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

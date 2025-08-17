@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.MapPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             Title="地圖">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 地圖控制項 -->
+        <mapsui:MapControl x:Name="MapControl" 
+                           Grid.Row="0"
+                           VerticalOptions="FillAndExpand"
+                           HorizontalOptions="FillAndExpand" />
+
+        <!-- Attribution 顯示 -->
+        <Label x:Name="AttributionLabel"
+               Grid.Row="0"
+               Text="© OpenStreetMap contributors"
+               FontSize="10"
+               TextColor="Gray"
+               BackgroundColor="White"
+               Padding="4"
+               HorizontalOptions="End"
+               VerticalOptions="End"
+               Margin="8" />
+
+        <!-- 控制面板 -->
+        <StackLayout Grid.Row="1" 
+                     Orientation="Horizontal" 
+                     Padding="10"
+                     BackgroundColor="LightGray">
+            
+            <Button x:Name="LocationButton"
+                    Text="我的位置"
+                    Clicked="OnLocationButtonClicked" />
+            
+            <Picker x:Name="TileProviderPicker"
+                    Title="圖磚供應商"
+                    SelectedIndexChanged="OnTileProviderChanged"
+                    HorizontalOptions="FillAndExpand" />
+            
+            <Button x:Name="GeofenceButton"
+                    Text="地理圍欄"
+                    Clicked="OnGeofenceButtonClicked" />
+                    
+        </StackLayout>
+
+        <!-- 狀態列 -->
+        <StackLayout Grid.Row="2" 
+                     Orientation="Horizontal" 
+                     Padding="10"
+                     BackgroundColor="DarkGray">
+            
+            <Label x:Name="StatusLabel"
+                   Text="準備就緒"
+                   TextColor="White"
+                   HorizontalOptions="StartAndExpand" />
+                   
+            <Label x:Name="LocationLabel"
+                   Text="位置: 未知"
+                   TextColor="White"
+                   HorizontalOptions="End" />
+                   
+        </StackLayout>
+
+    </Grid>
+
+</ContentPage>
