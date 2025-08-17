@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.NavigationPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MapLocationApp.Models"
+             Title="Turn-by-Turn Navigation"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Current Instruction Display -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="White" 
+               CornerRadius="10"
+               Padding="20"
+               Margin="10"
+               HasShadow="True"
+               IsVisible="{Binding IsNavigating}">
+            <StackLayout Orientation="Horizontal">
+                <Image x:Name="DirectionArrow" 
+                       Source="{Binding CurrentInstruction.ArrowIcon}"
+                       WidthRequest="60" 
+                       HeightRequest="60"
+                       VerticalOptions="Center"/>
+                <StackLayout VerticalOptions="Center" Spacing="5">
+                    <Label x:Name="NextInstructionText"
+                           Text="{Binding CurrentInstruction.Text}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="Black"/>
+                    <Label x:Name="DistanceToNext"
+                           Text="{Binding CurrentInstruction.Distance}"
+                           FontSize="14"
+                           TextColor="Gray"/>
+                </StackLayout>
+            </StackLayout>
+        </Frame>
+
+        <!-- Map Area (Placeholder) -->
+        <Frame Grid.Row="1" 
+               BackgroundColor="LightGray"
+               CornerRadius="5"
+               Margin="10"
+               HasShadow="True">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="🗺️ Navigation Map"
+                       FontSize="24"
+                       HorizontalOptions="Center"/>
+                <Label Text="Map component would be displayed here"
+                       FontSize="14"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Route Progress -->
+        <StackLayout Grid.Row="2" 
+                     Orientation="Horizontal" 
+                     BackgroundColor="#E3F2FD"
+                     Padding="15,10"
+                     IsVisible="{Binding IsNavigating}">
+            <Label Text="{Binding EstimatedArrivalTime}" 
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"/>
+            <Label Text="•" 
+                   FontSize="16"
+                   Margin="10,0"
+                   VerticalOptions="Center"/>
+            <Label Text="{Binding RemainingDistance}" 
+                   FontSize="16"
+                   VerticalOptions="Center"/>
+            <Label Text="•" 
+                   FontSize="16"
+                   Margin="10,0"
+                   VerticalOptions="Center"/>
+            <Label Text="{Binding RemainingTime}" 
+                   FontSize="16"
+                   VerticalOptions="Center"/>
+            
+            <!-- Signal Quality Indicator -->
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="EndAndExpand"
+                         VerticalOptions="Center">
+                <Label Text="📶" FontSize="16"/>
+                <Ellipse Fill="{Binding SignalQualityColor}"
+                         WidthRequest="12"
+                         HeightRequest="12"
+                         VerticalOptions="Center"/>
+            </StackLayout>
+        </StackLayout>
+
+        <!-- Lane Guidance -->
+        <CollectionView x:Name="LaneGuidanceView" 
+                        Grid.Row="2"
+                        ItemsSource="{Binding LaneInfo}"
+                        ItemsLayout="HorizontalList"
+                        BackgroundColor="#FFF3E0"
+                        HeightRequest="50"
+                        IsVisible="{Binding HasLaneGuidance}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:LaneInfo">
+                    <Grid BackgroundColor="{Binding LaneColor}"
+                          WidthRequest="40"
+                          HeightRequest="40"
+                          Margin="2">
+                        <Label Text="🚗" 
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               FontSize="12"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Control Buttons -->
+        <StackLayout Grid.Row="3" 
+                     Orientation="Horizontal"
+                     Padding="10"
+                     Spacing="10">
+            <Button x:Name="StartNavigationButton"
+                    Text="🧭 Start Navigation"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnStartNavigationClicked"
+                    IsVisible="{Binding IsNavigating, Converter={StaticResource InvertedBoolConverter}}"/>
+            
+            <Button x:Name="StopNavigationButton"
+                    Text="⏹️ Stop Navigation"
+                    BackgroundColor="#F44336"
+                    TextColor="White"
+                    CornerRadius="8"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnStopNavigationClicked"
+                    IsVisible="{Binding IsNavigating}"/>
+            
+            <Button x:Name="VoiceToggleButton"
+                    Text="{Binding IsVoiceEnabled, Converter={StaticResource VoiceButtonTextConverter}}"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    CornerRadius="8"
+                    WidthRequest="100"
+                    Clicked="OnVoiceToggleClicked"/>
+            
+            <Button x:Name="SettingsButton"
+                    Text="⚙️"
+                    BackgroundColor="#9E9E9E"
+                    TextColor="White"
+                    CornerRadius="8"
+                    WidthRequest="50"
+                    Clicked="OnSettingsClicked"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

@@ -47,6 +47,28 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
 		builder.Services.AddSingleton<INotificationIntegrationService, NotificationIntegrationService>();
 
+		// 註冊導航相關服務
+		builder.Services.AddSingleton<ITTSService, LocalizedTTSService>();
+		builder.Services.AddSingleton<IAdvancedLocationService>(provider => 
+		{
+			var baseLocationService = provider.GetRequiredService<ILocationService>();
+			return new AdvancedLocationService(baseLocationService);
+		});
+		builder.Services.AddSingleton<IRouteTrackingService, RouteTrackingService>();
+		builder.Services.AddSingleton<ITrafficService>(provider => 
+		{
+			// In production, get API key from configuration
+			var configuration = provider.GetRequiredService<IConfiguration>();
+			var apiKey = configuration["GoogleMapsApiKey"] ?? "demo-key";
+			return new GoogleTrafficService(apiKey);
+		});
+		builder.Services.AddSingleton<INavigationService, NavigationService>();
+		builder.Services.AddSingleton<IDestinationArrivalService, DestinationArrivalService>();
+		builder.Services.AddSingleton<INavigationPreferencesService, NavigationPreferencesService>();
+		builder.Services.AddSingleton<ILaneGuidanceService, LaneGuidanceService>();
+		builder.Services.AddSingleton<INavigationPerformanceMonitor, NavigationPerformanceMonitor>();
+		builder.Services.AddSingleton<INavigationErrorHandler, NavigationErrorHandler>();
+
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MapPage>();
@@ -54,6 +76,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<PrivacyPolicyPage>();
 		builder.Services.AddTransient<SettingsPage>();
 		builder.Services.AddTransient<RoutePlanningPage>();
+		builder.Services.AddTransient<NavigationPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
