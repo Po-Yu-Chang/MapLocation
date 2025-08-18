@@ -6,236 +6,540 @@
              Title="路線規劃"
              BackgroundColor="LightGray">
 
-    <Grid RowDefinitions="Auto,*">
+    <!-- 根據導航狀態動態切換的主要布局 -->
+    <Grid>
         
-        <!-- 搜尋和控制區域 -->
-        <StackLayout Grid.Row="0" BackgroundColor="White" Spacing="0">
+        <!-- 路線規劃模式 (非導航時顯示) -->
+        <Grid x:Name="RoutePlanningMode" 
+              IsVisible="{Binding IsNotNavigating}"
+              RowDefinitions="Auto,*">
             
-            <!-- 起點搜尋框 -->
-            <Border BackgroundColor="White"
-                    Stroke="Gray"
-                    StrokeShape="RoundRectangle 8"
-                    StrokeThickness="1"
-                    Padding="0"
-                    Margin="16,8">
-                <Grid ColumnDefinitions="24,*,Auto,Auto" ColumnSpacing="8">
-                    <Label Grid.Column="0" 
-                           Text="🟢" 
-                           FontSize="20"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center"
-                           WidthRequest="24"
-                           HeightRequest="24"/>
-                    <Entry Grid.Column="1" 
-                           x:Name="StartLocationEntry"
-                           Placeholder="選擇起點，或在地圖上點選"
-                           FontSize="16"
-                           TextColor="Black"
-                           BackgroundColor="Transparent"
-                           PlaceholderColor="Gray"
-                           Margin="12,16"
-                           TextChanged="OnStartLocationTextChanged"/>
-                    <Button Grid.Column="2" 
-                            x:Name="UseCurrentLocationButton"
-                            Text="📍"
-                            BackgroundColor="Transparent"
-                            TextColor="Blue"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            CornerRadius="20"
-                            Clicked="OnUseCurrentLocationClicked"/>
-                    <Button Grid.Column="3" 
-                            x:Name="SwapLocationsButton"
-                            Text="🔄"
-                            BackgroundColor="Transparent"
-                            TextColor="Gray"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            CornerRadius="20"
-                            Clicked="OnSwapLocationsClicked"/>
-                </Grid>
-            </Border>
-            
-            <!-- 連接線 -->
-            <StackLayout HorizontalOptions="Start" Margin="40,0,0,0">
-                <BoxView Color="LightGray"
-                         WidthRequest="2"
-                         HorizontalOptions="Center"
-                         Margin="0,4"
-                         HeightRequest="8"/>
-                <BoxView Color="LightGray"
-                         WidthRequest="2"
-                         HorizontalOptions="Center"
-                         Margin="0,4"
-                         HeightRequest="8"/>
-                <BoxView Color="LightGray"
-                         WidthRequest="2"
-                         HorizontalOptions="Center"
-                         Margin="0,4"
-                         HeightRequest="8"/>
-            </StackLayout>
-            
-            <!-- 終點搜尋框 -->
-            <Border BackgroundColor="White"
-                    Stroke="Gray"
-                    StrokeShape="RoundRectangle 8"
-                    StrokeThickness="1"
-                    Padding="0"
-                    Margin="16,8">
-                <Grid ColumnDefinitions="24,*,Auto" ColumnSpacing="8">
-                    <Label Grid.Column="0" 
-                           Text="🔴" 
-                           FontSize="20"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center"
-                           WidthRequest="24"
-                           HeightRequest="24"/>
-                    <Entry Grid.Column="1" 
-                           x:Name="EndLocationEntry"
-                           Placeholder="選擇目的地"
-                           FontSize="16"
-                           TextColor="Black"
-                           BackgroundColor="Transparent"
-                           PlaceholderColor="Gray"
-                           Margin="12,16"
-                           TextChanged="OnEndLocationTextChanged"/>
-                    <Button Grid.Column="2" 
-                            x:Name="ClearEndLocationButton"
-                            Text="✕"
-                            BackgroundColor="Transparent"
-                            TextColor="Gray"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            CornerRadius="20"
-                            Clicked="OnClearEndLocationClicked"/>
-                </Grid>
-            </Border>
-            
-            <!-- 路線選項按鈕 -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="16,8">
-                <Button x:Name="FastestRouteButton" 
-                        Text="🚗 最快路線" 
-                        BackgroundColor="White"
-                        TextColor="Blue"
-                        BorderColor="LightGray"
-                        BorderWidth="1"
-                        CornerRadius="16"
-                        HeightRequest="36"
-                        FontSize="14"
-                        Margin="4"
-                        Clicked="OnRouteOptionClicked"/>
-                <Button x:Name="ShortestRouteButton" 
-                        Text="📏 最短路線" 
-                        BackgroundColor="White"
-                        TextColor="Blue"
-                        BorderColor="LightGray"
-                        BorderWidth="1"
-                        CornerRadius="16"
-                        HeightRequest="36"
-                        FontSize="14"
-                        Margin="4"
-                        Clicked="OnRouteOptionClicked"/>
-                <Button x:Name="EcoRouteButton" 
-                        Text="🌱 節能路線" 
-                        BackgroundColor="White"
-                        TextColor="Blue"
-                        BorderColor="LightGray"
-                        BorderWidth="1"
-                        CornerRadius="16"
-                        HeightRequest="36"
-                        FontSize="14"
-                        Margin="4"
-                        Clicked="OnRouteOptionClicked"/>
-            </StackLayout>
-            
-            <!-- 規劃路線按鈕 -->
-            <Button x:Name="GetDirectionsButton" 
-                    Text="規劃路線" 
-                    BackgroundColor="Blue"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="20"
-                    HeightRequest="48"
-                    Margin="16,8"
-                    Clicked="OnGetDirectionsClicked"/>
-            
-            <!-- 開始導航按鈕 -->
-            <Button x:Name="StartNavigationButton" 
-                    Text="開始導航" 
-                    IsVisible="False"
-                    BackgroundColor="Green"
-                    TextColor="White"
-                    CornerRadius="20"
-                    WidthRequest="60"
-                    HeightRequest="36"
-                    FontSize="14"
-                    Clicked="OnStartNavigationClicked"/>
-        </StackLayout>
-        
-        <!-- 地圖區域 -->
-        <Grid Grid.Row="1">
-            <mapsui:MapControl x:Name="MapView" />
-            
-            <!-- 路線結果卡片 -->
-            <CollectionView x:Name="RouteOptionsCollectionView" 
-                            ItemsSource="{Binding RouteOptions}"
-                            IsVisible="False"
-                            BackgroundColor="LightGray">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BackgroundColor="White"
-                                Stroke="LightGray"
-                                StrokeShape="RoundRectangle 12"
-                                StrokeThickness="1"
-                                Padding="16"
-                                Margin="16,8">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnRouteOptionSelected"/>
-                            </Border.GestureRecognizers>
-                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
-                                
-                                <!-- 路線時間和距離 -->
-                                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="8">
-                                    <Label Text="{Binding Duration}" 
-                                           FontSize="24"
-                                           FontAttributes="Bold"
-                                           TextColor="Blue"/>
-                                    <Label Text="{Binding Distance}" 
-                                           FontSize="16"
-                                           TextColor="Gray"
-                                           VerticalOptions="End"/>
-                                </StackLayout>
-                                
-                                <!-- 路線描述 -->
-                                <Label Grid.Row="1" Grid.Column="0" 
-                                       Text="{Binding Description}" 
-                                       FontSize="14"
-                                       TextColor="Black"/>
-                                
-                                <!-- 交通狀況 -->
-                                <StackLayout Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
-                                    <BoxView BackgroundColor="{Binding TrafficColor}" 
-                                             WidthRequest="12" 
-                                             HeightRequest="3" 
-                                             CornerRadius="1.5"
-                                             VerticalOptions="Center"/>
-                                    <Label Text="{Binding TrafficInfo}" 
-                                           FontSize="12" 
-                                           TextColor="Gray"/>
-                                </StackLayout>
-                                
-                                <!-- 選擇圖示 -->
-                                <Label Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
-                                       Text="▶️" 
-                                       FontSize="20" 
-                                       VerticalOptions="Center"
-                                       IsVisible="{Binding IsSelected}"/>
-                                
+            <!-- 搜尋和控制區域 -->
+            <StackLayout Grid.Row="0" BackgroundColor="White" Spacing="0">
+                
+                <!-- 起點搜尋框 -->
+                <Border BackgroundColor="White"
+                        Stroke="Gray"
+                        StrokeShape="RoundRectangle 8"
+                        StrokeThickness="1"
+                        Padding="0"
+                        Margin="16,8">
+                    <Grid ColumnDefinitions="24,*,Auto,Auto" ColumnSpacing="8">
+                        <Label Grid.Column="0" 
+                               Text="🟢" 
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               WidthRequest="24"
+                               HeightRequest="24"/>
+                        <Entry Grid.Column="1" 
+                               x:Name="StartLocationEntry"
+                               Placeholder="選擇起點，或在地圖上點選"
+                               FontSize="16"
+                               TextColor="Black"
+                               BackgroundColor="Transparent"
+                               PlaceholderColor="Gray"
+                               Margin="12,16"
+                               TextChanged="OnStartLocationTextChanged"/>
+                        <Button Grid.Column="2" 
+                                x:Name="UseCurrentLocationButton"
+                                Text="📍"
+                                BackgroundColor="Transparent"
+                                TextColor="Blue"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                CornerRadius="20"
+                                Clicked="OnUseCurrentLocationClicked"/>
+                        <Button Grid.Column="3" 
+                                x:Name="SwapLocationsButton"
+                                Text="🔄"
+                                BackgroundColor="Transparent"
+                                TextColor="Gray"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                CornerRadius="20"
+                                Clicked="OnSwapLocationsClicked"/>
+                    </Grid>
+                </Border>
+                
+                <!-- 起點搜尋建議 -->
+                <CollectionView x:Name="StartSuggestionsView" 
+                                ItemsSource="{Binding FromSuggestions}"
+                                IsVisible="False"
+                                BackgroundColor="White"
+                                Margin="16,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="16,12" BackgroundColor="White">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnStartSuggestionTapped"/>
+                                </Grid.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Label Grid.Column="0" Text="📍" FontSize="18" VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="1" Margin="12,0,0,0">
+                                        <Label Text="{Binding MainText}" FontSize="16" TextColor="Black"/>
+                                        <Label Text="{Binding SecondaryText}" FontSize="14" TextColor="Gray"/>
+                                    </StackLayout>
+                                </Grid>
                             </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <!-- 連接線 -->
+                <StackLayout HorizontalOptions="Start" Margin="40,0,0,0">
+                    <BoxView Color="LightGray"
+                             WidthRequest="2"
+                             HorizontalOptions="Center"
+                             Margin="0,4"
+                             HeightRequest="8"/>
+                    <BoxView Color="LightGray"
+                             WidthRequest="2"
+                             HorizontalOptions="Center"
+                             Margin="0,4"
+                             HeightRequest="8"/>
+                    <BoxView Color="LightGray"
+                             WidthRequest="2"
+                             HorizontalOptions="Center"
+                             Margin="0,4"
+                             HeightRequest="8"/>
+                </StackLayout>
+                
+                <!-- 終點搜尋框 -->
+                <Border BackgroundColor="White"
+                        Stroke="Gray"
+                        StrokeShape="RoundRectangle 8"
+                        StrokeThickness="1"
+                        Padding="0"
+                        Margin="16,8">
+                    <Grid ColumnDefinitions="24,*,Auto" ColumnSpacing="8">
+                        <Label Grid.Column="0" 
+                               Text="🔴" 
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               WidthRequest="24"
+                               HeightRequest="24"/>
+                        <Entry Grid.Column="1" 
+                               x:Name="EndLocationEntry"
+                               Placeholder="選擇目的地"
+                               FontSize="16"
+                               TextColor="Black"
+                               BackgroundColor="Transparent"
+                               PlaceholderColor="Gray"
+                               Margin="12,16"
+                               TextChanged="OnEndLocationTextChanged"/>
+                        <Button Grid.Column="2" 
+                                x:Name="ClearEndLocationButton"
+                                Text="✕"
+                                BackgroundColor="Transparent"
+                                TextColor="Gray"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                CornerRadius="20"
+                                Clicked="OnClearEndLocationClicked"/>
+                    </Grid>
+                </Border>
+                
+                <!-- 終點搜尋建議 -->
+                <CollectionView x:Name="EndSuggestionsView" 
+                                ItemsSource="{Binding ToSuggestions}"
+                                IsVisible="False"
+                                BackgroundColor="White"
+                                Margin="16,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="16,12" BackgroundColor="White">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnEndSuggestionTapped"/>
+                                </Grid.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Label Grid.Column="0" Text="📍" FontSize="18" VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="1" Margin="12,0,0,0">
+                                        <Label Text="{Binding MainText}" FontSize="16" TextColor="Black"/>
+                                        <Label Text="{Binding SecondaryText}" FontSize="14" TextColor="Gray"/>
+                                    </StackLayout>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <!-- 路線選項按鈕 -->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="16,8">
+                    <Button x:Name="FastestRouteButton" 
+                            Text="🚗 最快路線" 
+                            BackgroundColor="White"
+                            TextColor="Blue"
+                            BorderColor="LightGray"
+                            BorderWidth="1"
+                            CornerRadius="16"
+                            HeightRequest="36"
+                            FontSize="14"
+                            Margin="4"
+                            Clicked="OnRouteOptionClicked"/>
+                    <Button x:Name="ShortestRouteButton" 
+                            Text="📏 最短路線" 
+                            BackgroundColor="White"
+                            TextColor="Blue"
+                            BorderColor="LightGray"
+                            BorderWidth="1"
+                            CornerRadius="16"
+                            HeightRequest="36"
+                            FontSize="14"
+                            Margin="4"
+                            Clicked="OnRouteOptionClicked"/>
+                    <Button x:Name="EcoRouteButton" 
+                            Text="🌱 節能路線" 
+                            BackgroundColor="White"
+                            TextColor="Blue"
+                            BorderColor="LightGray"
+                            BorderWidth="1"
+                            CornerRadius="16"
+                            HeightRequest="36"
+                            FontSize="14"
+                            Margin="4"
+                            Clicked="OnRouteOptionClicked"/>
+                </StackLayout>
+                
+                <!-- 規劃路線按鈕 -->
+                <Button x:Name="GetDirectionsButton" 
+                        Text="規劃路線" 
+                        BackgroundColor="Blue"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="20"
+                        HeightRequest="48"
+                        Margin="16,8"
+                        Clicked="OnGetDirectionsClicked"/>
+                
+                <!-- 測試導航按鈕 (暫時) -->
+                <Button x:Name="TestNavigationButton" 
+                        Text="🧪 測試導航模式" 
+                        BackgroundColor="Orange"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="20"
+                        HeightRequest="48"
+                        Margin="16,8"
+                        Clicked="OnTestNavigationClicked"/>
+            </StackLayout>
+            
+            <!-- 路線規劃模式的地圖 -->
+            <Grid Grid.Row="1">
+                <mapsui:MapControl x:Name="PlanningMapView" />
+                
+                <!-- 路線結果卡片 -->
+                <CollectionView x:Name="RouteOptionsCollectionView" 
+                                ItemsSource="{Binding RouteOptions}"
+                                IsVisible="False"
+                                BackgroundColor="LightGray"
+                                VerticalOptions="End"
+                                Margin="16">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White"
+                                    Stroke="LightGray"
+                                    StrokeShape="RoundRectangle 12"
+                                    StrokeThickness="1"
+                                    Padding="16"
+                                    Margin="0,4">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnRouteOptionSelected"/>
+                                </Border.GestureRecognizers>
+                                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto,Auto">
+                                    
+                                    <!-- 路線時間和距離 -->
+                                    <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                        <Label Text="{Binding Duration}" 
+                                               FontSize="24"
+                                               FontAttributes="Bold"
+                                               TextColor="Blue"/>
+                                        <Label Text="{Binding Distance}" 
+                                               FontSize="16"
+                                               TextColor="Gray"
+                                               VerticalOptions="End"/>
+                                    </StackLayout>
+                                    
+                                    <!-- 路線描述 -->
+                                    <Label Grid.Row="1" Grid.Column="0" 
+                                           Text="{Binding Description}" 
+                                           FontSize="14"
+                                           TextColor="Black"/>
+                                    
+                                    <!-- 交通狀況 -->
+                                    <StackLayout Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                                        <BoxView BackgroundColor="{Binding TrafficColor}" 
+                                                 WidthRequest="12" 
+                                                 HeightRequest="3" 
+                                                 CornerRadius="1.5"
+                                                 VerticalOptions="Center"/>
+                                        <Label Text="{Binding TrafficInfo}" 
+                                               FontSize="12" 
+                                               TextColor="Gray"/>
+                                    </StackLayout>
+                                    
+                                    <!-- 開始導航按鈕 -->
+                                    <Button Grid.Row="0" Grid.RowSpan="3" Grid.Column="2"
+                                            Text="開始導航"
+                                            BackgroundColor="Green"
+                                            TextColor="White"
+                                            CornerRadius="20"
+                                            FontSize="14"
+                                            WidthRequest="80"
+                                            HeightRequest="40"
+                                            Clicked="OnStartNavigationClicked"/>
+                                    
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Grid>
+        
+        <!-- Google Maps 風格全螢幕導航模式 (導航時顯示) -->
+        <Grid x:Name="NavigationMode" 
+              IsVisible="{Binding IsNavigating}">
+            
+            <!-- 全螢幕地圖 -->
+            <mapsui:MapControl x:Name="NavigationMapView" />
+            
+            <!-- 頂部導航指示卡片 - Google Maps 風格 -->
+            <Border x:Name="NavigationInstructionCard"
+                    BackgroundColor="White"
+                    Stroke="LightGray"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="1"
+                    VerticalOptions="Start"
+                    Margin="16,50,16,0"
+                    Padding="20">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="8" Offset="0,2"/>
+                </Border.Shadow>
+                
+                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="80,*,Auto">
+                    
+                    <!-- 大型方向箭頭 - Google Maps 風格 -->
+                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                            BackgroundColor="#E3F2FD"
+                            StrokeShape="RoundRectangle 35"
+                            WidthRequest="70"
+                            HeightRequest="70"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center">
+                        <Label x:Name="NavigationDirectionArrow"
+                               Text="{Binding CurrentInstruction.ArrowIcon}"
+                               FontSize="36"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               TextColor="#1976D2"/>
+                    </Border>
+                    
+                    <!-- 導航指示文字 -->
+                    <StackLayout Grid.Row="0" Grid.Column="1" 
+                                 VerticalOptions="Center"
+                                 Margin="16,0">
+                        <!-- 距離 -->
+                        <Label x:Name="NavigationDistanceText"
+                               Text="{Binding CurrentInstruction.Distance}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#666"/>
+                        
+                        <!-- 指示文字 -->
+                        <Label x:Name="NavigationInstructionText"
+                               Text="{Binding CurrentInstruction.Text}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               Margin="0,4,0,0"/>
+                        
+                        <!-- 街道名稱 (如果有) -->
+                        <Label x:Name="NavigationStreetName"
+                               Text="{Binding CurrentInstruction.StreetName}"
+                               FontSize="16"
+                               TextColor="#666"
+                               Margin="0,2,0,0"/>
+                    </StackLayout>
+                    
+                    <!-- 導航控制按鈕 -->
+                    <StackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" 
+                                 Orientation="Vertical" 
+                                 Spacing="8"
+                                 VerticalOptions="Center">
+                        <Button x:Name="NavigationMuteButton"
+                                Text="🔊"
+                                WidthRequest="44"
+                                HeightRequest="44"
+                                CornerRadius="22"
+                                BackgroundColor="#F5F5F5"
+                                TextColor="#666"
+                                FontSize="20"
+                                Clicked="OnMuteToggleClicked"/>
+                        <Button x:Name="NavigationMenuButton"
+                                Text="⋮"
+                                WidthRequest="44"
+                                HeightRequest="44"
+                                CornerRadius="22"
+                                BackgroundColor="#F5F5F5"
+                                TextColor="#666"
+                                FontSize="20"
+                                Clicked="OnNavigationMenuClicked"/>
+                    </StackLayout>
+                    
+                    <!-- 路線進度條 -->
+                    <ProgressBar Grid.Row="2" Grid.ColumnSpan="3"
+                                 x:Name="NavigationProgressBar"
+                                 Progress="{Binding RouteProgress}"
+                                 ProgressColor="#1976D2"
+                                 BackgroundColor="#E0E0E0"
+                                 HeightRequest="4"
+                                 Margin="0,16,0,0"/>
+                </Grid>
+            </Border>
+            
+            <!-- 底部狀態列 - Google Maps 風格 -->
+            <Border x:Name="NavigationStatusBar"
+                    BackgroundColor="White"
+                    Stroke="LightGray"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="1"
+                    VerticalOptions="End"
+                    HorizontalOptions="Center"
+                    Margin="16,0,16,40"
+                    Padding="20,12">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.2" Radius="6" Offset="0,2"/>
+                </Border.Shadow>
+                
+                <StackLayout Orientation="Horizontal" Spacing="24">
+                    <!-- 預計到達時間 -->
+                    <StackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding EstimatedArrivalTime}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#1976D2"
+                               HorizontalOptions="Center"/>
+                        <Label Text="預計到達"
+                               FontSize="12"
+                               TextColor="#666"
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                    
+                    <!-- 分隔線 -->
+                    <BoxView WidthRequest="1"
+                             HeightRequest="40"
+                             BackgroundColor="#E0E0E0"
+                             VerticalOptions="Center"/>
+                    
+                    <!-- 剩餘時間 -->
+                    <StackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding RemainingTime}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"/>
+                        <Label Text="剩餘時間"
+                               FontSize="12"
+                               TextColor="#666"
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                    
+                    <!-- 分隔線 -->
+                    <BoxView WidthRequest="1"
+                             HeightRequest="40"
+                             BackgroundColor="#E0E0E0"
+                             VerticalOptions="Center"/>
+                    
+                    <!-- 剩餘距離 -->
+                    <StackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="{Binding RemainingDistance}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"/>
+                        <Label Text="剩餘距離"
+                               FontSize="12"
+                               TextColor="#666"
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+            
+            <!-- 右下角控制按鈕群組 - Google Maps 風格 -->
+            <StackLayout x:Name="NavigationControlButtons"
+                         Orientation="Vertical"
+                         Spacing="12"
+                         VerticalOptions="End"
+                         HorizontalOptions="End"
+                         Margin="16,0,16,140">
+                
+                <!-- 重新置中按鈕 -->
+                <Button x:Name="RecenterButton"
+                        Text="🎯"
+                        WidthRequest="56"
+                        HeightRequest="56"
+                        CornerRadius="28"
+                        BackgroundColor="White"
+                        TextColor="#666"
+                        FontSize="24"
+                        Clicked="OnRecenterClicked">
+                    <Button.Shadow>
+                        <Shadow Brush="Black" Opacity="0.2" Radius="6" Offset="0,2"/>
+                    </Button.Shadow>
+                </Button>
+                
+                <!-- 縮放控制 -->
+                <StackLayout Spacing="0">
+                    <Button x:Name="ZoomInButton"
+                            Text="+"
+                            WidthRequest="56"
+                            HeightRequest="44"
+                            CornerRadius="8"
+                            BackgroundColor="White"
+                            TextColor="#666"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            Clicked="OnZoomInClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Black" Opacity="0.2" Radius="6" Offset="0,2"/>
+                        </Button.Shadow>
+                    </Button>
+                    <Button x:Name="ZoomOutButton"
+                            Text="−"
+                            WidthRequest="56"
+                            HeightRequest="44"
+                            CornerRadius="8"
+                            BackgroundColor="White"
+                            TextColor="#666"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            Clicked="OnZoomOutClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="Black" Opacity="0.2" Radius="6" Offset="0,2"/>
+                        </Button.Shadow>
+                    </Button>
+                </StackLayout>
+            </StackLayout>
+            
+            <!-- 左上角退出導航按鈕 -->
+            <Button x:Name="ExitNavigationButton"
+                    Text="✕"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    CornerRadius="22"
+                    BackgroundColor="White"
+                    TextColor="#666"
+                    FontSize="20"
+                    VerticalOptions="Start"
+                    HorizontalOptions="Start"
+                    Margin="16,50,0,0"
+                    Clicked="OnExitNavigationClicked">
+                <Button.Shadow>
+                    <Shadow Brush="Black" Opacity="0.2" Radius="6" Offset="0,2"/>
+                </Button.Shadow>
+            </Button>
         </Grid>
     </Grid>
 </ContentPage>

@@ -171,7 +171,7 @@ public class GeofenceService : IGeofenceService
                         TransitionType = GeofenceTransitionType.Enter,
                         Latitude = location.Latitude,
                         Longitude = location.Longitude,
-                        Accuracy = location.Accuracy,
+                        Accuracy = location.Accuracy ?? 0,
                         Timestamp = DateTime.UtcNow
                     };
 
@@ -193,7 +193,7 @@ public class GeofenceService : IGeofenceService
                         TransitionType = GeofenceTransitionType.Exit,
                         Latitude = location.Latitude,
                         Longitude = location.Longitude,
-                        Accuracy = location.Accuracy,
+                        Accuracy = location.Accuracy ?? 0,
                         Timestamp = DateTime.UtcNow
                     };
 

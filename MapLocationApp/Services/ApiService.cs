@@ -103,7 +103,7 @@ public class ApiService : IApiService
                 UserId = userId,
                 Latitude = location.Latitude,
                 Longitude = location.Longitude,
-                Accuracy = location.Accuracy,
+                Accuracy = location.Accuracy ?? 0,
                 Timestamp = location.Timestamp
             };
 

@@ -6,6 +6,8 @@ using Mapsui.Styles;
 using Mapsui.Tiling.Layers;
 using Mapsui.UI.Maui;
 using Mapsui.Projections;
+using Mapsui.Nts;
+using NetTopologySuite.Geometries;
 
 namespace MapLocationApp.Services;
 
@@ -139,5 +141,305 @@ public class MapService : IMapService
         // 直接設定地圖中心和縮放等級
         mapControl.Map.Navigator.CenterOn(point);
         mapControl.Map.Navigator.ZoomTo(mapControl.Map.Navigator.Resolutions[Math.Min(zoomLevel, mapControl.Map.Navigator.Resolutions.Count - 1)]);
+    }
+
+    // 路線渲染功能實作
+    public void DrawRoute(Mapsui.Map map, Route route, string routeColor = "#2196F3", int width = 5)
+    {
+        if (map == null || route == null) return;
+
+        try
+        {
+            // 移除現有的路線層
+            var existingRouteLayer = map.Layers.FirstOrDefault(l => l.Name == "ActiveRoute");
+            if (existingRouteLayer != null)
+                map.Layers.Remove(existingRouteLayer);
+
+            // 創建路線點集合
+            var coordinates = new List<Coordinate>();
+            
+            // 起點
+            coordinates.Add(new Coordinate(route.StartLongitude, route.StartLatitude));
+            
+            // 如果有路線步驟，加入中間點
+            if (route.Steps != null && route.Steps.Any())
+            {
+                foreach (var step in route.Steps)
+                {
+                    coordinates.Add(new Coordinate(step.EndLongitude, step.EndLatitude));
+                }
+            }
+            else
+            {
+                // 如果沒有詳細步驟，創建直線路線
+                coordinates.Add(new Coordinate(route.EndLongitude, route.EndLatitude));
+            }
+
+            // 創建線幾何
+            var lineString = new LineString(coordinates.ToArray());
+            var feature = new GeometryFeature(lineString);
+
+            // 設定路線樣式
+            var routeStyle = new VectorStyle
+            {
+                Line = new Pen
+                {
+                    Color = Mapsui.Styles.Color.FromString(routeColor),
+                    Width = width,
+                    PenStyle = PenStyle.Solid
+                }
+            };
+
+            var memoryProvider = new MemoryProvider(feature);
+            var routeLayer = new Layer("ActiveRoute")
+            {
+                DataSource = memoryProvider,
+                Style = routeStyle
+            };
+
+            map.Layers.Add(routeLayer);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"繪製路線錯誤: {ex.Message}");
+        }
+    }
+
+    public void DrawAlternativeRoutes(Mapsui.Map map, List<Route> routes)
+    {
+        if (map == null || routes == null || !routes.Any()) return;
+
+        // 清除現有的替代路線
+        var existingAltRoutes = map.Layers.Where(l => l.Name?.StartsWith("AltRoute_") == true).ToList();
+        foreach (var layer in existingAltRoutes)
+        {
+            map.Layers.Remove(layer);
+        }
+
+        // 繪製每條替代路線
+        var colors = new[] { "#9E9E9E", "#757575", "#616161" };
+        for (int i = 0; i < Math.Min(routes.Count, colors.Length); i++)
+        {
+            var route = routes[i];
+            var color = colors[i];
+            
+            try
+            {
+                var coordinates = new List<Coordinate>
+                {
+                    new Coordinate(route.StartLongitude, route.StartLatitude),
+                    new Coordinate(route.EndLongitude, route.EndLatitude)
+                };
+
+                var lineString = new LineString(coordinates.ToArray());
+                var feature = new GeometryFeature(lineString);
+
+                var altRouteStyle = new VectorStyle
+                {
+                    Line = new Pen
+                    {
+                        Color = Mapsui.Styles.Color.FromString(color),
+                        Width = 3,
+                        PenStyle = PenStyle.Dash
+                    }
+                };
+
+                var memoryProvider = new MemoryProvider(feature);
+                var altRouteLayer = new Layer($"AltRoute_{i}")
+                {
+                    DataSource = memoryProvider,
+                    Style = altRouteStyle
+                };
+
+                map.Layers.Add(altRouteLayer);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"繪製替代路線 {i} 錯誤: {ex.Message}");
+            }
+        }
+    }
+
+    public void ClearRoutes(Mapsui.Map map)
+    {
+        if (map == null) return;
+
+        var routeLayers = map.Layers.Where(l => 
+            l.Name == "ActiveRoute" || 
+            l.Name?.StartsWith("AltRoute_") == true ||
+            l.Name == "RouteDirections").ToList();
+
+        foreach (var layer in routeLayers)
+        {
+            map.Layers.Remove(layer);
+        }
+    }
+
+    public void ShowRouteDirectionArrows(Mapsui.Map map, Route route)
+    {
+        // 簡化版本：在路線上顯示方向指示
+        // 完整實作需要計算路線方向並在地圖上放置箭頭圖標
+        System.Diagnostics.Debug.WriteLine("顯示路線方向箭頭功能待實作");
+    }
+
+    public void HighlightActiveRoute(Mapsui.Map map, Route activeRoute)
+    {
+        if (activeRoute != null)
+        {
+            DrawRoute(map, activeRoute, "#2196F3", 6); // 較粗的藍色線
+        }
+    }
+
+    // 用戶位置追蹤功能
+    public void UpdateUserLocation(Mapsui.Map map, double latitude, double longitude, float bearing = 0, double accuracy = 0)
+    {
+        if (map == null) return;
+
+        try
+        {
+            // 移除現有的用戶位置標記
+            var existingUserLocation = map.Layers.FirstOrDefault(l => l.Name == "UserLocation");
+            if (existingUserLocation != null)
+                map.Layers.Remove(existingUserLocation);
+
+            // 創建用戶位置點
+            var position = SphericalMercator.FromLonLat(longitude, latitude);
+            var feature = new PointFeature(new MPoint(position.x, position.y));
+
+            // 設定用戶位置樣式（藍色圓點）
+            var userLocationStyle = new SymbolStyle
+            {
+                SymbolScale = 0.8,
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(255, 33, 150, 243) }, // 藍色
+                Outline = new Pen { Color = Mapsui.Styles.Color.White, Width = 3 }
+            };
+
+            var memoryProvider = new MemoryProvider(feature);
+            var userLocationLayer = new Layer("UserLocation")
+            {
+                DataSource = memoryProvider,
+                Style = userLocationStyle
+            };
+
+            map.Layers.Add(userLocationLayer);
+
+            // 如果有精確度資訊，顯示精確度圓圈
+            if (accuracy > 0)
+            {
+                ShowLocationAccuracyCircle(map, latitude, longitude, accuracy);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"更新用戶位置錯誤: {ex.Message}");
+        }
+    }
+
+    public void EnableLocationFollowMode(MapControl mapControl, bool followUser)
+    {
+        // 這個功能需要在位置更新時自動調整地圖中心
+        // 實作會在位置服務層面處理
+        System.Diagnostics.Debug.WriteLine($"位置跟隨模式: {(followUser ? "啟用" : "停用")}");
+    }
+
+    public void ShowLocationAccuracyCircle(Mapsui.Map map, double latitude, double longitude, double accuracy)
+    {
+        if (map == null || accuracy <= 0) return;
+
+        try
+        {
+            // 移除現有的精確度圓圈
+            var existingAccuracyCircle = map.Layers.FirstOrDefault(l => l.Name == "AccuracyCircle");
+            if (existingAccuracyCircle != null)
+                map.Layers.Remove(existingAccuracyCircle);
+
+            // 創建精確度圓圈（簡化版本）
+            var center = SphericalMercator.FromLonLat(longitude, latitude);
+            var feature = new PointFeature(new MPoint(center.x, center.y));
+
+            var accuracyStyle = new SymbolStyle
+            {
+                SymbolScale = Math.Max(0.1, accuracy / 100), // 根據精確度調整大小
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(50, 33, 150, 243) }, // 半透明藍色
+                Outline = new Pen { Color = Mapsui.Styles.Color.FromArgb(100, 33, 150, 243), Width = 1 }
+            };
+
+            var memoryProvider = new MemoryProvider(feature);
+            var accuracyLayer = new Layer("AccuracyCircle")
+            {
+                DataSource = memoryProvider,
+                Style = accuracyStyle
+            };
+
+            map.Layers.Add(accuracyLayer);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"顯示精確度圓圈錯誤: {ex.Message}");
+        }
+    }
+
+    // 地圖視圖控制
+    public void AnimateToLocation(MapControl mapControl, double latitude, double longitude, int zoomLevel = 15)
+    {
+        if (mapControl?.Map == null) return;
+
+        try
+        {
+            var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(longitude, latitude);
+            var point = new MPoint(sphericalMercatorCoordinate.x, sphericalMercatorCoordinate.y);
+            
+            // 使用動畫移動到指定位置
+            mapControl.Map.Navigator.CenterOn(point);
+            if (zoomLevel > 0 && zoomLevel < mapControl.Map.Navigator.Resolutions.Count)
+            {
+                mapControl.Map.Navigator.ZoomTo(mapControl.Map.Navigator.Resolutions[zoomLevel]);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"動畫移動到位置錯誤: {ex.Message}");
+        }
+    }
+
+    public void AnimateToRoute(MapControl mapControl, Route route, int padding = 50)
+    {
+        if (mapControl?.Map == null || route == null) return;
+
+        try
+        {
+            // 計算路線的邊界框
+            var minLat = Math.Min(route.StartLatitude, route.EndLatitude);
+            var maxLat = Math.Max(route.StartLatitude, route.EndLatitude);
+            var minLng = Math.Min(route.StartLongitude, route.EndLongitude);
+            var maxLng = Math.Max(route.StartLongitude, route.EndLongitude);
+
+            // 轉換為地圖座標
+            var southwest = SphericalMercator.FromLonLat(minLng, minLat);
+            var northeast = SphericalMercator.FromLonLat(maxLng, maxLat);
+
+            // 創建邊界框並縮放到適合的層級
+            var bbox = new MRect(southwest.x, southwest.y, northeast.x, northeast.y);
+            mapControl.Map.Navigator.ZoomToBox(bbox);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"縮放到路線錯誤: {ex.Message}");
+        }
+    }
+
+    public void SetMapBearing(MapControl mapControl, float bearing)
+    {
+        if (mapControl?.Map == null) return;
+
+        try
+        {
+            // 設定地圖旋轉角度
+            mapControl.Map.Navigator.RotateTo(bearing);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"設定地圖方向錯誤: {ex.Message}");
+        }
     }
 }

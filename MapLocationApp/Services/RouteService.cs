@@ -33,15 +33,23 @@ namespace MapLocationApp.Services
         {
             try
             {
-                // 使用 OpenRouteService API (需要註冊 API 金鑰)
-                var profile = routeType switch
+                System.Diagnostics.Debug.WriteLine($"計算路線: ({startLat}, {startLng}) -> ({endLat}, {endLng}), 類型: {routeType}");
+                
+                // 首先嘗試使用真實路線 API
+                var realRoute = await GetRealRouteAsync(startLat, startLng, endLat, endLng, routeType);
+                if (realRoute != null)
                 {
-                    RouteType.Walking => "foot-walking",
-                    RouteType.Cycling => "cycling-regular",
-                    RouteType.Driving => "driving-car",
-                    _ => "driving-car"
-                };
+                    System.Diagnostics.Debug.WriteLine("成功獲取真實路線");
+                    return new RouteResult
+                    {
+                        Success = true,
+                        Route = realRoute,
+                        ErrorMessage = null
+                    };
+                }
 
+                System.Diagnostics.Debug.WriteLine("真實路線獲取失敗，使用後備路線");
+                
                 // 如果無法取得線上路線，使用簡單的直線路線
                 var fallbackRoute = CreateFallbackRoute(startLat, startLng, endLat, endLng, routeType);
                 
@@ -49,11 +57,12 @@ namespace MapLocationApp.Services
                 {
                     Success = true,
                     Route = fallbackRoute,
-                    ErrorMessage = null
+                    ErrorMessage = "使用後備路線規劃"
                 };
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"路線計算錯誤: {ex.Message}");
                 return new RouteResult
                 {
                     Success = false,
@@ -61,6 +70,75 @@ namespace MapLocationApp.Services
                     ErrorMessage = ex.Message
                 };
             }
+        }
+
+        private async Task<Route> GetRealRouteAsync(double startLat, double startLng, double endLat, double endLng, RouteType routeType)
+        {
+            try
+            {
+                // 使用 OpenRouteService API
+                var profile = routeType switch
+                {
+                    RouteType.Walking => "foot-walking",
+                    RouteType.Cycling => "cycling-regular", 
+                    RouteType.Driving => "driving-car",
+                    _ => "driving-car"
+                };
+
+                // 構建 API URL
+                var apiUrl = $"https://api.openrouteservice.org/v2/directions/{profile}?" +
+                           $"api_key=YOUR_API_KEY&" +
+                           $"start={startLng},{startLat}&" +
+                           $"end={endLng},{endLat}&" +
+                           "format=json";
+
+                System.Diagnostics.Debug.WriteLine($"呼叫 OpenRouteService API: {apiUrl}");
+
+                // 暫時模擬 API 呼叫失敗，使用後備路線
+                // 實際部署時需要註冊 OpenRouteService API Key
+                return null;
+
+                /* 實際 API 呼叫程式碼 (需要 API Key)
+                var response = await _httpClient.GetStringAsync(apiUrl);
+                var jsonDoc = JsonDocument.Parse(response);
+                
+                if (jsonDoc.RootElement.TryGetProperty("features", out var features) && 
+                    features.GetArrayLength() > 0)
+                {
+                    var feature = features[0];
+                    var properties = feature.GetProperty("properties");
+                    var geometry = feature.GetProperty("geometry");
+                    
+                    var route = new Route
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        StartLatitude = startLat,
+                        StartLongitude = startLng,
+                        EndLatitude = endLat,
+                        EndLongitude = endLng,
+                        Distance = properties.GetProperty("summary").GetProperty("distance").GetDouble() / 1000.0, // 轉換為公里
+                        EstimatedDuration = TimeSpan.FromSeconds(properties.GetProperty("summary").GetProperty("duration").GetDouble()),
+                        CreatedAt = DateTime.Now,
+                        StartAddress = $"起點 ({startLat:F4}, {startLng:F4})",
+                        EndAddress = $"終點 ({endLat:F4}, {endLng:F4})"
+                    };
+
+                    // 解析路線步驟
+                    if (properties.TryGetProperty("segments", out var segments))
+                    {
+                        route.Steps = ParseRouteSteps(segments, geometry);
+                    }
+
+                    return route;
+                }
+                */
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"真實路線 API 錯誤: {ex.Message}");
+            }
+
+            return null;
         }
 
         public async Task<List<RouteStep>> GetRouteStepsAsync(string routeId)
@@ -248,34 +326,29 @@ namespace MapLocationApp.Services
             var route = new Route
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = $"Route to destination",
                 StartLatitude = startLat,
                 StartLongitude = startLng,
                 EndLatitude = endLat,
                 EndLongitude = endLng,
-                Type = routeType,
-                Distance = distance * 1000, // 轉換為公尺
+                Distance = distance, // 保持公里單位，與現有程式碼一致
                 EstimatedDuration = duration,
-                CreatedDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                StartAddress = $"起點 ({startLat:F4}, {startLng:F4})",
+                EndAddress = $"終點 ({endLat:F4}, {endLng:F4})",
                 Steps = new List<RouteStep>
                 {
                     new RouteStep
                     {
                         Index = 0,
-                        Instruction = "前往目的地",
+                        Instruction = "直行前往目的地",
                         StartLatitude = startLat,
                         StartLongitude = startLng,
                         EndLatitude = endLat,
                         EndLongitude = endLng,
-                        Distance = distance * 1000,
+                        Distance = distance * 1000, // 步驟距離用公尺
                         Duration = duration,
                         Type = StepType.Straight
                     }
-                },
-                Coordinates = new List<RouteCoordinate>
-                {
-                    new RouteCoordinate { Latitude = startLat, Longitude = startLng },
-                    new RouteCoordinate { Latitude = endLat, Longitude = endLng }
                 }
             };
 
@@ -331,85 +404,5 @@ namespace MapLocationApp.Services
 
             return totalDistance;
         }
-    }
-
-    // 資料模型
-    public class RouteResult
-    {
-        public bool Success { get; set; }
-        public Route Route { get; set; }
-        public string ErrorMessage { get; set; }
-    }
-
-    public class Route
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public double StartLatitude { get; set; }
-        public double StartLongitude { get; set; }
-        public double EndLatitude { get; set; }
-        public double EndLongitude { get; set; }
-        public string? StartAddress { get; set; } // 新增：起點地址
-        public string? EndAddress { get; set; } // 新增：終點地址
-        public RouteType Type { get; set; }
-        public double Distance { get; set; } // 公尺
-        public double DistanceInMeters => Distance; // 方便存取的屬性
-        public TimeSpan EstimatedDuration { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public List<RouteStep> Steps { get; set; } = new();
-        public List<RouteCoordinate> Coordinates { get; set; } = new();
-        
-        // Google Maps 風格的顯示屬性
-        public string FromAddress => StartAddress ?? $"{StartLatitude:F6}, {StartLongitude:F6}";
-        public string ToAddress => EndAddress ?? $"{EndLatitude:F6}, {EndLongitude:F6}";
-        public string Duration => EstimatedDuration.TotalHours >= 1 
-            ? $"{EstimatedDuration.Hours}小時{EstimatedDuration.Minutes}分鐘"
-            : $"{EstimatedDuration.Minutes}分鐘";
-    }
-
-    public class RouteStep
-    {
-        public int Index { get; set; }
-        public string Instruction { get; set; }
-        public double StartLatitude { get; set; }
-        public double StartLongitude { get; set; }
-        public double EndLatitude { get; set; }
-        public double EndLongitude { get; set; }
-        public double Distance { get; set; } // 公尺
-        public TimeSpan Duration { get; set; }
-        public StepType Type { get; set; }
-    }
-
-    public class RouteCoordinate
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-    }
-
-    public class NavigationUpdate
-    {
-        public string SessionId { get; set; }
-        public bool IsNavigationComplete { get; set; }
-        public RouteStep CurrentStep { get; set; }
-        public double DistanceToNextTurn { get; set; } // 公尺
-        public TimeSpan EstimatedTimeToDestination { get; set; }
-        public double RemainingDistance { get; set; } // 公尺
-    }
-
-    public enum RouteType
-    {
-        Driving,
-        Walking,
-        Cycling
-    }
-
-    public enum StepType
-    {
-        Straight,
-        TurnLeft,
-        TurnRight,
-        UTurn,
-        RoundaboutEnter,
-        RoundaboutExit
     }
 }
