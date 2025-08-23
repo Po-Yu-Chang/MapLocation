@@ -26,10 +26,15 @@ namespace MapLocationApp.Services
         private const int CONSECUTIVE_DEVIATIONS_REQUIRED = 3;
         private const int NAVIGATION_UPDATE_INTERVAL = 2000; // 毫秒
         private const double INSTRUCTION_DISTANCE_THRESHOLD = 500.0; // 公尺
+        private const double NEXT_INSTRUCTION_THRESHOLD = 200.0; // 公尺
+        private const double APPROACH_INSTRUCTION_THRESHOLD = 100.0; // 公尺
         
         private int _consecutiveDeviations = 0;
         private NavigationInstruction _lastSpokenInstruction;
         private DateTime _lastInstructionTime = DateTime.MinValue;
+        private int _currentStepIndex = 0;
+        private double _totalRouteDistance = 0;
+        private double _distanceTraveled = 0;
 
         public NavigationState CurrentState => _currentState ?? new NavigationState();
         public bool IsNavigating => _currentState?.IsActive == true;
@@ -81,6 +86,11 @@ namespace MapLocationApp.Services
                     DistanceRemaining = route.Distance * 1000, // 轉換為公尺
                     RouteProgress = 0.0
                 };
+                
+                // 重置導航變數
+                _currentStepIndex = 0;
+                _totalRouteDistance = route.Distance * 1000;
+                _distanceTraveled = 0;
 
                 // 取得目前位置
                 var currentLocation = await _locationService.GetCurrentLocationAsync();
@@ -332,22 +342,40 @@ namespace MapLocationApp.Services
                 if (_currentState?.CurrentRoute == null || currentLocation == null)
                     return null;
 
-                // 簡化版本：生成基本的導航指令
+                var route = _currentState.CurrentRoute;
+                
+                // 檢查是否到達目的地
                 var distanceToDestination = CalculateDistance(
                     currentLocation.Latitude, currentLocation.Longitude,
-                    _currentState.CurrentRoute.EndLatitude, _currentState.CurrentRoute.EndLongitude);
+                    route.EndLatitude, route.EndLongitude);
 
                 if (distanceToDestination <= ARRIVAL_THRESHOLD)
                 {
                     return NavigationInstructions.CreateInstruction(NavigationType.Arrive, 0);
                 }
-                else if (distanceToDestination <= 500)
+
+                // 如果路線有步驟，使用真實的導航指令
+                if (route.Steps != null && route.Steps.Any())
                 {
-                    return NavigationInstructions.CreateInstruction(NavigationType.Continue, distanceToDestination);
+                    return GetInstructionFromRouteSteps(currentLocation, route);
                 }
                 else
                 {
-                    return NavigationInstructions.CreateInstruction(NavigationType.Continue, distanceToDestination);
+                    // 回退到簡單的直線導航
+                    var bearing = CalculateBearing(
+                        currentLocation.Latitude, currentLocation.Longitude,
+                        route.EndLatitude, route.EndLongitude);
+                        
+                    var direction = GetDirectionFromBearing(bearing);
+                    var instruction = $"朝{direction}方向行駛 {FormatDistance(distanceToDestination)}";
+                    
+                    return new NavigationInstruction
+                    {
+                        Text = instruction,
+                        Type = NavigationType.Continue,
+                        DistanceInMeters = distanceToDestination,
+                        Direction = direction
+                    };
                 }
             }
             catch (Exception ex)
@@ -355,6 +383,240 @@ namespace MapLocationApp.Services
                 Debug.WriteLine($"取得導航指令錯誤: {ex.Message}");
                 return null;
             }
+        }
+        
+        private NavigationInstruction GetInstructionFromRouteSteps(AppLocation currentLocation, Route route)
+        {
+            try
+            {
+                var steps = route.Steps.ToList();
+                
+                // 找到當前最接近的路線步驟
+                var currentStep = FindCurrentStep(currentLocation, steps);
+                if (currentStep == null)
+                {
+                    // 如果找不到當前步驟，使用最後一個步驟
+                    currentStep = steps.Last();
+                }
+                
+                var stepIndex = steps.IndexOf(currentStep);
+                _currentStepIndex = stepIndex;
+                
+                // 計算到當前步驟終點的距離
+                var distanceToStepEnd = CalculateDistance(
+                    currentLocation.Latitude, currentLocation.Longitude,
+                    currentStep.EndLatitude, currentStep.EndLongitude);
+                    
+                // 更新行程進度
+                UpdateRouteProgress(currentLocation, route);
+                
+                // 檢查是否接近轉彎點
+                if (distanceToStepEnd <= APPROACH_INSTRUCTION_THRESHOLD && stepIndex < steps.Count - 1)
+                {
+                    var nextStep = steps[stepIndex + 1];
+                    var turnDirection = CalculateTurnDirection(currentStep, nextStep);
+                    
+                    return new NavigationInstruction
+                    {
+                        Text = $"在 {FormatDistance(distanceToStepEnd)} 後{GetTurnInstruction(turnDirection)}",
+                        Type = GetNavigationTypeFromTurn(turnDirection),
+                        DistanceInMeters = distanceToStepEnd,
+                        Direction = GetDirectionFromBearing(nextStep.Bearing)
+                    };
+                }
+                else if (distanceToStepEnd <= NEXT_INSTRUCTION_THRESHOLD && stepIndex < steps.Count - 1)
+                {
+                    var nextStep = steps[stepIndex + 1];
+                    var turnDirection = CalculateTurnDirection(currentStep, nextStep);
+                    
+                    return new NavigationInstruction
+                    {
+                        Text = $"準備{GetTurnInstruction(turnDirection)}，距離 {FormatDistance(distanceToStepEnd)}",
+                        Type = GetNavigationTypeFromTurn(turnDirection),
+                        DistanceInMeters = distanceToStepEnd,
+                        Direction = GetDirectionFromBearing(nextStep.Bearing)
+                    };
+                }
+                else
+                {
+                    // 繼續直行指令
+                    var direction = GetDirectionFromBearing(currentStep.Bearing);
+                    return new NavigationInstruction
+                    {
+                        Text = $"繼續朝{direction}方向行駛 {FormatDistance(distanceToStepEnd)}",
+                        Type = NavigationType.Continue,
+                        DistanceInMeters = distanceToStepEnd,
+                        Direction = direction
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"從路線步驟取得指令錯誤: {ex.Message}");
+                return null;
+            }
+        }
+        
+        private RouteStep FindCurrentStep(AppLocation currentLocation, List<RouteStep> steps)
+        {
+            RouteStep closestStep = null;
+            double minDistance = double.MaxValue;
+            
+            foreach (var step in steps)
+            {
+                var distanceToStart = CalculateDistance(
+                    currentLocation.Latitude, currentLocation.Longitude,
+                    step.StartLatitude, step.StartLongitude);
+                    
+                var distanceToEnd = CalculateDistance(
+                    currentLocation.Latitude, currentLocation.Longitude,
+                    step.EndLatitude, step.EndLongitude);
+                    
+                var minStepDistance = Math.Min(distanceToStart, distanceToEnd);
+                
+                if (minStepDistance < minDistance)
+                {
+                    minDistance = minStepDistance;
+                    closestStep = step;
+                }
+            }
+            
+            return closestStep;
+        }
+        
+        private void UpdateRouteProgress(AppLocation currentLocation, Route route)
+        {
+            if (route.Steps?.Any() != true || _currentStepIndex < 0)
+                return;
+                
+            try
+            {
+                var steps = route.Steps.ToList();
+                double progressDistance = 0;
+                
+                // 計算已完成步驟的距離
+                for (int i = 0; i < _currentStepIndex && i < steps.Count; i++)
+                {
+                    progressDistance += steps[i].DistanceInMeters;
+                }
+                
+                // 加上當前步驟中已行駛的距離
+                if (_currentStepIndex < steps.Count)
+                {
+                    var currentStep = steps[_currentStepIndex];
+                    var stepStartDistance = CalculateDistance(
+                        currentLocation.Latitude, currentLocation.Longitude,
+                        currentStep.StartLatitude, currentStep.StartLongitude);
+                    var stepTotalDistance = currentStep.DistanceInMeters;
+                    var stepProgress = Math.Max(0, stepTotalDistance - stepStartDistance);
+                    progressDistance += Math.Min(stepProgress, stepTotalDistance);
+                }
+                
+                _distanceTraveled = progressDistance;
+                
+                // 更新導航狀態
+                if (_totalRouteDistance > 0)
+                {
+                    _currentState.RouteProgress = Math.Min(1.0, _distanceTraveled / _totalRouteDistance);
+                    _currentState.DistanceRemaining = Math.Max(0, _totalRouteDistance - _distanceTraveled);
+                    
+                    // 更新預估剩餘時間
+                    var avgSpeed = 50.0; // km/h 預設平均速度
+                    var remainingHours = (_currentState.DistanceRemaining / 1000.0) / avgSpeed;
+                    _currentState.EstimatedTimeRemaining = TimeSpan.FromHours(remainingHours);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"更新路線進度錯誤: {ex.Message}");
+            }
+        }
+        
+        private string CalculateTurnDirection(RouteStep currentStep, RouteStep nextStep)
+        {
+            var bearingDiff = nextStep.Bearing - currentStep.Bearing;
+            
+            // 正規化角度差異到 -180 到 180 度
+            while (bearingDiff > 180) bearingDiff -= 360;
+            while (bearingDiff < -180) bearingDiff += 360;
+            
+            if (Math.Abs(bearingDiff) < 15)
+                return "直行";
+            else if (bearingDiff > 15 && bearingDiff < 75)
+                return "右轉";
+            else if (bearingDiff >= 75 && bearingDiff <= 105)
+                return "右轉";
+            else if (bearingDiff > 105)
+                return "迴轉";
+            else if (bearingDiff < -15 && bearingDiff > -75)
+                return "左轉";
+            else if (bearingDiff <= -75 && bearingDiff >= -105)
+                return "左轉";
+            else
+                return "迴轉";
+        }
+        
+        private string GetTurnInstruction(string turnDirection)
+        {
+            return turnDirection switch
+            {
+                "左轉" => "左轉",
+                "右轉" => "右轉", 
+                "迴轉" => "迴轉",
+                "直行" => "繼續直行",
+                _ => "繼續行駛"
+            };
+        }
+        
+        private NavigationType GetNavigationTypeFromTurn(string turnDirection)
+        {
+            return turnDirection switch
+            {
+                "左轉" => NavigationType.TurnLeft,
+                "右轉" => NavigationType.TurnRight,
+                "迴轉" => NavigationType.UTurn,
+                "直行" => NavigationType.Continue,
+                _ => NavigationType.Continue
+            };
+        }
+        
+        private double CalculateBearing(double startLat, double startLng, double endLat, double endLng)
+        {
+            var startLatRad = ToRadians(startLat);
+            var startLngRad = ToRadians(startLng);
+            var endLatRad = ToRadians(endLat);
+            var endLngRad = ToRadians(endLng);
+            
+            var dLng = endLngRad - startLngRad;
+            
+            var y = Math.Sin(dLng) * Math.Cos(endLatRad);
+            var x = Math.Cos(startLatRad) * Math.Sin(endLatRad) -
+                    Math.Sin(startLatRad) * Math.Cos(endLatRad) * Math.Cos(dLng);
+            
+            var bearingRad = Math.Atan2(y, x);
+            var bearingDeg = ToDegrees(bearingRad);
+            
+            return (bearingDeg + 360) % 360;
+        }
+        
+        private double ToDegrees(double radians)
+        {
+            return radians * 180.0 / Math.PI;
+        }
+        
+        private string GetDirectionFromBearing(double bearing)
+        {
+            var directions = new[] { "北", "東北", "東", "東南", "南", "西南", "西", "西北" };
+            var index = (int)Math.Round(bearing / 45.0) % 8;
+            return directions[index];
+        }
+        
+        private string FormatDistance(double meters)
+        {
+            if (meters < 1000)
+                return $"{Math.Round(meters)}公尺";
+            else
+                return $"{Math.Round(meters / 1000.0, 1)}公里";
         }
 
         public async Task<bool> CheckArrivalAsync(AppLocation currentLocation)
@@ -496,11 +758,97 @@ namespace MapLocationApp.Services
 
         private double CalculateDistanceToRoute(AppLocation location, Route route)
         {
-            // 簡化版本：計算到目的地的距離作為路線距離
-            // 實際實作應該計算到路線路徑的最短距離
-            return CalculateDistance(
-                location.Latitude, location.Longitude,
-                route.EndLatitude, route.EndLongitude);
+            try
+            {
+                if (route.Steps == null || !route.Steps.Any())
+                {
+                    // 如果沒有步驟，計算到直線路徑的距離
+                    return CalculateDistanceToLine(
+                        location.Latitude, location.Longitude,
+                        route.StartLatitude, route.StartLongitude,
+                        route.EndLatitude, route.EndLongitude);
+                }
+                
+                // 計算到所有路線段的最短距離
+                double minDistance = double.MaxValue;
+                
+                foreach (var step in route.Steps)
+                {
+                    var distanceToStep = CalculateDistanceToLine(
+                        location.Latitude, location.Longitude,
+                        step.StartLatitude, step.StartLongitude,
+                        step.EndLatitude, step.EndLongitude);
+                        
+                    minDistance = Math.Min(minDistance, distanceToStep);
+                }
+                
+                return minDistance;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"計算到路線距離錯誤: {ex.Message}");
+                // 回退到簡單計算
+                return CalculateDistance(
+                    location.Latitude, location.Longitude,
+                    route.EndLatitude, route.EndLongitude);
+            }
+        }
+        
+        private double CalculateDistanceToLine(double pointLat, double pointLon, 
+                                               double line1Lat, double line1Lon, 
+                                               double line2Lat, double line2Lon)
+        {
+            // 使用點到線段的最短距離公式
+            const double R = 6371000; // 地球半徑（公尺）
+            
+            // 轉換為弧度
+            var lat1 = ToRadians(pointLat);
+            var lon1 = ToRadians(pointLon);
+            var lat2 = ToRadians(line1Lat);
+            var lon2 = ToRadians(line1Lon);
+            var lat3 = ToRadians(line2Lat);
+            var lon3 = ToRadians(line2Lon);
+            
+            // 計算線段兩端點到測試點的距離
+            var d13 = Math.Acos(Math.Sin(lat1) * Math.Sin(lat2) + 
+                               Math.Cos(lat1) * Math.Cos(lat2) * Math.Cos(lon2 - lon1));
+            var d23 = Math.Acos(Math.Sin(lat1) * Math.Sin(lat3) + 
+                               Math.Cos(lat1) * Math.Cos(lat3) * Math.Cos(lon3 - lon1));
+            var d12 = Math.Acos(Math.Sin(lat2) * Math.Sin(lat3) + 
+                               Math.Cos(lat2) * Math.Cos(lat3) * Math.Cos(lon3 - lon2));
+            
+            // 如果線段長度為零，返回點到點的距離
+            if (d12 < 1e-6)
+            {
+                return R * d13;
+            }
+            
+            // 計算投影點
+            var A = Math.Sin(d13) * Math.Sin(d13) - Math.Sin(d23) * Math.Sin(d23) + Math.Sin(d12) * Math.Sin(d12);
+            var B = 2 * Math.Sin(d12) * Math.Sin(d12);
+            
+            if (Math.Abs(B) < 1e-6)
+            {
+                return R * Math.Min(d13, d23);
+            }
+            
+            var x = (A / B);
+            
+            // 檢查投影點是否在線段上
+            if (x < 0)
+            {
+                return R * d13; // 最近點是線段起點
+            }
+            else if (x > 1)
+            {
+                return R * d23; // 最近點是線段終點
+            }
+            else
+            {
+                // 計算到投影點的距離
+                var dxt = Math.Asin(Math.Sqrt(Math.Sin(d13) * Math.Sin(d13) - x * x * Math.Sin(d12) * Math.Sin(d12)));
+                return R * Math.Abs(dxt);
+            }
         }
 
         public void Dispose()

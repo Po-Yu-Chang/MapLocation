@@ -108,23 +108,73 @@ public class MapService : IMapService
 
     public void AddLocationMarker(Mapsui.Map map, double latitude, double longitude, string? label = null)
     {
-        // 移除現有的位置標記層
-        var existingLayer = map.Layers.FirstOrDefault(l => l.Name == "LocationMarker");
+        try
+        {
+            // 移除現有的位置標記層
+            var existingLayer = map.Layers.FirstOrDefault(l => l.Name == "LocationMarker");
+            if (existingLayer != null)
+                map.Layers.Remove(existingLayer);
+
+            // 使用 NetTopologySuite 創建點幾何
+            var position = SphericalMercator.FromLonLat(longitude, latitude);
+            var point = new NetTopologySuite.Geometries.Point(position.x, position.y);
+            var feature = new GeometryFeature(point);
+            
+            // 添加屬性
+            if (!string.IsNullOrEmpty(label))
+            {
+                feature["Label"] = label;
+            }
+
+            var memoryProvider = new MemoryProvider(feature);
+            var markerLayer = new Layer("LocationMarker")
+            {
+                DataSource = memoryProvider,
+                Style = new SymbolStyle
+                {
+                    SymbolScale = 0.8,
+                    Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.Red },
+                    Outline = new Pen { Color = Mapsui.Styles.Color.White, Width = 2 }
+                }
+            };
+
+            map.Layers.Add(markerLayer);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"添加位置標記錯誤: {ex.Message}");
+            
+            // 使用簡化的標記方法作為備用
+            try
+            {
+                AddSimpleLocationMarker(map, latitude, longitude, label);
+            }
+            catch (Exception fallbackEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"備用標記方法也失敗: {fallbackEx.Message}");
+            }
+        }
+    }
+    
+    private void AddSimpleLocationMarker(Mapsui.Map map, double latitude, double longitude, string? label = null)
+    {
+        // 簡化版本：只添加一個最基本的標記層
+        var existingLayer = map.Layers.FirstOrDefault(l => l.Name == "SimpleLocationMarker");
         if (existingLayer != null)
             map.Layers.Remove(existingLayer);
-
+            
         var position = SphericalMercator.FromLonLat(longitude, latitude);
-        var feature = new PointFeature(new MPoint(position.x, position.y));
-
+        var point = new NetTopologySuite.Geometries.Point(position.x, position.y);
+        var feature = new GeometryFeature(point);
+        
         var memoryProvider = new MemoryProvider(feature);
-        var markerLayer = new Layer("LocationMarker")
+        var markerLayer = new Layer("SimpleLocationMarker")
         {
             DataSource = memoryProvider,
             Style = new SymbolStyle
             {
-                SymbolScale = 0.8,
-                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.Red },
-                Outline = new Pen { Color = Mapsui.Styles.Color.White, Width = 2 }
+                SymbolScale = 1.0,
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.Blue }
             }
         };
 
@@ -155,17 +205,38 @@ public class MapService : IMapService
             if (existingRouteLayer != null)
                 map.Layers.Remove(existingRouteLayer);
 
-            // 創建路線點集合
+            // 創建路線點集合 - 使用更詳細的路線步驟
             var coordinates = new List<Coordinate>();
             
             // 起點
             coordinates.Add(new Coordinate(route.StartLongitude, route.StartLatitude));
             
-            // 如果有路線步驟，加入中間點
+            // 如果有路線步驟，加入所有步驟點創建更平滑的路線
             if (route.Steps != null && route.Steps.Any())
             {
                 foreach (var step in route.Steps)
                 {
+                    // 如果步驟有起點和終點，可以創建更詳細的路線
+                    if (Math.Abs(step.StartLatitude - step.EndLatitude) > 0.001 || 
+                        Math.Abs(step.StartLongitude - step.EndLongitude) > 0.001)
+                    {
+                        // 在長距離步驟中插入中間點使路線更平滑
+                        var stepDistance = CalculateStepDistance(step.StartLatitude, step.StartLongitude, 
+                                                               step.EndLatitude, step.EndLongitude);
+                        if (stepDistance > 0.01) // 如果步驟超過1公里，插入中間點
+                        {
+                            int intermediatePoints = Math.Min(3, (int)(stepDistance * 10)); // 每0.1km一個點，最多3個
+                            for (int i = 1; i <= intermediatePoints; i++)
+                            {
+                                double ratio = (double)i / (intermediatePoints + 1);
+                                var intermediateLat = step.StartLatitude + (step.EndLatitude - step.StartLatitude) * ratio;
+                                var intermediateLng = step.StartLongitude + (step.EndLongitude - step.StartLongitude) * ratio;
+                                coordinates.Add(new Coordinate(intermediateLng, intermediateLat));
+                            }
+                        }
+                    }
+                    
+                    // 添加步驟終點
                     coordinates.Add(new Coordinate(step.EndLongitude, step.EndLatitude));
                 }
             }
@@ -440,6 +511,52 @@ public class MapService : IMapService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"設定地圖方向錯誤: {ex.Message}");
+        }
+    }
+
+    private double CalculateStepDistance(double lat1, double lng1, double lat2, double lng2)
+    {
+        const double earthRadius = 6371; // 地球半徑（公里）
+        
+        var lat1Rad = lat1 * Math.PI / 180;
+        var lat2Rad = lat2 * Math.PI / 180;
+        var deltaLatRad = (lat2 - lat1) * Math.PI / 180;
+        var deltaLngRad = (lng2 - lng1) * Math.PI / 180;
+
+        var a = Math.Sin(deltaLatRad / 2) * Math.Sin(deltaLatRad / 2) +
+                Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
+                Math.Sin(deltaLngRad / 2) * Math.Sin(deltaLngRad / 2);
+        
+        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        
+        return earthRadius * c;
+    }
+    
+    public (double latitude, double longitude)? ScreenToWorldCoordinates(MapControl mapControl, double screenX, double screenY)
+    {
+        try
+        {
+            if (mapControl?.Map == null) return null;
+            
+            // 使用 MapControl 提供的座標轉換方法
+            var viewport = mapControl.Map.Navigator.Viewport;
+            var centerX = viewport.CenterX;
+            var centerY = viewport.CenterY;
+            var resolution = viewport.Resolution;
+            
+            // 計算世界座標
+            var worldX = centerX + (screenX - viewport.Width / 2.0) * resolution;
+            var worldY = centerY - (screenY - viewport.Height / 2.0) * resolution;
+            
+            // 轉換為地理座標 (WGS84)
+            var lonLat = Mapsui.Projections.SphericalMercator.ToLonLat(worldX, worldY);
+            
+            return (lonLat.lat, lonLat.lon);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"座標轉換錯誤: {ex.Message}");
+            return null;
         }
     }
 }

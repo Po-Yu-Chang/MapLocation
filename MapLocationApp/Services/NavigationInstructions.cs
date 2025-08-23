@@ -37,6 +37,7 @@ namespace MapLocationApp.Services
         public double DistanceInMeters { get; set; }
         public string StreetName { get; set; }
         public int ExitNumber { get; set; } // 圓環出口編號
+        public string Direction { get; set; } // 方向（北、東南等）
     }
 
     /// <summary>

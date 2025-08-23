@@ -15,6 +15,7 @@ namespace MapLocationApp.Models
         private double _distance;
         private TimeSpan _duration;
         private StepType _type;
+        private double _bearing;
 
         public int Index
         {
@@ -69,6 +70,15 @@ namespace MapLocationApp.Models
             get => _type;
             set => SetProperty(ref _type, value);
         }
+        
+        public double Bearing
+        {
+            get => _bearing;
+            set => SetProperty(ref _bearing, value);
+        }
+        
+        // 為了相容性，提供 DistanceInMeters 屬性
+        public double DistanceInMeters => Distance;
 
         public string FormattedDistance => Distance < 1000 
             ? $"{Distance:F0} 公尺" 
@@ -98,6 +108,7 @@ namespace MapLocationApp.Models
 
     public enum StepType
     {
+        Start,
         Straight,
         TurnLeft,
         TurnRight,
@@ -105,6 +116,7 @@ namespace MapLocationApp.Models
         RoundaboutEnter,
         RoundaboutExit,
         Merge,
-        Exit
+        Exit,
+        Arrive
     }
 }

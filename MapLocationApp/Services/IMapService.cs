@@ -30,4 +30,7 @@ public interface IMapService
     void AnimateToLocation(MapControl mapControl, double latitude, double longitude, int zoomLevel = 15);
     void AnimateToRoute(MapControl mapControl, Route route, int padding = 50);
     void SetMapBearing(MapControl mapControl, float bearing);
+    
+    // 新增座標轉換功能
+    (double latitude, double longitude)? ScreenToWorldCoordinates(MapControl mapControl, double screenX, double screenY);
 }
