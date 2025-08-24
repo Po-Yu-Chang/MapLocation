@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.LoginPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="登入"
+             Shell.NavBarIsVisible="False"
+             Style="{StaticResource DarkPageStyle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="*,Auto,*" Padding="40,60,40,40">
+            
+            <!-- Logo 和標題區域 -->
+            <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Spacing="30">
+                
+                <!-- Logo -->
+                <Frame BackgroundColor="{StaticResource DarkSecondaryColor}"
+                       BorderColor="{StaticResource InfoColor}"
+                       CornerRadius="60"
+                       HeightRequest="120"
+                       WidthRequest="120"
+                       HorizontalOptions="Center"
+                       HasShadow="True"
+                       Padding="0">
+                    <Label Text="📍"
+                           FontSize="60"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Frame>
+
+                <!-- 標題 -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="MapLocation"
+                           Style="{StaticResource TitleLabelStyle}"
+                           FontSize="32"/>
+                    <Label Text="智慧位置管理系統"
+                           Style="{StaticResource SmallLabelStyle}"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                
+            </VerticalStackLayout>
+
+            <!-- 登入表單 -->
+            <Frame Grid.Row="1" 
+                   Style="{StaticResource CardFrameStyle}"
+                   Margin="0,20">
+                
+                <VerticalStackLayout Spacing="25">
+                    
+                    <!-- 歡迎文字 -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="歡迎回來"
+                               Style="{StaticResource TitleLabelStyle}"
+                               FontSize="24"/>
+                        <Label Text="請登入您的帳號以繼續使用"
+                               Style="{StaticResource SmallLabelStyle}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- 輸入欄位 -->
+                    <VerticalStackLayout Spacing="20">
+                        
+                        <!-- 使用者名稱 -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="使用者名稱"
+                                   Style="{StaticResource LabelStyle}"
+                                   FontAttributes="Bold"/>
+                            <Entry x:Name="UsernameEntry"
+                                   Placeholder="請輸入使用者名稱"
+                                   Style="{StaticResource DarkEntryStyle}"/>
+                        </VerticalStackLayout>
+
+                        <!-- 密碼 -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="密碼"
+                                   Style="{StaticResource LabelStyle}"
+                                   FontAttributes="Bold"/>
+                            <Entry x:Name="PasswordEntry"
+                                   Placeholder="請輸入密碼"
+                                   IsPassword="True"
+                                   Style="{StaticResource DarkEntryStyle}"/>
+                        </VerticalStackLayout>
+
+                        <!-- 記住我 -->
+                        <HorizontalStackLayout Spacing="12">
+                            <CheckBox x:Name="RememberMeCheckbox"
+                                      Style="{StaticResource DarkCheckBoxStyle}"/>
+                            <Label Text="記住我"
+                                   Style="{StaticResource LabelStyle}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        
+                    </VerticalStackLayout>
+
+                    <!-- 登入按鈕 -->
+                    <Button x:Name="LoginButton"
+                            Text="登入"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Clicked="OnLoginClicked"/>
+
+                    <!-- 忘記密碼連結 -->
+                    <Label Text="忘記密碼？"
+                           Style="{StaticResource LabelStyle}"
+                           TextColor="{StaticResource InfoColor}"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,10,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- 底部資訊 -->
+            <VerticalStackLayout Grid.Row="2" VerticalOptions="End" Spacing="15">
+                
+                <!-- 註冊連結 -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                    <Label Text="還沒有帳號？"
+                           Style="{StaticResource GrayTextColor}"
+                           FontSize="14"/>
+                    <Label Text="立即註冊"
+                           Style="{StaticResource LabelStyle}"
+                           FontSize="14"
+                           FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRegisterTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+                <!-- 版本資訊 -->
+                <Label Text="版本 1.0.0"
+                       Style="{StaticResource SmallLabelStyle}"
+                       HorizontalTextAlignment="Center"/>
+                
+            </VerticalStackLayout>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

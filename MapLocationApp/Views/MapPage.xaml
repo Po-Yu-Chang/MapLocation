@@ -4,7 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              Title="🗺️ 地圖導航"
-             Background="{StaticResource BackgroundGradient}">
+             Style="{StaticResource DarkPageStyle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+    </ContentPage.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -34,8 +38,8 @@
                             WidthRequest="48"
                             HeightRequest="48"
                             CornerRadius="24"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="White"
+                            BackgroundColor="{StaticResource InfoColor}"
+                            TextColor="{StaticResource WhiteTextColor}"
                             Clicked="OnLocationButtonClicked" />
                     
                     <Button x:Name="ZoomInButton"
@@ -44,8 +48,8 @@
                             WidthRequest="48"
                             HeightRequest="48"
                             CornerRadius="24"
-                            BackgroundColor="{StaticResource CardBackground}"
-                            TextColor="{StaticResource Primary}"
+                            BackgroundColor="{StaticResource DarkSecondaryColor}"
+                            TextColor="{StaticResource WhiteTextColor}"
                             Clicked="OnZoomInClicked" />
                     
                     <Button x:Name="ZoomOutButton"
@@ -54,15 +58,15 @@
                             WidthRequest="48"
                             HeightRequest="48"
                             CornerRadius="24"
-                            BackgroundColor="{StaticResource CardBackground}"
-                            TextColor="{StaticResource Primary}"
+                            BackgroundColor="{StaticResource DarkSecondaryColor}"
+                            TextColor="{StaticResource WhiteTextColor}"
                             Clicked="OnZoomOutClicked" />
                 </VerticalStackLayout>
 
                 <!-- Attribution 標籤 -->
                 <Border HorizontalOptions="End"
                         VerticalOptions="End"
-                        BackgroundColor="{StaticResource CardBackground}"
+                        BackgroundColor="{StaticResource DarkSecondaryColor}"
                         StrokeShape="RoundRectangle 8"
                         Stroke="Transparent"
                         Padding="8"
@@ -71,13 +75,13 @@
                     <Label x:Name="AttributionLabel"
                            Text="© OpenStreetMap contributors"
                            FontSize="10"
-                           TextColor="{StaticResource Gray600}" />
+                           TextColor="{StaticResource GrayTextColor}" />
                 </Border>
 
                 <!-- 狀態指示器 -->
                 <Border HorizontalOptions="Start"
                         VerticalOptions="Start"
-                        BackgroundColor="{StaticResource CardBackground}"
+                        BackgroundColor="{StaticResource DarkSecondaryColor}"
                         StrokeShape="RoundRectangle 8"
                         Stroke="Transparent"
                         Padding="12"
@@ -86,15 +90,15 @@
                            Text="🔄 準備就緒"
                            FontSize="12"
                            FontAttributes="Bold"
-                           TextColor="{StaticResource Primary}" />
+                           TextColor="{StaticResource InfoColor}" />
                 </Border>
             </Grid>
         </Border>
 
         <!-- 底部控制面板 -->
-        <Border Grid.Row="1" 
-                Style="{StaticResource ModernCard}" 
-                Margin="16,8,16,16">
+        <Frame Grid.Row="1" 
+               Style="{StaticResource CardFrameStyle}" 
+               Margin="16,8,16,16">
             <VerticalStackLayout Spacing="16">
                 
                 <!-- 位置資訊 -->
@@ -102,36 +106,38 @@
                     <Label Grid.Row="0" Grid.Column="0" Text="📍" FontSize="16"/>
                     <Label Grid.Row="0" Grid.Column="1" x:Name="LocationLabel" 
                            Text="位置: 準備獲取..." 
-                           Style="{StaticResource BodyText}"/>
+                           Style="{StaticResource LabelStyle}"/>
                     
                     <Label Grid.Row="1" Grid.Column="0" Text="🎯" FontSize="16"/>
                     <Label Grid.Row="1" Grid.Column="1" x:Name="AccuracyLabel"
                            Text="精確度: 未知"
-                           Style="{StaticResource CaptionText}"/>
+                           Style="{StaticResource SmallLabelStyle}"/>
                 </Grid>
 
                 <!-- 控制按鈕群組 -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
                     <Button Grid.Column="0"
                             Text="🎯 定位"
-                            Style="{StaticResource PrimaryButton}"
+                            Style="{StaticResource PrimaryButtonStyle}"
                             Clicked="OnLocationButtonClicked" />
                     
                     <Picker Grid.Column="1"
                             x:Name="TileProviderPicker"
                             Title="🗺️ 地圖類型"
-                            Style="{StaticResource ModernPicker}"
+                            BackgroundColor="{StaticResource DarkSecondaryColor}"
+                            TextColor="{StaticResource WhiteTextColor}"
+                            TitleColor="{StaticResource GrayTextColor}"
                             SelectedIndexChanged="OnTileProviderChanged" />
                     
                     <Button Grid.Column="2"
                             x:Name="GeofenceButton"
                             Text="🔍 圍欄"
-                            Style="{StaticResource SecondaryButton}"
+                            Style="{StaticResource SecondaryButtonStyle}"
                             Clicked="OnGeofenceButtonClicked" />
                 </Grid>
 
             </VerticalStackLayout>
-        </Border>
+        </Frame>
 
     </Grid>
 

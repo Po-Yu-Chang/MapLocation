@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- 深色主題顏色定義 -->
+    <Color x:Key="DarkPrimaryColor">#1A1A1A</Color>
+    <Color x:Key="DarkSecondaryColor">#2D2D2D</Color>
+    <Color x:Key="DarkAccentColor">#404040</Color>
+    <Color x:Key="DarkSurfaceColor">#252525</Color>
+    <Color x:Key="DarkCardColor">#2A2A2A</Color>
+    
+    <!-- 文字顏色 -->
+    <Color x:Key="WhiteTextColor">#FFFFFF</Color>
+    <Color x:Key="LightGrayTextColor">#E0E0E0</Color>
+    <Color x:Key="GrayTextColor">#B0B0B0</Color>
+    
+    <!-- 強調顏色 -->
+    <Color x:Key="SuccessColor">#4CAF50</Color>
+    <Color x:Key="WarningColor">#FF9800</Color>
+    <Color x:Key="ErrorColor">#F44336</Color>
+    <Color x:Key="InfoColor">#2196F3</Color>
+    
+    <!-- 頁面背景樣式 -->
+    <Style x:Key="DarkPageStyle" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkPrimaryColor}" />
+    </Style>
+    
+    <!-- 標題文字樣式 -->
+    <Style x:Key="TitleLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Margin" Value="0,20,0,30" />
+    </Style>
+    
+    <!-- 一般標籤樣式 -->
+    <Style x:Key="LabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource LightGrayTextColor}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    
+    <!-- 小標籤樣式 -->
+    <Style x:Key="SmallLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource GrayTextColor}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    
+    <!-- 輸入框樣式 -->
+    <Style x:Key="DarkEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSecondaryColor}" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource GrayTextColor}" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="Margin" Value="0,5" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    
+    <!-- 按鈕樣式 -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource InfoColor}" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="Margin" Value="0,10" />
+    </Style>
+    
+    <!-- 次要按鈕樣式 -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSecondaryColor}" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="BorderColor" Value="{StaticResource DarkAccentColor}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="Margin" Value="0,10" />
+    </Style>
+    
+    <!-- 成功按鈕樣式 -->
+    <Style x:Key="SuccessButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource SuccessColor}" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="Margin" Value="0,10" />
+    </Style>
+    
+    <!-- 警告按鈕樣式 -->
+    <Style x:Key="WarningButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource WarningColor}" />
+        <Setter Property="TextColor" Value="{StaticResource WhiteTextColor}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="Margin" Value="0,10" />
+    </Style>
+    
+    <!-- 卡片框架樣式 -->
+    <Style x:Key="CardFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkCardColor}" />
+        <Setter Property="BorderColor" Value="{StaticResource DarkAccentColor}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10,5" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+    
+    <!-- 用戶資訊卡片樣式 -->
+    <Style x:Key="UserInfoCardStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSecondaryColor}" />
+        <Setter Property="BorderColor" Value="{StaticResource InfoColor}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="10,5" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+    
+    <!-- CheckBox 樣式 -->
+    <Style x:Key="DarkCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource InfoColor}" />
+    </Style>
+    
+    <!-- Switch 樣式 -->
+    <Style x:Key="DarkSwitchStyle" TargetType="Switch">
+        <Setter Property="OnColor" Value="{StaticResource SuccessColor}" />
+        <Setter Property="ThumbColor" Value="{StaticResource WhiteTextColor}" />
+    </Style>
+    
+    <!-- TabbedPage 樣式 -->
+    <Style x:Key="DarkTabbedPageStyle" TargetType="TabbedPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkPrimaryColor}" />
+        <Setter Property="BarBackgroundColor" Value="{StaticResource DarkSecondaryColor}" />
+        <Setter Property="BarTextColor" Value="{StaticResource LightGrayTextColor}" />
+        <Setter Property="SelectedTabColor" Value="{StaticResource InfoColor}" />
+        <Setter Property="UnselectedTabColor" Value="{StaticResource GrayTextColor}" />
+    </Style>
+
+</ResourceDictionary>

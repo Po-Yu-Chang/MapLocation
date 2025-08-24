@@ -47,6 +47,11 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
 		builder.Services.AddSingleton<INotificationIntegrationService, NotificationIntegrationService>();
 
+		// 註冊認證和資料庫服務
+		builder.Services.AddSingleton<IConfigService, SqliteConfigService>();
+		builder.Services.AddSingleton<IDatabaseService, MySqlDatabaseService>();
+		builder.Services.AddSingleton<IUserSessionService, UserSessionService>();
+
 		// 註冊進階導航服務
 		builder.Services.AddSingleton<ITTSService, TTSService>();
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
@@ -65,6 +70,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<PrivacyPolicyPage>();
 		builder.Services.AddTransient<SettingsPage>();
 		builder.Services.AddTransient<RoutePlanningPage>();
+		builder.Services.AddTransient<LoginPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

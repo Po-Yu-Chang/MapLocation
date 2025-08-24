@@ -17,7 +17,12 @@ public partial class CheckInPage : ContentPage
     private readonly ObservableCollection<CheckInRecordDisplay> _todayRecords = new();
     private CheckInRecord? _currentCheckIn;
 
-    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService, IGeocodingService geocodingService, ICheckInStorageService checkInStorageService)
+    private readonly IDatabaseService _databaseService;
+    private readonly IConfigService _configService;
+    private readonly IUserSessionService _userSessionService;
+    private User? _currentUser;
+
+    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService, IGeocodingService geocodingService, ICheckInStorageService checkInStorageService, IDatabaseService databaseService, IConfigService configService)
     {
         InitializeComponent();
         
@@ -25,18 +30,85 @@ public partial class CheckInPage : ContentPage
         _geofenceService = geofenceService;
         _geocodingService = geocodingService;
         _checkInStorageService = checkInStorageService;
+        _databaseService = databaseService;
+        _configService = configService;
+        _userSessionService = ServiceHelper.GetService<IUserSessionService>();
         
         NearbyGeofencesCollectionView.ItemsSource = _nearbyGeofences;
         TodayRecordsCollectionView.ItemsSource = _todayRecords;
+        
+        // 訂閱用戶會話事件
+        _userSessionService.UserLoggedIn += OnUserLoggedIn;
+        _userSessionService.UserLoggedOut += OnUserLoggedOut;
         
         InitializeAsync();
     }
 
     private async void InitializeAsync()
     {
+        await LoadCurrentUser();
         await LoadCurrentLocation();
         await LoadGeofences();
         await LoadTodayRecords();
+        UpdateUI();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            _currentUser = await _userSessionService.GetCurrentUserAsync();
+            UpdateUserDisplay();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"載入當前用戶失敗: {ex.Message}");
+        }
+    }
+    
+    private void UpdateUserDisplay()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            if (_currentUser != null)
+            {
+                UserNameLabel.Text = _currentUser.DisplayName;
+                UserDepartmentLabel.Text = _currentUser.DepartmentPosition;
+                LogoutButton.IsVisible = true;
+            }
+            else
+            {
+                UserNameLabel.Text = "未登入";
+                UserDepartmentLabel.Text = "請先登入以使用打卡功能";
+                LogoutButton.IsVisible = false;
+            }
+        });
+    }
+    
+    private void UpdateUI()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            bool isLoggedIn = _currentUser != null;
+            CheckInOperationsPanel.IsEnabled = isLoggedIn;
+            LoginRequiredPanel.IsVisible = !isLoggedIn;
+        });
+    }
+    
+    private void OnUserLoggedIn(object? sender, User user)
+    {
+        _currentUser = user;
+        UpdateUserDisplay();
+        UpdateUI();
+        _ = LoadTodayRecords(); // 重新載入記錄
+    }
+    
+    private void OnUserLoggedOut(object? sender, EventArgs e)
+    {
+        _currentUser = null;
+        UpdateUserDisplay();
+        UpdateUI();
+        _todayRecords.Clear(); // 清空記錄
     }
 
     private async Task LoadCurrentLocation()
@@ -277,7 +349,7 @@ public partial class CheckInPage : ContentPage
             _currentCheckIn = new CheckInRecord
             {
                 Id = Guid.NewGuid().ToString(),
-                UserId = "user123", // 實際應用中應該從認證服務獲取
+                UserId = _currentUser?.Id.ToString() ?? "0",
                 GeofenceId = selectedGeofence.Id,
                 GeofenceName = selectedGeofence.Name,
                 CheckInTime = DateTime.Now,
@@ -287,8 +359,19 @@ public partial class CheckInPage : ContentPage
                 Type = CheckInType.Manual
             };
 
-            // 保存打卡記錄到本地存儲
-            var saveSuccess = await _checkInStorageService.SaveCheckInRecordAsync(_currentCheckIn);
+            // 保存打卡記錄到資料庫和本地存儲
+            var saveSuccess = false;
+            
+            if (_currentUser != null)
+            {
+                saveSuccess = await _databaseService.SaveCheckInRecordAsync(_currentCheckIn);
+            }
+            
+            // 如果資料庫保存失敗，仍嘗試保存到本地
+            if (!saveSuccess)
+            {
+                saveSuccess = await _checkInStorageService.SaveCheckInRecordAsync(_currentCheckIn);
+            }
             
             if (saveSuccess)
             {
@@ -361,6 +444,28 @@ public partial class CheckInPage : ContentPage
             RefreshButton.IsEnabled = true;
             RefreshButton.Text = "重新整理";
         }
+    }
+    
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var result = await DisplayAlert("確認登出", "您確定要登出嗎？", "確定", "取消");
+            if (result)
+            {
+                await _userSessionService.LogoutAsync();
+                await Shell.Current.GoToAsync("//LoginPage");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("錯誤", $"登出失敗: {ex.Message}", "確定");
+        }
+    }
+    
+    private async void OnGoToLoginClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//LoginPage");
     }
 }
 

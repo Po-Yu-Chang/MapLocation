@@ -3,94 +3,146 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="⏰ 位置打卡"
-             Background="{StaticResource BackgroundGradient}">
+             Style="{StaticResource DarkPageStyle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
             
+            <!-- 用戶資訊區域 -->
+            <Frame Style="{StaticResource UserInfoCardStyle}">
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                    <!-- 用戶頭像 -->
+                    <Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                           BackgroundColor="{StaticResource InfoColor}"
+                           CornerRadius="25"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           Padding="0"
+                           VerticalOptions="Center"
+                           Margin="0,0,15,0">
+                        <Label Text="👤"
+                               FontSize="24"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Frame>
+                    
+                    <!-- 用戶資訊 -->
+                    <Label Grid.Row="0" Grid.Column="1"
+                           x:Name="UserNameLabel"
+                           Text="未登入"
+                           Style="{StaticResource LabelStyle}"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           x:Name="UserDepartmentLabel"
+                           Text="請先登入以使用打卡功能"
+                           Style="{StaticResource SmallLabelStyle}"/>
+                    
+                    <!-- 登出按鈕 -->
+                    <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                            x:Name="LogoutButton"
+                            Text="登出"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            FontSize="12"
+                            HeightRequest="35"
+                            WidthRequest="60"
+                            CornerRadius="17"
+                            Margin="0"
+                            Padding="5"
+                            VerticalOptions="Center"
+                            Clicked="OnLogoutClicked"/>
+                </Grid>
+            </Frame>
+            
             <!-- 頁面標題 -->
-            <Label Text="智慧考勤系統" Style="{StaticResource PageTitle}"/>
+            <Label Text="智慧考勤系統" Style="{StaticResource TitleLabelStyle}"/>
 
             <!-- 目前位置卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📍" FontSize="24"/>
-                        <Label Text="目前位置" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="目前位置" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="8">
                         <Label x:Name="CurrentLocationLabel"
                                Text="🔄 正在獲取位置..."
-                               Style="{StaticResource BodyText}"
+                               Style="{StaticResource LabelStyle}"
                                FontSize="16"/>
                         <Label x:Name="AccuracyLabel"
                                Text=""
-                               Style="{StaticResource CaptionText}"/>
+                               Style="{StaticResource SmallLabelStyle}"/>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 附近區域卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🎯" FontSize="24"/>
-                        <Label Text="附近區域" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="附近區域" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <CollectionView x:Name="NearbyGeofencesCollectionView" 
                                     MaximumHeightRequest="200">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="{StaticResource SurfaceBrush}" 
-                                        StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource BorderBrush}"
-                                        Padding="16" 
-                                        Margin="0,4">
+                                <Frame BackgroundColor="{StaticResource DarkSecondaryColor}" 
+                                       BorderColor="{StaticResource DarkAccentColor}"
+                                       CornerRadius="12"
+                                       Padding="16" 
+                                       Margin="0,4">
                                     <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                                         <Label Grid.Row="0" Grid.Column="0"
                                                Text="{Binding Name}"
-                                               Style="{StaticResource SubTitle}"/>
+                                               Style="{StaticResource LabelStyle}"
+                                               FontAttributes="Bold"/>
                                         <Label Grid.Row="1" Grid.Column="0"
                                                Text="{Binding Description}"
-                                               Style="{StaticResource CaptionText}"/>
-                                        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
-                                                BackgroundColor="{StaticResource Primary}"
-                                                StrokeShape="RoundRectangle 8"
-                                                Stroke="Transparent"
-                                                Padding="8,4"
-                                                VerticalOptions="Center">
+                                               Style="{StaticResource SmallLabelStyle}"/>
+                                        <Frame Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                               BackgroundColor="{StaticResource InfoColor}"
+                                               CornerRadius="8"
+                                               Padding="8,4"
+                                               VerticalOptions="Center">
                                             <Label Text="{Binding DistanceText}"
                                                    FontSize="12"
                                                    FontAttributes="Bold"
-                                                   TextColor="White"/>
-                                        </Border>
+                                                   TextColor="{StaticResource WhiteTextColor}"/>
+                                        </Frame>
                                     </Grid>
-                                </Border>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 打卡操作卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="20">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="⚡" FontSize="24"/>
-                        <Label Text="打卡操作" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="打卡操作" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
-                    <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="16" x:Name="CheckInOperationsPanel" IsEnabled="False">
                         <Picker x:Name="GeofencePicker"
                                 Title="選擇打卡地點"
-                                Style="{StaticResource ModernPicker}"
+                                BackgroundColor="{StaticResource DarkSecondaryColor}"
+                                TextColor="{StaticResource WhiteTextColor}"
+                                TitleColor="{StaticResource GrayTextColor}"
                                 SelectedIndexChanged="OnGeofenceSelected" />
                         
                         <Entry x:Name="NotesEntry"
                                Placeholder="✍️ 備註 (選填)"
-                               Style="{StaticResource ModernEntry}"
+                               Style="{StaticResource DarkEntryStyle}"
                                MaxLength="200" />
                         
                         <!-- 打卡按鈕群組 -->
@@ -98,58 +150,70 @@
                             <Button Grid.Column="0"
                                     x:Name="CheckInButton"
                                     Text="🟢 打卡上班"
-                                    Style="{StaticResource SuccessButton}"
+                                    Style="{StaticResource SuccessButtonStyle}"
                                     Clicked="OnCheckInClicked" />
                             
                             <Button Grid.Column="1"
                                     x:Name="CheckOutButton"
                                     Text="🔴 打卡下班"
-                                    Style="{StaticResource DangerButton}"
+                                    Style="{StaticResource WarningButtonStyle}"
                                     Clicked="OnCheckOutClicked"
                                     IsEnabled="False" />
                         </Grid>
                     </VerticalStackLayout>
+                    
+                    <!-- 未登入提示 -->
+                    <VerticalStackLayout x:Name="LoginRequiredPanel" IsVisible="True" Spacing="15">
+                        <Label Text="⚠️ 請先登入才能使用打卡功能"
+                               Style="{StaticResource LabelStyle}"
+                               TextColor="{StaticResource WarningColor}"
+                               HorizontalTextAlignment="Center"
+                               FontAttributes="Bold"/>
+                        <Button Text="前往登入"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Clicked="OnGoToLoginClicked"/>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 今日記錄卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📋" FontSize="24"/>
-                        <Label Text="今日記錄" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="今日記錄" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <CollectionView x:Name="TodayRecordsCollectionView"
                                     MaximumHeightRequest="300">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="{StaticResource SurfaceBrush}" 
-                                        StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource BorderBrush}"
-                                        Padding="16" 
-                                        Margin="0,4">
+                                <Frame BackgroundColor="{StaticResource DarkSecondaryColor}" 
+                                       BorderColor="{StaticResource DarkAccentColor}"
+                                       CornerRadius="12"
+                                       Padding="16" 
+                                       Margin="0,4">
                                     <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
                                         <!-- 時間標記 -->
-                                        <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                                                BackgroundColor="{StaticResource Success}"
-                                                StrokeShape="RoundRectangle 8"
-                                                Stroke="Transparent"
-                                                Padding="8"
-                                                VerticalOptions="Center"
-                                                Margin="0,0,12,0">
+                                        <Frame Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                                               BackgroundColor="{StaticResource SuccessColor}"
+                                               CornerRadius="8"
+                                               Padding="8"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,12,0">
                                             <Label Text="⏰"
                                                    FontSize="16"
-                                                   TextColor="White"/>
-                                        </Border>
+                                                   TextColor="{StaticResource WhiteTextColor}"/>
+                                        </Frame>
                                         
                                         <!-- 記錄內容 -->
                                         <Label Grid.Row="0" Grid.Column="1"
                                                Text="{Binding GeofenceName}"
-                                               Style="{StaticResource SubTitle}"/>
+                                               Style="{StaticResource LabelStyle}"
+                                               FontAttributes="Bold"/>
                                         <Label Grid.Row="1" Grid.Column="1"
                                                Text="{Binding Notes}"
-                                               Style="{StaticResource CaptionText}"/>
+                                               Style="{StaticResource SmallLabelStyle}"/>
                                         
                                         <!-- 時間和持續時間 -->
                                         <VerticalStackLayout Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
@@ -157,24 +221,24 @@
                                             <Label Text="{Binding CheckInTimeText}"
                                                    FontSize="14"
                                                    FontAttributes="Bold"
-                                                   TextColor="{StaticResource Primary}"
+                                                   TextColor="{StaticResource InfoColor}"
                                                    HorizontalTextAlignment="End"/>
                                             <Label Text="{Binding DurationText}"
-                                                   Style="{StaticResource CaptionText}"
+                                                   Style="{StaticResource SmallLabelStyle}"
                                                    HorizontalTextAlignment="End"/>
                                         </VerticalStackLayout>
                                     </Grid>
-                                </Border>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 重新整理按鈕 -->
             <Button x:Name="RefreshButton"
                     Text="🔄 重新整理"
-                    Style="{StaticResource OutlineButton}"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Clicked="OnRefreshClicked" />
 
         </VerticalStackLayout>

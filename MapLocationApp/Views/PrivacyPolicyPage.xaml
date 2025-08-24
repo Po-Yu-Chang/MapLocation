@@ -3,7 +3,11 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="🔒 隱私政策"
-             Background="{StaticResource BackgroundGradient}">
+             Style="{StaticResource DarkPageStyle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="20">
@@ -11,21 +15,21 @@
             <!-- 標題區域 -->
             <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                 <Label Text="🔒" FontSize="48"/>
-                <Label Text="隱私政策" Style="{StaticResource PageTitle}"/>
-                <Label Text="保護您的隱私是我們的承諾" Style="{StaticResource BodyText}" HorizontalOptions="Center"/>
+                <Label Text="隱私政策" Style="{StaticResource TitleLabelStyle}"/>
+                <Label Text="保護您的隱私是我們的承諾" Style="{StaticResource LabelStyle}" HorizontalOptions="Center"/>
             </VerticalStackLayout>
 
             <!-- 政策內容 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="20">
                     
                     <!-- 資料收集 -->
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout Spacing="8">
                             <Label Text="📊" FontSize="20"/>
-                            <Label Text="資料收集" Style="{StaticResource SectionTitle}"/>
+                            <Label Text="資料收集" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                         </HorizontalStackLayout>
-                        <Label Style="{StaticResource BodyText}">
+                        <Label Style="{StaticResource LabelStyle}">
                             <Label.Text>
 我們僅收集提供服務所必需的資料：
 • GPS位置資訊（用於打卡功能）
@@ -39,9 +43,9 @@
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout Spacing="8">
                             <Label Text="🎯" FontSize="20"/>
-                            <Label Text="資料使用" Style="{StaticResource SectionTitle}"/>
+                            <Label Text="資料使用" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                         </HorizontalStackLayout>
-                        <Label Style="{StaticResource BodyText}">
+                        <Label Style="{StaticResource LabelStyle}">
                             <Label.Text>
 您的資料僅用於：
 • 提供位置打卡服務
@@ -56,9 +60,9 @@
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout Spacing="8">
                             <Label Text="🛡️" FontSize="20"/>
-                            <Label Text="資料保護" Style="{StaticResource SectionTitle}"/>
+                            <Label Text="資料保護" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                         </HorizontalStackLayout>
-                        <Label Style="{StaticResource BodyText}">
+                        <Label Style="{StaticResource LabelStyle}">
                             <Label.Text>
 我們採用多重保護措施：
 • 本地加密存儲
@@ -73,9 +77,9 @@
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout Spacing="8">
                             <Label Text="👤" FontSize="20"/>
-                            <Label Text="您的權利" Style="{StaticResource SectionTitle}"/>
+                            <Label Text="您的權利" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                         </HorizontalStackLayout>
-                        <Label Style="{StaticResource BodyText}">
+                        <Label Style="{StaticResource LabelStyle}">
                             <Label.Text>
 您擁有以下權利：
 • 查看個人資料
@@ -88,17 +92,17 @@
                     </VerticalStackLayout>
 
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 聯絡資訊 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📧" FontSize="24"/>
-                        <Label Text="聯絡我們" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="聯絡我們" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
-                    <Label Style="{StaticResource BodyText}">
+                    <Label Style="{StaticResource LabelStyle}">
                         <Label.Text>
 如果您對隱私政策有任何疑問或需要行使您的權利，請聯絡我們：
 
@@ -108,38 +112,38 @@
                         </Label.Text>
                     </Label>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 政策更新 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="12">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🔄" FontSize="24"/>
-                        <Label Text="政策更新" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="政策更新" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
-                    <Label Style="{StaticResource BodyText}">
+                    <Label Style="{StaticResource LabelStyle}">
                         <Label.Text>
 本隱私政策可能會不定期更新。我們將在重大變更前通知您，並在應用程式中公布最新版本。
                         </Label.Text>
                     </Label>
                     
-                    <Label Text="最後更新: 2025年8月17日" Style="{StaticResource CaptionText}"/>
+                    <Label Text="最後更新: 2025年8月17日" Style="{StaticResource SmallLabelStyle}"/>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 操作按鈕 -->
             <VerticalStackLayout Spacing="12">
                 <Button Text="✅ 我已閱讀並同意"
-                        Style="{StaticResource SuccessButton}"
+                        Style="{StaticResource SuccessButtonStyle}"
                         Clicked="OnAcceptClicked"/>
                 
                 <Button Text="📄 匯出我的資料"
-                        Style="{StaticResource OutlineButton}"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Clicked="OnExportDataClicked"/>
                 
                 <Button Text="🗑️ 刪除我的資料"
-                        Style="{StaticResource DangerButton}"
+                        Style="{StaticResource WarningButtonStyle}"
                         Clicked="OnDeleteDataClicked"/>
             </VerticalStackLayout>
 

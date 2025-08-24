@@ -3,26 +3,32 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="設定"
-             Background="{StaticResource BackgroundBrush}">
+             Style="{StaticResource DarkPageStyle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
             
             <!-- 頁面標題 -->
-            <Label Text="應用程式設定" Style="{StaticResource PageTitle}"/>
+            <Label Text="應用程式設定" Style="{StaticResource TitleLabelStyle}"/>
 
             <!-- 語言設定卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🌍" FontSize="24"/>
-                        <Label Text="語言設定" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="語言設定" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="選擇應用程式語言" Style="{StaticResource BodyText}"/>
+                        <Label Text="選擇應用程式語言" Style="{StaticResource LabelStyle}"/>
                         <Picker x:Name="LanguagePicker"
-                                Style="{StaticResource ModernPicker}"
+                                BackgroundColor="{StaticResource DarkSecondaryColor}"
+                                TextColor="{StaticResource WhiteTextColor}"
+                                TitleColor="{StaticResource GrayTextColor}"
                                 SelectedIndexChanged="OnLanguageChanged">
                             <Picker.Items>
                                 <x:String>繁體中文 (Traditional Chinese)</x:String>
@@ -34,20 +40,22 @@
                         </Picker>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 主題設定卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🎨" FontSize="24"/>
-                        <Label Text="主題設定" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="主題設定" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="選擇外觀主題" Style="{StaticResource BodyText}"/>
+                        <Label Text="選擇外觀主題" Style="{StaticResource LabelStyle}"/>
                         <Picker x:Name="ThemePicker"
-                                Style="{StaticResource ModernPicker}"
+                                BackgroundColor="{StaticResource DarkSecondaryColor}"
+                                TextColor="{StaticResource WhiteTextColor}"
+                                TitleColor="{StaticResource GrayTextColor}"
                                 SelectedIndexChanged="OnThemeChanged">
                             <Picker.Items>
                                 <x:String>🌞 淺色模式</x:String>
@@ -57,176 +65,196 @@
                         </Picker>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 位置設定卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📍" FontSize="24"/>
-                        <Label Text="位置服務" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="位置服務" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout>
-                            <Label Text="啟用高精度定位" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="HighAccuracySwitch" HorizontalOptions="EndAndExpand" Toggled="OnHighAccuracyToggled"/>
+                            <Label Text="啟用高精度定位" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="HighAccuracySwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnHighAccuracyToggled"/>
                         </HorizontalStackLayout>
                         
                         <HorizontalStackLayout>
-                            <Label Text="背景位置更新" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="BackgroundLocationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnBackgroundLocationToggled"/>
+                            <Label Text="背景位置更新" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="BackgroundLocationSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnBackgroundLocationToggled"/>
                         </HorizontalStackLayout>
                         
                         <HorizontalStackLayout>
-                            <Label Text="自動地理圍欄檢測" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="GeofenceDetectionSwitch" HorizontalOptions="EndAndExpand" Toggled="OnGeofenceDetectionToggled"/>
+                            <Label Text="自動地理圍欄檢測" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="GeofenceDetectionSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnGeofenceDetectionToggled"/>
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 通知設定卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🔔" FontSize="24"/>
-                        <Label Text="通知設定" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="通知設定" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout>
-                            <Label Text="打卡提醒" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="CheckInNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnCheckInNotificationToggled"/>
+                            <Label Text="打卡提醒" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="CheckInNotificationSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnCheckInNotificationToggled"/>
                         </HorizontalStackLayout>
                         
                         <HorizontalStackLayout>
-                            <Label Text="地理圍欄進出通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="GeofenceNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnGeofenceNotificationToggled"/>
+                            <Label Text="地理圍欄進出通知" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="GeofenceNotificationSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnGeofenceNotificationToggled"/>
                         </HorizontalStackLayout>
                         
                         <HorizontalStackLayout>
-                            <Label Text="團隊位置分享通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="TeamNotificationSwitch" HorizontalOptions="EndAndExpand" Toggled="OnTeamNotificationToggled"/>
+                            <Label Text="團隊位置分享通知" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="TeamNotificationSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnTeamNotificationToggled"/>
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- Telegram 推播通知設定卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📱" FontSize="24"/>
-                        <Label Text="Telegram 推播通知" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="Telegram 推播通知" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
                         <HorizontalStackLayout>
-                            <Label Text="啟用 Telegram 通知" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Switch x:Name="TelegramEnabledSwitch" HorizontalOptions="EndAndExpand" Toggled="OnTelegramEnabledToggled"/>
+                            <Label Text="啟用 Telegram 通知" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Switch x:Name="TelegramEnabledSwitch" 
+                                    Style="{StaticResource DarkSwitchStyle}" 
+                                    HorizontalOptions="EndAndExpand" 
+                                    Toggled="OnTelegramEnabledToggled"/>
                         </HorizontalStackLayout>
                         
                         <VerticalStackLayout x:Name="TelegramConfigLayout" Spacing="12" IsVisible="False">
-                            <Label Text="機器人設定" Style="{StaticResource BodyText}" FontAttributes="Bold"/>
+                            <Label Text="機器人設定" Style="{StaticResource LabelStyle}" FontAttributes="Bold"/>
                             
                             <Entry x:Name="TelegramBotTokenEntry"
                                    Placeholder="輸入 Telegram Bot Token"
                                    IsPassword="True"
-                                   Style="{StaticResource ModernEntry}"/>
+                                   Style="{StaticResource DarkEntryStyle}"/>
                             
                             <Entry x:Name="TelegramChatIdEntry"
                                    Placeholder="輸入 Chat ID 或 @頻道名稱"
-                                   Style="{StaticResource ModernEntry}"/>
+                                   Style="{StaticResource DarkEntryStyle}"/>
                             
-                            <Label Text="📝 設定說明：" Style="{StaticResource BodyText}" FontAttributes="Bold"/>
-                            <Label Text="1. 在 Telegram 搜尋 @BotFather → /start → /newbot 建立機器人" Style="{StaticResource BodyText}" FontSize="12"/>
-                            <Label Text="2. 取得 Bot Token（形如 123456789:AA...）" Style="{StaticResource BodyText}" FontSize="12"/>
-                            <Label Text="3. 讓 Bot 能傳訊息給您：" Style="{StaticResource BodyText}" FontSize="12"/>
-                            <Label Text="   • 個人：搜尋您的 Bot 名稱，按 Start" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
-                            <Label Text="   • 群組：把 Bot 加進群組，給他權限" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
-                            <Label Text="   • 頻道：把 Bot 加進頻道並設為管理員" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
-                            <Label Text="4. 取得 Chat ID：" Style="{StaticResource BodyText}" FontSize="12"/>
-                            <Label Text="   • 開瀏覽器 GET: https://api.telegram.org/bot&lt;YOUR_BOT_TOKEN&gt;/getUpdates" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
-                            <Label Text="   • 找到 message.chat.id（群組/頻道通常是負數）" Style="{StaticResource BodyText}" FontSize="11" Margin="15,0,0,0"/>
+                            <Label Text="📝 設定說明：" Style="{StaticResource LabelStyle}" FontAttributes="Bold"/>
+                            <Label Text="1. 在 Telegram 搜尋 @BotFather → /start → /newbot 建立機器人" Style="{StaticResource SmallLabelStyle}"/>
+                            <Label Text="2. 取得 Bot Token（形如 123456789:AA...）" Style="{StaticResource SmallLabelStyle}"/>
+                            <Label Text="3. 讓 Bot 能傳訊息給您：" Style="{StaticResource SmallLabelStyle}"/>
+                            <Label Text="   • 個人：搜尋您的 Bot 名稱，按 Start" Style="{StaticResource SmallLabelStyle}" Margin="15,0,0,0"/>
+                            <Label Text="   • 群組：把 Bot 加進群組，給他權限" Style="{StaticResource SmallLabelStyle}" Margin="15,0,0,0"/>
+                            <Label Text="   • 頻道：把 Bot 加進頻道並設為管理員" Style="{StaticResource SmallLabelStyle}" Margin="15,0,0,0"/>
+                            <Label Text="4. 取得 Chat ID：" Style="{StaticResource SmallLabelStyle}"/>
+                            <Label Text="   • 開瀏覽器 GET: https://api.telegram.org/bot&lt;YOUR_BOT_TOKEN&gt;/getUpdates" Style="{StaticResource SmallLabelStyle}" Margin="15,0,0,0"/>
+                            <Label Text="   • 找到 message.chat.id（群組/頻道通常是負數）" Style="{StaticResource SmallLabelStyle}" Margin="15,0,0,0"/>
                             
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,10,0,0">
                                 <Button Grid.Column="0"
                                         x:Name="TelegramTestButton"
                                         Text="🧪 測試連線"
-                                        Style="{StaticResource OutlineButton}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
                                         Clicked="OnTelegramTestClicked"/>
                                 
                                 <Button Grid.Column="1"
                                         x:Name="TelegramSaveButton"
                                         Text="💾 儲存設定"
-                                        Style="{StaticResource PrimaryButton}"
+                                        Style="{StaticResource PrimaryButtonStyle}"
                                         Clicked="OnTelegramSaveClicked"/>
                             </Grid>
                             
                             <Label x:Name="TelegramStatusLabel"
                                    Text="📡 狀態: 未設定"
-                                   Style="{StaticResource BodyText}"
-                                   FontSize="12"
+                                   Style="{StaticResource SmallLabelStyle}"
                                    Margin="0,5,0,0"/>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 資料管理卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="💾" FontSize="24"/>
-                        <Label Text="資料管理" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="資料管理" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="12">
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Button Grid.Column="0"
                                     Text="📤 匯出資料"
-                                    Style="{StaticResource OutlineButton}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     Clicked="OnExportDataClicked"/>
                             
                             <Button Grid.Column="1"
                                     Text="📥 匯入資料"
-                                    Style="{StaticResource OutlineButton}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     Clicked="OnImportDataClicked"/>
                         </Grid>
                         
                         <Button Text="🗑️ 清除快取"
-                                Style="{StaticResource SecondaryButton}"
+                                Style="{StaticResource WarningButtonStyle}"
                                 Clicked="OnClearCacheClicked"/>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
             <!-- 關於資訊卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="ℹ️" FontSize="24"/>
-                        <Label Text="應用程式資訊" Style="{StaticResource SectionTitle}"/>
+                        <Label Text="應用程式資訊" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
                     </HorizontalStackLayout>
                     
                     <VerticalStackLayout Spacing="8">
                         <HorizontalStackLayout>
-                            <Label Text="版本:" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Label Text="1.0.0" Style="{StaticResource BodyText}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
+                            <Label Text="版本:" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Label Text="1.0.0" Style="{StaticResource LabelStyle}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
                         </HorizontalStackLayout>
                         
                         <HorizontalStackLayout>
-                            <Label Text="建置:" Style="{StaticResource BodyText}" VerticalOptions="Center"/>
-                            <Label Text="20241201" Style="{StaticResource BodyText}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
+                            <Label Text="建置:" Style="{StaticResource LabelStyle}" VerticalOptions="Center"/>
+                            <Label Text="20241201" Style="{StaticResource LabelStyle}" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
                         </HorizontalStackLayout>
                         
                         <Button Text="📄 查看隱私政策"
-                                Style="{StaticResource OutlineButton}"
+                                Style="{StaticResource SecondaryButtonStyle}"
                                 Clicked="OnPrivacyPolicyClicked"/>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </Border>
+            </Frame>
 
         </VerticalStackLayout>
     </ScrollView>
