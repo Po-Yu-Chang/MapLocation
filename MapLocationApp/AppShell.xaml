@@ -42,6 +42,14 @@
     <!-- 新增其他頁面的路由 -->
     <ShellContent
         ContentTemplate="{DataTemplate views:PrivacyPolicyPage}"
-        Route="PrivacyPolicy" />
+        Route="PrivacyPolicyPage" />
+    
+    <ShellContent
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+        
+    <ShellContent
+        ContentTemplate="{DataTemplate views:FaceRecognitionPage}"
+        Route="FaceRecognitionPage" />
 
 </Shell>

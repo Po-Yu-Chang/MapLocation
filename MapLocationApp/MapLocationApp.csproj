@@ -19,6 +19,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<NoWarn>$(NoWarn);CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8619;CS8622;CS8625;CS8629;CS1998;CS0168;NU1608;XC0022</NoWarn>
 
 		<!-- 修復 Android 路徑長度問題 -->
 		<IntermediateOutputPath Condition="'$(TargetFramework)' == 'net9.0-android'">obj\droid\</IntermediateOutputPath>
@@ -77,6 +78,23 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SkiaSharp" Version="2.88.9" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9" />
+		<PackageReference Include="MySql.Data" Version="9.1.0" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+		
+		<!-- Face Recognition packages for Windows -->
+		<PackageReference Include="FaceAiSharp.Bundle" Version="0.5.23" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
+		<!-- UI Toolkit -->
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
+
+
+		<!-- Windows GPU / DirectML (可選，加上條件避免非必要平台體積) -->
+		<PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
+
+		<!-- Android 備援 ML Kit (若未來需要可解除註解) -->
+		<!-- <PackageReference Include="Xamarin.Google.MLKit.FaceDetection" Version="116.1.7.5" Condition="'$(TargetFramework)' == 'net9.0-android'" /> -->
 	</ItemGroup>
 
 </Project>

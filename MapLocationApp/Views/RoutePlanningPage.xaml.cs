@@ -15,25 +15,29 @@ namespace MapLocationApp.Views
 {
     public partial class RoutePlanningPage : ContentPage, INotifyPropertyChanged
     {
-        private readonly IRouteService _routeService;
-        private readonly ILocationService _locationService;
-        private readonly IGeocodingService _geocodingService;
-        private readonly ITelegramNotificationService _telegramService;
-        private readonly INavigationService _navigationService;
-        private readonly ITTSService _ttsService;
-        private readonly IMapService _mapService;
+        private readonly IRouteService? _routeService;
+        private readonly ILocationService? _locationService;
+        private readonly IGeocodingService? _geocodingService;
+        private readonly ITelegramNotificationService? _telegramService;
+        private readonly INavigationService? _navigationService;
+        private readonly ITTSService? _ttsService;
+        private readonly IMapService? _mapService;
         private readonly EnhancedNominatimService _enhancedNominatim;
-        private Route _currentCalculatedRoute;
-        private Route _currentRoute;
-        private NavigationSession _currentNavigationSession;
-        private Timer _navigationUpdateTimer;
+        private Route? _currentCalculatedRoute;
+        private Route? _currentRoute;
+        private NavigationSession? _currentNavigationSession;
+        private Timer? _navigationUpdateTimer;
         private string _selectedTransportMode = "driving";
-        private Microsoft.Maui.Devices.Sensors.Location _startLocation;
-        private Microsoft.Maui.Devices.Sensors.Location _endLocation;
+        private Microsoft.Maui.Devices.Sensors.Location? _startLocation;
+        private Microsoft.Maui.Devices.Sensors.Location? _endLocation;
         private bool _isMuted = false;
-        private CancellationTokenSource _searchCancellationTokenSource;
+        private bool _isEndNavigationSheetVisible;
+        private CancellationTokenSource? _searchCancellationTokenSource;
         private const int SearchDelayMs = 300;
         private readonly SemaphoreSlim _searchLock = new SemaphoreSlim(1, 1);
+        private bool _isFindingRoute = false; // 避免重入導致 UI 競態
+
+        // 移除手動屬性定義，因為 XAML 編譯器會自動生成
 
         // Google Maps 風格的集合
         public ObservableCollection<Route> SavedRoutes { get; set; }
@@ -50,7 +54,7 @@ namespace MapLocationApp.Views
         // 導航相關屬性
         public bool IsNavigating => _navigationService?.IsNavigating == true;
         public bool IsNotNavigating => !IsNavigating;
-        public NavigationInstruction CurrentInstruction => _navigationService?.CurrentState?.CurrentInstruction;
+        public NavigationInstruction? CurrentInstruction => _navigationService?.CurrentState?.CurrentInstruction;
         public string EstimatedArrivalTime => _navigationService?.CurrentState?.EstimatedArrivalTime ?? "無";
         public string RemainingTime => FormatTimeSpan(_navigationService?.CurrentState?.EstimatedTimeRemaining ?? TimeSpan.Zero);
         public string RemainingDistance => FormatDistance(_navigationService?.CurrentState?.DistanceRemaining ?? 0);
@@ -62,14 +66,20 @@ namespace MapLocationApp.Views
             set => SetProperty(ref _selectedTransportMode, value);
         }
 
-        public Route CurrentRoute
+        public Route? CurrentRoute
         {
             get => _currentRoute;
             set => SetProperty(ref _currentRoute, value);
         }
 
+        public bool IsEndNavigationSheetVisible
+        {
+            get => _isEndNavigationSheetVisible;
+            set => SetProperty(ref _isEndNavigationSheetVisible, value);
+        }
+
         // 事件
-        public event EventHandler<Route> RouteSelected;
+        public event EventHandler<Route>? RouteSelected;
 
         public RoutePlanningPage()
         {
@@ -174,7 +184,7 @@ namespace MapLocationApp.Views
             }
         }
 
-        private async void OnMapLongPress(object sender, TappedEventArgs e)
+        private async void OnMapLongPress(object? sender, TappedEventArgs e)
         {
             try
             {
@@ -395,25 +405,95 @@ namespace MapLocationApp.Views
         
         private async void OnStartSuggestionTapped(object sender, EventArgs e)
         {
-            if (sender is Grid grid && grid.BindingContext is SearchSuggestion suggestion)
+            if (sender is Border border && border.BindingContext is SearchSuggestion suggestion)
             {
-                StartLocationEntry.Text = suggestion.MainText;
-                _startLocation = new Microsoft.Maui.Devices.Sensors.Location(suggestion.Latitude, suggestion.Longitude);
-                StartSuggestionsView.IsVisible = false;
-                FromSuggestions.Clear();
-                CheckCanSearchRoute();
+                await ApplySearchSuggestion(suggestion, true, border);
             }
         }
-        
+
         private async void OnEndSuggestionTapped(object sender, EventArgs e)
         {
-            if (sender is Grid grid && grid.BindingContext is SearchSuggestion suggestion)
+            if (sender is Border border && border.BindingContext is SearchSuggestion suggestion)
             {
-                EndLocationEntry.Text = suggestion.MainText;
-                _endLocation = new Microsoft.Maui.Devices.Sensors.Location(suggestion.Latitude, suggestion.Longitude);
-                EndSuggestionsView.IsVisible = false;
-                ToSuggestions.Clear();
+                await ApplySearchSuggestion(suggestion, false, border);
+            }
+        }
+
+        private async Task ApplySearchSuggestion(SearchSuggestion suggestion, bool isStartLocation, Border? senderBorder = null)
+        {
+            try
+            {
+                if (isStartLocation)
+                {
+                    StartLocationEntry.Text = suggestion.MainText;
+                    _startLocation = new Microsoft.Maui.Devices.Sensors.Location(suggestion.Latitude, suggestion.Longitude);
+
+                    // 隱藏建議並清理
+                    StartSuggestionsView.IsVisible = false;
+                    if (StartSuggestionsContainer != null)
+                        StartSuggestionsContainer.IsVisible = false;
+                    FromSuggestions.Clear();
+
+                    // 在地圖上添加起點標記
+                    if (_mapService != null && PlanningMapView?.Map != null)
+                    {
+                        _mapService.AddLocationMarker(PlanningMapView.Map, suggestion.Latitude, suggestion.Longitude, "起點");
+                        PlanningMapView.Refresh();
+                    }
+                }
+                else
+                {
+                    EndLocationEntry.Text = suggestion.MainText;
+                    _endLocation = new Microsoft.Maui.Devices.Sensors.Location(suggestion.Latitude, suggestion.Longitude);
+
+                    // 隱藏建議並清理
+                    EndSuggestionsView.IsVisible = false;
+                    if (EndSuggestionsContainer != null)
+                        EndSuggestionsContainer.IsVisible = false;
+                    ToSuggestions.Clear();
+
+                    // 在地圖上添加終點標記
+                    if (_mapService != null && PlanningMapView?.Map != null)
+                    {
+                        _mapService.AddLocationMarker(PlanningMapView.Map, suggestion.Latitude, suggestion.Longitude, "終點");
+                        PlanningMapView.Refresh();
+                    }
+                }
+
+                // 播放液態玻璃選擇動畫
+                await PlaySuggestionSelectAnimation(senderBorder);
+
+                // 自動開始路線規劃
                 CheckCanSearchRoute();
+                ShowStatusMessage($"已選擇{(isStartLocation ? "起點" : "終點")}: {suggestion.MainText}", isSuccess: true);
+            }
+            catch (Exception ex)
+            {
+                ShowStatusMessage($"設置位置失敗: {ex.Message}", isSuccess: false);
+            }
+        }
+
+        private async Task PlaySuggestionSelectAnimation(Border? border)
+        {
+            if (border == null) return;
+
+            try
+            {
+                // 播放選中動畫
+                var scaleTask = border.ScaleTo(0.95, 150, Easing.CubicIn);
+                var fadeTask = border.FadeTo(0.7, 150, Easing.CubicIn);
+
+                await Task.WhenAll(scaleTask, fadeTask);
+
+                // 恢復
+                var restoreScaleTask = border.ScaleTo(1.0, 100, Easing.CubicOut);
+                var restoreFadeTask = border.FadeTo(1.0, 100, Easing.CubicOut);
+
+                await Task.WhenAll(restoreScaleTask, restoreFadeTask);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"播放選擇動畫錯誤: {ex.Message}");
             }
         }
 
@@ -427,7 +507,7 @@ namespace MapLocationApp.Views
         {
             try
             {
-                var location = await _locationService.GetCurrentLocationAsync();
+                var location = await _locationService?.GetCurrentLocationAsync();
                 if (location != null)
                 {
                     StartLocationEntry.Text = $"目前位置 ({location.Latitude:F4}, {location.Longitude:F4})";
@@ -479,35 +559,153 @@ namespace MapLocationApp.Views
 
         private async void OnGetDirectionsClicked(object sender, EventArgs e)
         {
-            if (_startLocation != null && _endLocation != null)
+            try
             {
-                await FindRouteAsync();
+                // 播放按鈕動畫
+                if (sender is Button button)
+                {
+                    await PlayButtonPressAnimation(button);
+                }
+
+                if (_startLocation != null && _endLocation != null)
+                {
+                    ShowStatusMessage("正在計算最佳路線...", isSuccess: true);
+                    await FindRouteAsync();
+                }
+                else
+                {
+                    // 提供更友好的提示
+                    var missingLocation = _startLocation == null ? "起點" : "終點";
+                    ShowStatusMessage($"請先設定{missingLocation}，您可以:", isSuccess: false);
+
+                    // 可以添加具體的指引
+                    if (_startLocation == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("💡 提示: 點擊📍按鈕使用當前位置，或在搜尋框輸入地址");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("💡 提示: 在終點搜尋框輸入目的地，或在地圖上長按選擇");
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("提示", "請先選擇起點和終點", "確定");
+                ShowStatusMessage($"操作失敗: {ex.Message}", isSuccess: false);
             }
         }
 
-        private void OnRouteOptionClicked(object sender, EventArgs e)
+        private async void OnRouteOptionClicked(object sender, EventArgs e)
         {
             if (sender is Button button)
             {
-                // 重置所有路線選項按鈕
-                var buttons = new[] { FastestRouteButton, ShortestRouteButton, EcoRouteButton };
-                foreach (var btn in buttons)
+                try
                 {
-                    if (btn != null)
+                    System.Diagnostics.Debug.WriteLine($"路線按鈕被點擊: {button.Text}");
+
+                    // 播放按鈕點擊動畫
+                    await PlayButtonPressAnimation(button);
+
+                    // 更新路線模式選擇
+                    UpdateRouteTypeSelection(button);
+
+                    System.Diagnostics.Debug.WriteLine($"路線類型已更新為: {SelectedTransportMode}");
+
+                    // 如果已有起終點，重新搜尋該類型的路線
+                    if (_startLocation != null && _endLocation != null)
                     {
-                        btn.BackgroundColor = Color.FromArgb("#E0E0E0");
-                        btn.TextColor = Colors.Black;
+                        System.Diagnostics.Debug.WriteLine("開始重新搜尋路線...");
+                        await FindRouteAsync();
+                        System.Diagnostics.Debug.WriteLine("路線搜尋完成");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("尚未設定起點或終點，跳過路線搜尋");
+                    }
+
+                    ShowStatusMessage($"已選擇路線類型: {GetRouteTypeDisplayName(button)}", isSuccess: true);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"OnRouteOptionClicked 發生錯誤: {ex}");
+                    ShowStatusMessage($"切換路線類型失敗: {ex.Message}", isSuccess: false);
+                }
+            }
+        }
+
+        private async Task PlayButtonPressAnimation(Button button)
+        {
+            if (button == null) return;
+
+            try
+            {
+                // 按下動畫
+                await button.ScaleTo(0.95, 100, Easing.CubicOut);
+                // 釋放動畫
+                await button.ScaleTo(1.0, 150, Easing.BounceOut);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"播放按鈕動畫錯誤: {ex.Message}");
+            }
+        }
+
+        private void UpdateRouteTypeSelection(Button selectedButton)
+        {
+            try
+            {
+                if (selectedButton == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("UpdateRouteTypeSelection: selectedButton 是 null");
+                    return;
+                }
+
+                var buttons = new[] { FastestRouteButton, ShortestRouteButton, EcoRouteButton };
+                var routeTypes = new[] { "driving", "shortest", "eco" };
+
+                System.Diagnostics.Debug.WriteLine($"更新路線類型選擇，選中按鈕: {selectedButton.Text}");
+
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    if (buttons[i] != null)
+                    {
+                        bool isSelected = buttons[i] == selectedButton;
+                        if (isSelected)
+                        {
+                            // 選中狀態 - 保持原有的液態玻璃顏色
+                            var newRouteType = routeTypes[i];
+                            System.Diagnostics.Debug.WriteLine($"設定新的路線類型: {newRouteType}");
+                            SelectedTransportMode = newRouteType;
+                        }
+                        else
+                        {
+                            // 未選中狀態 - 降低透明度
+                            buttons[i].Opacity = 0.6;
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"按鈕 {i} 是 null");
                     }
                 }
-                
-                // 高亮選中的按鈕
-                button.BackgroundColor = Color.FromArgb("#1976D2");
-                button.TextColor = Colors.White;
+
+                // 恢復選中按鈕的透明度
+                selectedButton.Opacity = 1.0;
+                System.Diagnostics.Debug.WriteLine($"路線類型選擇更新完成，當前模式: {SelectedTransportMode}");
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"更新路線類型選擇錯誤: {ex}");
+                ShowStatusMessage("路線類型選擇失敗", isSuccess: false);
+            }
+        }
+
+        private string GetRouteTypeDisplayName(Button button)
+        {
+            if (button == FastestRouteButton) return "最快路線";
+            if (button == ShortestRouteButton) return "最短路線";
+            if (button == EcoRouteButton) return "節能路線";
+            return "路線";
         }
 
         private async void OnRouteOptionSelected(object sender, EventArgs e)
@@ -666,9 +864,25 @@ namespace MapLocationApp.Views
             UpdateMuteButtonStates();
         }
 
-        private async void OnStopNavigationClicked(object sender, EventArgs e)
+        private void OnStopNavigationClicked(object sender, EventArgs e)
         {
+            IsEndNavigationSheetVisible = true;
+        }
+
+        private void OnCancelStopNavigationClicked(object sender, EventArgs e)
+        {
+            IsEndNavigationSheetVisible = false;
+        }
+
+        private async void OnConfirmStopNavigationClicked(object sender, EventArgs e)
+        {
+            IsEndNavigationSheetVisible = false;
             await StopAdvancedNavigationAsync();
+        }
+
+        private void OnEndOverlayTapped(object sender, TappedEventArgs e)
+        {
+            IsEndNavigationSheetVisible = false;
         }
 
         private async void OnMyLocationClicked(object sender, EventArgs e)
@@ -726,9 +940,8 @@ namespace MapLocationApp.Views
             
             try
             {
-                // 取消之前的搜尋請求
-                _searchCancellationTokenSource?.Cancel();
-                _searchCancellationTokenSource?.Dispose();
+                // 安全地取消之前的搜尋請求
+                SafeDisposeCancellationTokenSource();
                 _searchCancellationTokenSource = new CancellationTokenSource();
                 
                 // 保存當前的 token 以避免並發問題
@@ -743,15 +956,21 @@ namespace MapLocationApp.Views
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         suggestionsView.IsVisible = false;
+                        var suggestionsContainer = isStartLocation ? StartSuggestionsContainer : EndSuggestionsContainer;
+                        if (suggestionsContainer != null)
+                            suggestionsContainer.IsVisible = false;
                         suggestions.Clear();
                     });
                     return;
                 }
-                
-                // 顯示建議區域
+
+                // 顯示建議區域和容器
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     suggestionsView.IsVisible = true;
+                    var suggestionsContainer = isStartLocation ? StartSuggestionsContainer : EndSuggestionsContainer;
+                    if (suggestionsContainer != null)
+                        suggestionsContainer.IsVisible = true;
                 });
                 
                 // 添加即時搜尋指示
@@ -841,6 +1060,9 @@ namespace MapLocationApp.Views
                 "walking" => RouteType.Walking,
                 "cycling" => RouteType.Cycling,
                 "transit" => RouteType.Driving, // 暫時用開車模式
+                "shortest" => RouteType.Driving, // 最短路線使用開車模式
+                "eco" => RouteType.Driving, // 節能路線使用開車模式
+                "driving" => RouteType.Driving,
                 _ => RouteType.Driving
             };
         }
@@ -919,11 +1141,26 @@ namespace MapLocationApp.Views
 
         private void CheckCanSearchRoute()
         {
-            if (_startLocation != null && _endLocation != null)
+            if (_startLocation == null || _endLocation == null) return;
+
+            // 確保在主執行緒排程，避免背景執行緒直接操作 UI 造成閃退
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                // 自動搜尋路線
-                _ = Task.Run(async () => await FindRouteAsync());
-            }
+                if (_isFindingRoute) return; // 已經在計算中
+                try
+                {
+                    _isFindingRoute = true;
+                    await FindRouteAsync();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"自動搜尋路線失敗: {ex.Message}");
+                }
+                finally
+                {
+                    _isFindingRoute = false;
+                }
+            });
         }
 
         private void UpdateTransportModeButtons()
@@ -946,22 +1183,40 @@ namespace MapLocationApp.Views
         private async Task FindRouteAsync()
         {
             if (_startLocation == null || _endLocation == null)
+            {
+                System.Diagnostics.Debug.WriteLine("FindRouteAsync: 起點或終點為空");
                 return;
+            }
 
+            if (_routeService == null)
+            {
+                System.Diagnostics.Debug.WriteLine("RouteService 為 null，無法計算路線");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"FindRouteAsync: 開始計算路線，模式: {SelectedTransportMode}");
+
+            // 這裡假設已在主執行緒呼叫（由 CheckCanSearchRoute 保證）
             try
             {
-                GetDirectionsButton.Text = "🔄 搜尋中...";
-                GetDirectionsButton.IsEnabled = false;
-                
-                // 使用現有的 RouteService 方法
+                if (GetDirectionsButton != null)
+                {
+                    GetDirectionsButton.Text = "🔄 搜尋中...";
+                    GetDirectionsButton.IsEnabled = false;
+                }
+
+                var routeType = GetRouteTypeFromMode(SelectedTransportMode);
+                System.Diagnostics.Debug.WriteLine($"FindRouteAsync: 使用路線類型: {routeType}");
+
                 var routeResult = await _routeService.CalculateRouteAsync(
                     _startLocation.Latitude, _startLocation.Longitude,
                     _endLocation.Latitude, _endLocation.Longitude,
-                    GetRouteTypeFromMode(SelectedTransportMode));
-                
+                    routeType);
+
+                System.Diagnostics.Debug.WriteLine($"FindRouteAsync: 路線計算結果 - Success: {routeResult?.Success}, Route: {routeResult?.Route != null}");
+
                 if (routeResult?.Success == true && routeResult.Route != null)
                 {
-                    // 創建多個路線選項
                     var routeOptions = new List<RouteOption>
                     {
                         new RouteOption
@@ -980,29 +1235,16 @@ namespace MapLocationApp.Views
                     foreach (var option in routeOptions)
                         RouteOptions.Add(option);
 
-                    // 自動選擇第一個路線
                     if (routeOptions.Any())
                     {
                         await SelectRouteOption(routeOptions.First());
-                        
-                        // 儲存計算出的路線
                         _currentCalculatedRoute = routeOptions.First().Route;
-                        
-                        // 顯示路線選項卡片
+
                         if (RouteOptionsCollectionView != null)
-                        {
                             RouteOptionsCollectionView.IsVisible = true;
-                        }
-                        
-                        // 顯示路線資訊卡片 (如果 UI 元素存在)
-                        try
-                        {
-                            UpdateRouteInfoCard(_currentCalculatedRoute);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Debug.WriteLine($"更新 UI 錯誤: {ex.Message}");
-                        }
+
+                        try { UpdateRouteInfoCard(_currentCalculatedRoute); }
+                        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"更新 UI 錯誤: {ex.Message}"); }
                     }
                 }
                 else
@@ -1012,12 +1254,16 @@ namespace MapLocationApp.Views
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"FindRouteAsync 錯誤: {ex}");
                 await DisplayAlert("錯誤", $"搜尋路線時發生錯誤: {ex.Message}", "確定");
             }
             finally
             {
-                GetDirectionsButton.Text = "🧭 開始導航";
-                GetDirectionsButton.IsEnabled = true;
+                if (GetDirectionsButton != null)
+                {
+                    GetDirectionsButton.Text = "🧭 開始導航";
+                    GetDirectionsButton.IsEnabled = true;
+                }
             }
         }
 
@@ -1086,7 +1332,7 @@ namespace MapLocationApp.Views
                 if (RouteSelected != null)
                 {
                     System.Diagnostics.Debug.WriteLine("觸發 RouteSelected 事件");
-                    RouteSelected.Invoke(this, option.Route);
+                    RouteSelected.Invoke(this, option.Route!);
                 }
                 else
                 {
@@ -1232,7 +1478,7 @@ namespace MapLocationApp.Views
             }
         }
 
-        private void OnLocationChanged(object sender, AppLocation location)
+        private void OnLocationChanged(object? sender, AppLocation location)
         {
             if (location != null)
             {
@@ -1283,22 +1529,77 @@ namespace MapLocationApp.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            
-            // 清理計時器
-            _navigationUpdateTimer?.Dispose();
-            
-            // 清理搜尋相關資源
-            _searchCancellationTokenSource?.Cancel();
-            _searchCancellationTokenSource?.Dispose();
-            _searchLock?.Dispose();
-            
-            // 取消訂閱導航事件
-            if (_navigationService != null)
+
+            try
             {
-                _navigationService.InstructionUpdated -= OnNavigationInstructionUpdated;
-                _navigationService.StateChanged -= OnNavigationStateChanged;
-                _navigationService.DestinationReached -= OnDestinationReached;
-                _navigationService.RouteDeviated -= OnRouteDeviated;
+                // 清理計時器
+                _navigationUpdateTimer?.Dispose();
+                _navigationUpdateTimer = null;
+
+                // 安全地清理搜尋相關資源
+                SafeDisposeCancellationTokenSource();
+
+                // 清理搜尋鎖
+                try
+                {
+                    _searchLock?.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // 搜尋鎖已被釋放，忽略
+                }
+
+                // 取消訂閱導航事件
+                if (_navigationService != null)
+                {
+                    _navigationService.InstructionUpdated -= OnNavigationInstructionUpdated;
+                    _navigationService.StateChanged -= OnNavigationStateChanged;
+                    _navigationService.DestinationReached -= OnDestinationReached;
+                    _navigationService.RouteDeviated -= OnRouteDeviated;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"OnDisappearing 清理資源時發生錯誤: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 安全地釋放 CancellationTokenSource，避免 ObjectDisposedException
+        /// </summary>
+        private void SafeDisposeCancellationTokenSource()
+        {
+            if (_searchCancellationTokenSource != null)
+            {
+                try
+                {
+                    // 檢查是否已被釋放
+                    if (!_searchCancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        _searchCancellationTokenSource.Cancel();
+                    }
+                }
+                catch (ObjectDisposedException)
+                {
+                    // CancellationTokenSource 已被釋放，這是正常的
+                    System.Diagnostics.Debug.WriteLine("CancellationTokenSource 已被釋放");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"取消搜尋權杖時發生錯誤: {ex.Message}");
+                }
+                finally
+                {
+                    try
+                    {
+                        _searchCancellationTokenSource?.Dispose();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // 已被釋放，忽略
+                    }
+                    _searchCancellationTokenSource = null;
+                }
             }
         }
 
@@ -1309,22 +1610,23 @@ namespace MapLocationApp.Views
             {
                 if (_navigationService == null)
                 {
-                    await DisplayAlert("錯誤", "導航服務不可用", "確定");
+                    ShowStatusMessage("導航服務不可用", isSuccess: false);
                     return;
                 }
 
                 await _navigationService.StartNavigationAsync(route);
-                
+
                 // 更新 UI
                 UpdateNavigationUI();
-                
-                await DisplayAlert("✅ 導航開始", "進階導航已啟動，請跟隨語音指示", "確定");
+                IsEndNavigationSheetVisible = false;
+                ShowStatusMessage("導航已開始", isSuccess: true);
             }
             catch (Exception ex)
             {
-                await DisplayAlert("❌ 錯誤", $"開始導航失敗: {ex.Message}", "確定");
+                ShowStatusMessage($"開始導航失敗: {ex.Message}", isSuccess: false);
             }
         }
+
 
         private async Task StopAdvancedNavigationAsync()
         {
@@ -1334,20 +1636,21 @@ namespace MapLocationApp.Views
                 {
                     await _navigationService.StopNavigationAsync();
                 }
-                
+
                 // 更新 UI
                 UpdateNavigationUI();
-                
-                await DisplayAlert("✅ 導航停止", "導航已結束", "確定");
+                IsEndNavigationSheetVisible = false;
+                ShowStatusMessage("導航已結束", isSuccess: true);
             }
             catch (Exception ex)
             {
-                await DisplayAlert("❌ 錯誤", $"停止導航失敗: {ex.Message}", "確定");
+                ShowStatusMessage($"停止導航失敗: {ex.Message}", isSuccess: false);
             }
         }
 
+
         // 導航事件處理器
-        private void OnNavigationInstructionUpdated(object sender, NavigationInstruction instruction)
+        private void OnNavigationInstructionUpdated(object? sender, NavigationInstruction instruction)
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
@@ -1369,7 +1672,7 @@ namespace MapLocationApp.Views
             });
         }
 
-        private void OnNavigationStateChanged(object sender, NavigationState state)
+        private void OnNavigationStateChanged(object? sender, NavigationState state)
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -1389,7 +1692,7 @@ namespace MapLocationApp.Views
             });
         }
 
-        private async void OnDestinationReached(object sender, EventArgs e)
+        private async void OnDestinationReached(object? sender, EventArgs e)
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -1398,7 +1701,7 @@ namespace MapLocationApp.Views
             });
         }
 
-        private async void OnRouteDeviated(object sender, RouteDeviationResult result)
+        private async void OnRouteDeviated(object? sender, RouteDeviationResult result)
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -1424,6 +1727,11 @@ namespace MapLocationApp.Views
                 
                 // 同步靜音按鈕狀態
                 UpdateMuteButtonStates();
+
+                if (!IsNavigating && IsEndNavigationSheetVisible)
+                {
+                    IsEndNavigationSheetVisible = false;
+                }
             }
             catch (Exception ex)
             {
@@ -1432,32 +1740,12 @@ namespace MapLocationApp.Views
         }
 
         // 新的 Google Maps 風格事件處理器
-        private async void OnNavigationMenuClicked(object sender, EventArgs e)
+        private void OnNavigationMenuClicked(object sender, EventArgs e)
         {
             try
             {
-                // 避免 DisplayActionSheet，使用簡化的邏輯
-                System.Diagnostics.Debug.WriteLine("導航選項選單點擊 - 使用預設操作：停止導航");
-                var action = "停止導航"; // 預設執行最常用的操作
-                
-                switch (action)
-                {
-                    case "路線總覽":
-                        await ShowRouteOverview();
-                        break;
-                    case "避開收費站":
-                        await ToggleAvoidTolls();
-                        break;
-                    case "避開高速公路":
-                        await ToggleAvoidHighways();
-                        break;
-                    case "回報問題":
-                        await ReportIssue();
-                        break;
-                    case "停止導航":
-                        await StopAdvancedNavigationAsync();
-                        break;
-                }
+                System.Diagnostics.Debug.WriteLine("導航選項選單點擊 - 顯示結束導航確認");
+                IsEndNavigationSheetVisible = true;
             }
             catch (Exception ex)
             {
@@ -1465,14 +1753,12 @@ namespace MapLocationApp.Views
             }
         }
 
-        private async void OnExitNavigationClicked(object sender, EventArgs e)
+
+        private void OnExitNavigationClicked(object sender, EventArgs e)
         {
-            var result = await DisplayAlert("停止導航", "確定要停止導航嗎？", "停止", "取消");
-            if (result)
-            {
-                await StopAdvancedNavigationAsync();
-            }
+            IsEndNavigationSheetVisible = true;
         }
+
 
         private async void OnRecenterClicked(object sender, EventArgs e)
         {
@@ -1819,14 +2105,14 @@ namespace MapLocationApp.Views
 
         #region INotifyPropertyChanged Implementation
         
-        public new event PropertyChangedEventHandler PropertyChanged;
+        public new event PropertyChangedEventHandler? PropertyChanged;
 
-        protected new virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected new virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
+        protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string? propertyName = "", Action? onChanged = null)
         {
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
@@ -1955,3 +2241,12 @@ namespace MapLocationApp.Views
         #endregion
     }
 }
+
+
+
+
+
+
+
+
+

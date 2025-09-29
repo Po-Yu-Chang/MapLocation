@@ -4,6 +4,8 @@ using SkiaSharp.Views.Maui.Controls.Hosting;
 using MapLocationApp.Services;
 using MapLocationApp.Views;
 using System.Reflection;
+using CommunityToolkit.Maui;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace MapLocationApp;
 
@@ -16,6 +18,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.UseSkiaSharp(true)
 			.ConfigureFonts(fonts =>
 			{
@@ -63,6 +66,17 @@ public static class MauiProgram
 			return new AdvancedLocationService(baseLocationService);
 		});
 
+		// 註冊人臉辨識服務
+		builder.Services.AddSingleton<IFaceDatabase, FaceDatabase>();
+#if WINDOWS
+		builder.Services.AddSingleton<IFaceRecognitionService, Platforms.Windows.FaceAiSharpService>();
+#else
+		builder.Services.AddSingleton<IFaceRecognitionService>(provider => null!); // 其他平台暫不支援
+#endif
+
+		// 提前註冊關閉管理服務 (必須在 Build 前)
+		builder.Services.AddSingleton<IAppShutdownService, AppShutdownService>();
+
 		// 註冊頁面
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MapPage>();
@@ -71,13 +85,39 @@ public static class MauiProgram
 		builder.Services.AddTransient<SettingsPage>();
 		builder.Services.AddTransient<RoutePlanningPage>();
 		builder.Services.AddTransient<LoginPage>();
+		builder.Services.AddTransient<FaceRecognitionPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
 
+
+		// 掛載 Windows 關閉事件以確保釋放背景服務
+		builder.ConfigureLifecycleEvents(events =>
+		{
+#if WINDOWS
+			events.AddWindows(w =>
+			{
+				w.OnClosed((win, args) =>
+				{
+					try
+					{
+						// 使用已建立的全域 Services 實例
+						var shutdownSvc = Services?.GetService(typeof(IAppShutdownService)) as IAppShutdownService;
+						shutdownSvc?.ShutdownAsync().GetAwaiter().GetResult();
+					}
+					catch { }
+				});
+			});
+#endif
+		});
+
 		var app = builder.Build();
 		Services = app.Services;
+
+		// 初始化 ServiceHelper
+		Views.ServiceHelper.Initialize(Services);
+		
 		return app;
 	}
 }

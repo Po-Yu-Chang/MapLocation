@@ -2,104 +2,257 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MapLocationApp.MainPage"
-             Style="{StaticResource DarkPageStyle}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource GlassBackground}, Dark={StaticResource GlassBackgroundDark}}"
+             Background="{StaticResource LiquidBackgroundBrush}">
 
     <ContentPage.Resources>
-        <ResourceDictionary Source="Resources/Styles/DarkTheme.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/LiquidGlassTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20">
-            
-            <!-- 標題區域 -->
-            <Frame Style="{StaticResource CardFrameStyle}" Margin="0,20,0,0">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Label Text="📍" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="MapLocation" Style="{StaticResource TitleLabelStyle}"/>
-                    <Label Text="智慧位置管理系統" Style="{StaticResource LabelStyle}" HorizontalOptions="Center"/>
+            <Grid>
+                <!-- 背景裝飾光暈層 -->
+                <Grid>
+                    <Ellipse Fill="{StaticResource AccentGlowPurple}" WidthRequest="520" HeightRequest="520" Opacity="0.25" TranslationX="-140" TranslationY="-120"/>
+                    <Ellipse Fill="{StaticResource AccentGlowBlue}" WidthRequest="480" HeightRequest="480" Opacity="0.22" TranslationX="260" TranslationY="-80"/>
+                    <Ellipse Fill="{StaticResource AccentGlowPink}" WidthRequest="560" HeightRequest="560" Opacity="0.20" TranslationX="80" TranslationY="280"/>
+                </Grid>
+
+                <VerticalStackLayout Spacing="0" Padding="0">
+
+                <!-- 頂部安全區域 (保留空間避免內容貼齊視窗頂端) -->
+                <BoxView HeightRequest="40" Color="Transparent"/>
+
+            <!-- 主標題區域 -->
+            <VerticalStackLayout Spacing="16" Padding="24,0">
+
+                <!-- 歡迎標題 -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="探索世界"
+                           Style="{StaticResource LiquidLargeTitle}"
+                           HorizontalOptions="Start"/>
+                    <Label Text="智慧位置管理系統"
+                           Style="{StaticResource LiquidSecondaryText}"
+                           HorizontalOptions="Start"/>
                 </VerticalStackLayout>
-            </Frame>
 
-            <!-- 功能卡片區域 -->
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="16" ColumnSpacing="16">
-                
-                <!-- 地圖功能 -->
-                <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="🗺️" FontSize="32" HorizontalOptions="Center"/>
-                        <Label Text="地圖導航" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="查看位置和地理圍欄" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開啟地圖" Style="{StaticResource PrimaryButtonStyle}" 
-                                Clicked="OnMapClicked" WidthRequest="120"/>
+                <!-- 狀態指示器 -->
+                <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                    <Border Style="{StaticResource LiquidStatusIndicator}"/>
+                    <Label Text="系統運行正常"
+                           Style="{StaticResource LiquidCaptionText}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+
+            <!-- 主要功能區域 -->
+            <VerticalStackLayout Spacing="24" Padding="24,16">
+
+                <!-- 主要功能卡片 -->
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="12" ColumnSpacing="12">
+
+                    <!-- 地圖導航 -->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <Border Style="{StaticResource LiquidIconContainer}">
+                                <Label Text="🗺️" FontSize="28"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="地圖導航"
+                                       Style="{StaticResource LiquidTitle3}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="智慧路線規劃"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <Button Text="開啟地圖"
+                                    Style="{StaticResource LiquidPrimaryButton}"
+                                    Clicked="OnMapClicked"
+                                    WidthRequest="140"
+                                    HeightRequest="44"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 智慧打卡 -->
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <Border Style="{StaticResource LiquidIconContainer}">
+                                <Label Text="⏰" FontSize="28"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="智慧打卡"
+                                       Style="{StaticResource LiquidTitle3}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="GPS考勤系統"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <Button Text="開始打卡"
+                                    Style="{StaticResource LiquidSuccessButton}"
+                                    Clicked="OnCheckInClicked"
+                                    WidthRequest="140"
+                                    HeightRequest="44"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 隱私保護 -->
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <Border Style="{StaticResource LiquidIconContainer}">
+                                <Label Text="🔒" FontSize="28"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="隱私保護"
+                                       Style="{StaticResource LiquidTitle3}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="資料安全政策"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <Button Text="查看政策"
+                                    Style="{StaticResource LiquidSecondaryFunctionButton}"
+                                    Clicked="OnPrivacyClicked"
+                                    WidthRequest="140"
+                                    HeightRequest="44"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- AI 人臉辨識 -->
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <Border Style="{StaticResource LiquidIconContainer}">
+                                <Label Text="👤" FontSize="28"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="AI 識別"
+                                       Style="{StaticResource LiquidTitle3}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="智慧人臉辨識"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <Button Text="開啟識別"
+                                    Style="{StaticResource LiquidPrimaryButton}"
+                                    Clicked="OnFaceRecognitionClicked"
+                                    WidthRequest="140"
+                                    HeightRequest="44"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- 系統狀態卡片 -->
+                <Border Style="{StaticResource LiquidGlassCard}" Margin="0,8,0,0">
+                    <VerticalStackLayout Spacing="20">
+                        <HorizontalStackLayout Spacing="12">
+                            <Border Style="{StaticResource LiquidIconContainer}"
+                                    WidthRequest="40" HeightRequest="40">
+                                <Label Text="📊" FontSize="18"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label Text="系統狀態監控"
+                                       Style="{StaticResource LiquidTitle3}"/>
+                                <Label Text="即時監控系統運行狀態"
+                                       Style="{StaticResource LiquidCaptionText}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <BoxView Style="{StaticResource LiquidSeparatorStyle}"/>
+
+                        <VerticalStackLayout Spacing="16">
+                            <!-- GPS 狀態 -->
+                            <HorizontalStackLayout Spacing="12">
+                                <Border Style="{StaticResource LiquidStatusIndicator}"/>
+                                <Label Text="GPS定位服務"
+                                       Style="{StaticResource LiquidBodyText}"
+                                       VerticalOptions="Center"/>
+                                <Label Text="準備就緒"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="EndAndExpand"/>
+                            </HorizontalStackLayout>
+
+                            <!-- 地理圍欄狀態 -->
+                            <HorizontalStackLayout Spacing="12">
+                                <Border Style="{StaticResource LiquidStatusIndicator}"/>
+                                <Label Text="地理圍欄監控"
+                                       Style="{StaticResource LiquidBodyText}"
+                                       VerticalOptions="Center"/>
+                                <Label Text="啟動中"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="EndAndExpand"/>
+                            </HorizontalStackLayout>
+
+                            <!-- 雲端同步狀態 -->
+                            <HorizontalStackLayout Spacing="12">
+                                <Border Style="{StaticResource LiquidStatusIndicator}"/>
+                                <Label Text="雲端同步服務"
+                                       Style="{StaticResource LiquidBodyText}"
+                                       VerticalOptions="Center"/>
+                                <Label Text="已連接"
+                                       Style="{StaticResource LiquidCaptionText}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="EndAndExpand"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <!-- 打卡功能 -->
-                <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="⏰" FontSize="32" HorizontalOptions="Center"/>
-                        <Label Text="位置打卡" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="GPS智慧考勤系統" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開始打卡" Style="{StaticResource SuccessButtonStyle}" 
-                                Clicked="OnCheckInClicked" WidthRequest="120"/>
-                    </VerticalStackLayout>
-                </Frame>
+                <!-- 快速操作區域 -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="快速操作"
+                           Style="{StaticResource LiquidTitle2}"
+                           Margin="0,0,0,8"/>
 
-                <!-- 隱私政策 -->
-                <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="🔒" FontSize="32" HorizontalOptions="Center"/>
-                        <Label Text="隱私政策" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="了解資料保護政策" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="查看政策" Style="{StaticResource SecondaryButtonStyle}" 
-                                Clicked="OnPrivacyClicked" WidthRequest="120"/>
-                    </VerticalStackLayout>
-                </Frame>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <Button x:Name="QuickLocationBtn"
+                                Grid.Column="0"
+                                Text="📍 獲取位置"
+                                Style="{StaticResource LiquidSecondaryButton}"
+                                Clicked="OnQuickLocationClicked"/>
 
-                <!-- 設定 -->
-                <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="⚙️" FontSize="32" HorizontalOptions="Center"/>
-                        <Label Text="應用設定" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="個人化設定選項" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="設定選項" Style="{StaticResource SecondaryButtonStyle}" 
-                                Clicked="OnSettingsClicked" WidthRequest="120"/>
-                    </VerticalStackLayout>
-                </Frame>
-
-            </Grid>
-
-            <!-- 狀態資訊卡片 -->
-            <Frame Style="{StaticResource CardFrameStyle}">
-                <VerticalStackLayout Spacing="16">
-                    <Label Text="系統狀態" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold"/>
-                    
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="12">
-                        <Label Grid.Row="0" Grid.Column="0" Text="🔍" FontSize="20"/>
-                        <Label Grid.Row="0" Grid.Column="1" Text="GPS定位服務: 準備就緒" Style="{StaticResource LabelStyle}"/>
-                        
-                        <Label Grid.Row="1" Grid.Column="0" Text="📍" FontSize="20"/>
-                        <Label Grid.Row="1" Grid.Column="1" Text="地理圍欄監控: 啟動中" Style="{StaticResource LabelStyle}"/>
-                        
-                        <Label Grid.Row="2" Grid.Column="0" Text="☁️" FontSize="20"/>
-                        <Label Grid.Row="2" Grid.Column="1" Text="雲端同步: 已連接" Style="{StaticResource LabelStyle}"/>
+                        <Button Grid.Column="1"
+                                Text="⚙️ 系統設定"
+                                Style="{StaticResource LiquidSecondaryButton}"
+                                Clicked="OnSettingsClicked"/>
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
 
-            <!-- 快速操作按鈕 -->
-            <Button x:Name="QuickLocationBtn"
-                    Text="📍 獲取當前位置" 
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    Clicked="OnQuickLocationClicked"/>
+            </VerticalStackLayout>
 
-            <!-- 版本資訊 -->
-            <Label Text="MapLocation v1.0.0" 
-                   Style="{StaticResource SmallLabelStyle}" 
-                   HorizontalOptions="Center" 
-                   Margin="0,20,0,10"/>
+            <!-- 底部版本資訊 -->
+            <VerticalStackLayout Spacing="12" Padding="24,30,24,52">
+                <BoxView Style="{StaticResource LiquidSeparatorStyle}"/>
+                <Label Text="MapLocation v1.0.0"
+                       Style="{StaticResource LiquidCaptionText}"
+                       HorizontalOptions="Center"/>
+                <Label Text="Powered by AI • 智慧位置管理"
+                       Style="{StaticResource LiquidCaptionText}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
+        </Grid>
     </ScrollView>
 
 </ContentPage>

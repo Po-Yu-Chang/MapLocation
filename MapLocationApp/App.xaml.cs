@@ -1,4 +1,6 @@
-﻿namespace MapLocationApp;
+using MapLocationApp.Services;
+
+namespace MapLocationApp;
 
 public partial class App : Application
 {
@@ -31,6 +33,35 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new AppShell());
+		var window = new Window(new AppShell());
+		
+		// 檢查是否已登入，如果沒有則導向登入頁面
+		MainThread.BeginInvokeOnMainThread(async () =>
+		{
+			await CheckLoginStatus();
+		});
+		
+		return window;
+	}
+
+	private async Task CheckLoginStatus()
+	{
+		try
+		{
+			await Task.Delay(1000); // 等待應用程式完全載入
+			
+			var configService = MauiProgram.Services.GetRequiredService<IConfigService>();
+			var currentUser = await configService.GetCurrentUserAsync();
+			
+			if (currentUser == null)
+			{
+				await Shell.Current.GoToAsync("//LoginPage");
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"檢查登入狀態失敗: {ex.Message}");
+			await Shell.Current.GoToAsync("//LoginPage");
+		}
 	}
 }

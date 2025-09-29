@@ -497,6 +497,78 @@ public partial class FaceRecognitionPage : ContentPage
             _ => "極低信心度"
         };
     }
+
+    // ===== 相機功能相關方法 =====
+
+    private async void OnStartLiveClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            StartLiveButton.IsEnabled = false;
+            StopLiveButton.IsEnabled = true;
+            CaptureFromLiveButton.IsEnabled = true;
+            LiveModeStatusLabel.Text = "即時辨識已啟動";
+
+            // 顯示即時模式區域
+            LiveCameraContainer.IsVisible = true;
+            LiveOverlayLabel.IsVisible = true;
+            LiveOverlayLabel.Text = "即時模式已啟動";
+
+            await DisplayAlert("提示", "即時相機功能目前為示範模式。\n完整功能需要相機權限和進階設定。", "確定");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "啟動即時相機失敗");
+            await DisplayAlert("錯誤", $"啟動相機失敗: {ex.Message}", "確定");
+
+            StartLiveButton.IsEnabled = true;
+            StopLiveButton.IsEnabled = false;
+            CaptureFromLiveButton.IsEnabled = false;
+        }
+    }
+
+    private async void OnStopLiveClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            StartLiveButton.IsEnabled = true;
+            StopLiveButton.IsEnabled = false;
+            CaptureFromLiveButton.IsEnabled = false;
+            LiveModeStatusLabel.Text = "已停止";
+
+            // 隱藏即時模式區域
+            LiveOverlayLabel.IsVisible = false;
+            LiveOverlayLabel.Text = "即時偵測中...";
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "停止即時相機失敗");
+            await DisplayAlert("錯誤", $"停止相機失敗: {ex.Message}", "確定");
+        }
+    }
+
+    private async void OnCaptureFromLiveClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            // 示範從即時相機擷取功能
+            await DisplayAlert("提示",
+                "即時相機擷取功能正在開發中。\n" +
+                "目前請使用 '拍照' 或 '選擇檔案' 功能。",
+                "確定");
+
+            // 實際實作時的程式碼架構：
+            // 1. 捕獲當前相機幀
+            // 2. 轉換為適當的圖像格式
+            // 3. 進行人臉辨識處理
+            // 4. 顯示結果
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "從即時相機擷取失敗");
+            await DisplayAlert("錯誤", $"擷取失敗: {ex.Message}", "確定");
+        }
+    }
 }
 
 public class DetectedFaceViewModel

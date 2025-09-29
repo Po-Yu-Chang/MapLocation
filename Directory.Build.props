@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- 全域禁用警告 -->
+    <NoWarn>$(NoWarn);CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8619;CS8622;CS8625;CS8629;CS1998;CS0168;NU1608;XC0022</NoWarn>
+    
+    <!-- 針對 .NET 9.0 和 MAUI 的設定 -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    
+    <!-- 針對 Nullable 相關的設定 -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>

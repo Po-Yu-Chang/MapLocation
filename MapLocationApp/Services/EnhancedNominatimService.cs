@@ -91,55 +91,118 @@ namespace MapLocationApp.Services
         {
             var suggestions = new List<SearchSuggestion>();
 
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                System.Diagnostics.Debug.WriteLine("查詢字串為空");
+                return suggestions;
+            }
+
             try
             {
                 string url = $"{BaseUrl}/search?q={Uri.EscapeDataString(query)}&format=json&limit=8&accept-language=zh-TW,zh&addressdetails=1&countrycodes=tw";
+                System.Diagnostics.Debug.WriteLine($"API 請求 URL: {url}");
 
-                var response = await _httpClient.GetStringAsync(url);
-                JArray json = JArray.Parse(response);
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                var response = await _httpClient.GetStringAsync(url, cts.Token);
+                
+                if (string.IsNullOrWhiteSpace(response))
+                {
+                    System.Diagnostics.Debug.WriteLine("API 回應為空");
+                    return suggestions;
+                }
+
+                JArray json;
+                try
+                {
+                    json = JArray.Parse(response);
+                }
+                catch (Newtonsoft.Json.JsonException jsonEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"JSON 解析錯誤: {jsonEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"原始回應: {response}");
+                    return suggestions;
+                }
+
+                if (json == null || json.Count == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("API 沒有返回結果");
+                    return suggestions;
+                }
 
                 foreach (var item in json)
                 {
-                    var lat = item["lat"]?.ToString();
-                    var lon = item["lon"]?.ToString();
-                    var displayName = item["display_name"]?.ToString();
-                    var name = item["name"]?.ToString();
-                    var type = item["type"]?.ToString();
-                    var category = item["class"]?.ToString();
-
-                    if (double.TryParse(lat, out double latitude) && 
-                        double.TryParse(lon, out double longitude))
+                    try
                     {
-                        // 建立主要文字和次要文字
-                        var mainText = !string.IsNullOrEmpty(name) ? name : 
-                                      displayName?.Split(',').FirstOrDefault()?.Trim() ?? "未知地點";
+                        var lat = item?["lat"]?.ToString();
+                        var lon = item?["lon"]?.ToString();
+                        var displayName = item?["display_name"]?.ToString();
+                        var name = item?["name"]?.ToString();
+                        var type = item?["type"]?.ToString();
+                        var category = item?["class"]?.ToString();
 
-                        var addressParts = displayName?.Split(',').Select(p => p.Trim()).Where(p => !string.IsNullOrEmpty(p)).ToList() ?? new List<string>();
-                        var secondaryText = addressParts.Count > 1 ? string.Join(", ", addressParts.Skip(1).Take(3)) : "";
-
-                        // 添加類型圖標
-                        var typeIcon = GetLocationTypeIcon(category, type);
-                        if (!string.IsNullOrEmpty(typeIcon))
+                        if (double.TryParse(lat, out double latitude) && 
+                            double.TryParse(lon, out double longitude))
                         {
-                            secondaryText = $"{typeIcon} {secondaryText}";
+                            // 建立主要文字和次要文字
+                            var mainText = !string.IsNullOrEmpty(name) ? name : 
+                                          displayName?.Split(',').FirstOrDefault()?.Trim() ?? "未知地點";
+
+                            var addressParts = displayName?.Split(',')
+                                .Select(p => p?.Trim())
+                                .Where(p => !string.IsNullOrEmpty(p))
+                                .ToList() ?? new List<string>();
+                            
+                            var secondaryText = addressParts.Count > 1 ? 
+                                string.Join(", ", addressParts.Skip(1).Take(3)) : "";
+
+                            // 添加類型圖標
+                            var typeIcon = GetLocationTypeIcon(category, type);
+                            if (!string.IsNullOrEmpty(typeIcon) && !string.IsNullOrEmpty(secondaryText))
+                            {
+                                secondaryText = $"{typeIcon} {secondaryText}";
+                            }
+                            else if (!string.IsNullOrEmpty(typeIcon))
+                            {
+                                secondaryText = typeIcon;
+                            }
+
+                            suggestions.Add(new SearchSuggestion
+                            {
+                                MainText = mainText ?? "未知地點",
+                                SecondaryText = secondaryText ?? "",
+                                Latitude = latitude,
+                                Longitude = longitude
+                            });
                         }
-
-                        suggestions.Add(new SearchSuggestion
+                        else
                         {
-                            MainText = mainText,
-                            SecondaryText = secondaryText,
-                            Latitude = latitude,
-                            Longitude = longitude
-                        });
+                            System.Diagnostics.Debug.WriteLine($"無效的座標: lat={lat}, lon={lon}");
+                        }
+                    }
+                    catch (Exception itemEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"處理單個搜尋結果錯誤: {itemEx.Message}");
+                        continue; // 跳過這個結果，繼續處理其他結果
                     }
                 }
 
                 System.Diagnostics.Debug.WriteLine($"✅ 找到 {suggestions.Count} 個搜尋結果: {query}");
                 return suggestions;
             }
+            catch (TaskCanceledException)
+            {
+                System.Diagnostics.Debug.WriteLine($"⏰ API 請求超時: {query}");
+                return suggestions;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"🌐 網路請求錯誤: {httpEx.Message}");
+                return suggestions;
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"❌ 搜尋建議錯誤: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ 搜尋建議嚴重錯誤: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"詳細錯誤: {ex.StackTrace}");
                 return suggestions;
             }
         }

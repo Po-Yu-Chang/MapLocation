@@ -23,7 +23,7 @@ namespace MapLocationApp.Services
         void StopLocationSharing(string teamId);
     }
 
-    public class TeamLocationService : ITeamLocationService
+    public class TeamLocationService : ITeamLocationService, IDisposable
     {
         private readonly ILocationService _locationService;
         private readonly string _teamsFile;
@@ -427,6 +427,28 @@ namespace MapLocationApp.Services
             {
                 System.Diagnostics.Debug.WriteLine($"Stop location sharing error: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 停止並清理所有團隊位置分享計時器 (關閉應用程式時呼叫)
+        /// </summary>
+        public void StopAllLocationSharing()
+        {
+            foreach (var kv in _locationTimers.ToList())
+            {
+                try
+                {
+                    kv.Value.Stop();
+                    kv.Value.Dispose();
+                }
+                catch { }
+            }
+            _locationTimers.Clear();
+        }
+
+        public void Dispose()
+        {
+            StopAllLocationSharing();
         }
 
         private async Task OnLocationTimer(string teamId)
