@@ -392,3 +392,7 @@ $RECYCLE.BIN/
 ## Custom additions
 appsettings.json
 *.csproj.user
+
+## Package installation files
+*.deb
+packages-microsoft-prod.deb
