@@ -512,7 +512,10 @@ public partial class FaceRecognitionPage : ContentPage
             // 顯示即時模式區域
             LiveCameraContainer.IsVisible = true;
             LiveOverlayLabel.IsVisible = true;
-            LiveOverlayLabel.Text = "即時模式已啟動";
+            if (LiveOverlayLabel.Content is Label overlayLabel)
+            {
+                overlayLabel.Text = "即時模式已啟動";
+            }
 
             await DisplayAlert("提示", "即時相機功能目前為示範模式。\n完整功能需要相機權限和進階設定。", "確定");
         }
@@ -538,7 +541,10 @@ public partial class FaceRecognitionPage : ContentPage
 
             // 隱藏即時模式區域
             LiveOverlayLabel.IsVisible = false;
-            LiveOverlayLabel.Text = "即時偵測中...";
+            if (LiveOverlayLabel.Content is Label overlayLabel)
+            {
+                overlayLabel.Text = "即時偵測中...";
+            }
         }
         catch (Exception ex)
         {

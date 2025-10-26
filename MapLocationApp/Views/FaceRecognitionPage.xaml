@@ -4,196 +4,299 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MapLocationApp.Views.FaceRecognitionPage"
              Title="人臉辨識"
-             Style="{StaticResource DarkPageStyle}">
+             Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
-        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
-            
+        <VerticalStackLayout Padding="20" Spacing="20" MaximumWidthRequest="900" HorizontalOptions="Center">
+
             <!-- 標題區域 -->
-            <Border Style="{StaticResource CardFrameStyle}">
-                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Label Text="👤" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="AI 人臉辨識系統" Style="{StaticResource TitleLabelStyle}" HorizontalOptions="Center"/>
-                    <Label Text="智慧人臉訓練與識別平台" Style="{StaticResource LabelStyle}" HorizontalOptions="Center"/>
+            <Border Style="{StaticResource ModernCardElevated}">
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="👤" FontSize="56" HorizontalOptions="Center"/>
+                    <Label Text="AI 人臉辨識系統" Style="{StaticResource ModernH2}" HorizontalOptions="Center"/>
+                    <Label Text="智慧人臉訓練與識別平台" Style="{StaticResource ModernBody}" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Border>
 
             <!-- 功能選擇區域 -->
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="16" ColumnSpacing="16">
-                
+
                 <!-- 訓練模式 -->
-                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="🎓" FontSize="36" HorizontalOptions="Center"/>
-                        <Label Text="訓練模式" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="新增人臉資料到系統" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開始訓練" Style="{StaticResource PrimaryButtonStyle}" 
-                                Clicked="OnTrainingModeClicked" WidthRequest="120"/>
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernCardInteractive}">
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" Padding="8">
+                        <Border Style="{StaticResource ModernIconContainer}">
+                            <Label Text="🎓" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <Label Text="訓練模式" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="新增人臉資料到系統" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="開始訓練"
+                                Style="{StaticResource ModernButtonPrimary}"
+                                Clicked="OnTrainingModeClicked"
+                                WidthRequest="140"/>
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- 測試模式 -->
-                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="🔍" FontSize="36" HorizontalOptions="Center"/>
-                        <Label Text="測試模式" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="辨識已訓練的人臉" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開始測試" Style="{StaticResource SuccessButtonStyle}" 
-                                Clicked="OnTestModeClicked" WidthRequest="120"/>
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernCardInteractive}">
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" Padding="8">
+                        <Border Style="{StaticResource ModernIconContainer}"
+                                BackgroundColor="{StaticResource ModernSuccessLight}">
+                            <Label Text="🔍" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernSuccess}"/>
+                        </Border>
+                        <Label Text="測試模式" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="辨識已訓練的人臉" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="開始測試"
+                                Style="{StaticResource ModernButtonSuccess}"
+                                Clicked="OnTestModeClicked"
+                                WidthRequest="140"/>
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- 管理模式 -->
-                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="📊" FontSize="36" HorizontalOptions="Center"/>
-                        <Label Text="資料管理" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="查看和管理人臉資料" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="管理資料" Style="{StaticResource SecondaryButtonStyle}" 
-                                Clicked="OnManagementModeClicked" WidthRequest="120"/>
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernCardInteractive}">
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" Padding="8">
+                        <Border Style="{StaticResource ModernIconContainer}"
+                                BackgroundColor="{StaticResource ModernSecondaryLight}">
+                            <Label Text="📊" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernSecondary}"/>
+                        </Border>
+                        <Label Text="資料管理" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="查看和管理人臉資料" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="管理資料"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnManagementModeClicked"
+                                WidthRequest="140"/>
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- 系統設定 -->
-                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardFrameStyle}">
-                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                        <Label Text="⚙️" FontSize="36" HorizontalOptions="Center"/>
-                        <Label Text="系統設定" Style="{StaticResource LabelStyle}" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Text="調整識別參數設定" Style="{StaticResource SmallLabelStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="系統設定" Style="{StaticResource SecondaryButtonStyle}" 
-                                Clicked="OnSystemSettingsClicked" WidthRequest="120"/>
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernCardInteractive}">
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" Padding="8">
+                        <Border Style="{StaticResource ModernIconContainer}"
+                                BackgroundColor="{StaticResource ModernAccentLight}">
+                            <Label Text="⚙️" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernAccent}"/>
+                        </Border>
+                        <Label Text="系統設定" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="調整識別參數設定" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="系統設定"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnSystemSettingsClicked"
+                                WidthRequest="140"/>
                     </VerticalStackLayout>
                 </Border>
 
             </Grid>
 
             <!-- 降級或診斷提醒 Banner -->
-            <Border x:Name="DegradedBanner" IsVisible="False" Stroke="#AA5500" StrokeShape="RoundRectangle 8" BackgroundColor="#663A1F" Padding="12">
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="⚠️ FaceAiSharp 未完全載入，已進入降級模式 (Demo)" Style="{StaticResource SmallLabelStyle}" TextColor="#FFD8B0"/>
-                    <Label Text="請確認 Windows x64、VC++ Runtime、FaceAiSharp.Bundle 套件已正確安裝。" Style="{StaticResource TinyLabelStyle}" TextColor="#FFCC99"/>
+            <Border x:Name="DegradedBanner"
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource ModernWarningLight}"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource ModernWarning}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="⚠️ FaceAiSharp 未完全載入，已進入降級模式 (Demo)"
+                           Style="{StaticResource ModernBody}"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource ModernWarning}"/>
+                    <Label Text="請確認 Windows x64、VC++ Runtime、FaceAiSharp.Bundle 套件已正確安裝。"
+                           Style="{StaticResource ModernBodySmall}"
+                           TextColor="{StaticResource ModernWarning}"/>
                 </VerticalStackLayout>
             </Border>
 
             <!-- 工作區域 -->
-            <Border x:Name="WorkAreaFrame" Style="{StaticResource CardFrameStyle}" IsVisible="False">
-                <StackLayout x:Name="WorkAreaContent" Spacing="15">
-                    <Label x:Name="WorkAreaTitle" Text="" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Border x:Name="WorkAreaFrame" Style="{StaticResource ModernCard}" IsVisible="False">
+                <StackLayout x:Name="WorkAreaContent" Spacing="16">
+                    <Label x:Name="WorkAreaTitle"
+                           Text=""
+                           Style="{StaticResource ModernH3}"
+                           HorizontalOptions="Center"/>
+
                     <!-- 即時相機模式 -->
-                    <Grid x:Name="LiveCameraContainer" IsVisible="False" RowSpacing="10">
+                    <Grid x:Name="LiveCameraContainer" IsVisible="False" RowSpacing="16">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="300" />
+                            <RowDefinition Height="400" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <HorizontalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center">
-                            <Button x:Name="StartLiveButton" Text="▶️ 開始即時辨識" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnStartLiveClicked"/>
-                            <Button x:Name="StopLiveButton" Text="⏹ 停止" IsEnabled="False" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnStopLiveClicked"/>
-                            <Button x:Name="CaptureFromLiveButton" Text="📸 擷取並訓練" IsEnabled="False" Style="{StaticResource SuccessButtonStyle}" Clicked="OnCaptureFromLiveClicked"/>
-                        </HorizontalStackLayout>
-                        <!-- CameraView 僅在支援平台顯示 -->
-                        <Border Grid.Row="1" StrokeThickness="1" Stroke="#444" BackgroundColor="#111" Padding="0" x:Name="CameraBorder">
+
+                        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <Button Grid.Column="0"
+                                    x:Name="StartLiveButton"
+                                    Text="▶️ 開始即時辨識"
+                                    Style="{StaticResource ModernButtonPrimary}"
+                                    Clicked="OnStartLiveClicked"/>
+                            <Button Grid.Column="1"
+                                    x:Name="StopLiveButton"
+                                    Text="⏹ 停止"
+                                    IsEnabled="False"
+                                    Style="{StaticResource ModernButtonDanger}"
+                                    Clicked="OnStopLiveClicked"/>
+                            <Button Grid.Column="2"
+                                    x:Name="CaptureFromLiveButton"
+                                    Text="📸 擷取並訓練"
+                                    IsEnabled="False"
+                                    Style="{StaticResource ModernButtonSuccess}"
+                                    Clicked="OnCaptureFromLiveClicked"/>
+                        </Grid>
+
+                        <!-- CameraView 佔位符 -->
+                        <Border Grid.Row="1"
+                                x:Name="CameraBorder"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}"
+                                StrokeThickness="2">
                             <Grid>
-                                <!-- 暫時使用佔位符，直到相機控件正確配置 -->
-                                <Border BackgroundColor="#1E1E1E"
+                                <VerticalStackLayout Spacing="16"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center">
+                                    <Label Text="📷"
+                                           FontSize="64"
+                                           HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource ModernTextTertiary}, Dark={StaticResource ModernTextSecondaryDark}}"/>
+                                    <Label Text="相機預覽區域"
+                                           Style="{StaticResource ModernH4}"
+                                           HorizontalOptions="Center"/>
+                                    <Label Text="即時相機功能正在開發中"
+                                           Style="{StaticResource ModernBodySmall}"
+                                           HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center"/>
+                                </VerticalStackLayout>
+
+                                <!-- 即時辨識結果疊加層 -->
+                                <Border x:Name="LiveOverlayLabel"
+                                        IsVisible="False"
+                                        BackgroundColor="#CC000000"
                                         StrokeShape="RoundRectangle 8"
-                                        Stroke="#444444"
-                                        StrokeThickness="1">
-                                    <VerticalStackLayout Spacing="12"
-                                                       HorizontalOptions="Center"
-                                                       VerticalOptions="Center">
-                                        <Label Text="📷"
-                                               FontSize="48"
-                                               HorizontalOptions="Center"
-                                               TextColor="#CCCCCC"/>
-                                        <Label Text="相機預覽區域"
-                                               Style="{StaticResource LabelStyle}"
-                                               HorizontalOptions="Center"
-                                               TextColor="#CCCCCC"/>
-                                        <Label Text="即時相機功能正在開發中"
-                                               Style="{StaticResource SmallLabelStyle}"
-                                               HorizontalOptions="Center"
-                                               TextColor="#888888"
-                                               HorizontalTextAlignment="Center"/>
-                                    </VerticalStackLayout>
+                                        Padding="12"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Start"
+                                        Margin="16">
+                                    <Label Text="即時偵測中..."
+                                           TextColor="White"
+                                           Style="{StaticResource ModernBodySmall}"
+                                           FontAttributes="Bold"/>
                                 </Border>
-                                <!-- 簡易疊加層顯示辨識結果文字 -->
-                                <Label x:Name="LiveOverlayLabel"
-                                       Text="即時偵測中..."
-                                       TextColor="#FFFFFF"
-                                       BackgroundColor="#66000000"
-                                       Padding="4"
-                                       HorizontalOptions="Start"
-                                       VerticalOptions="Start"
-                                       FontSize="12"
-                                       IsVisible="False"/>
                             </Grid>
                         </Border>
-                        <Label Grid.Row="2" x:Name="LiveModeStatusLabel" Text="尚未開始" Style="{StaticResource SmallLabelStyle}" HorizontalTextAlignment="Center"/>
+
+                        <Label Grid.Row="2"
+                               x:Name="LiveModeStatusLabel"
+                               Text="尚未開始"
+                               Style="{StaticResource ModernCaption}"
+                               HorizontalTextAlignment="Center"/>
                     </Grid>
                 </StackLayout>
             </Border>
 
             <!-- 影像選擇區域 -->
-            <Border x:Name="ImageFrame" Style="{StaticResource CardFrameStyle}" IsVisible="False">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="選擇影像" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold"/>
-                    
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Button Grid.Column="0" Text="📷 拍照" Style="{StaticResource PrimaryButtonStyle}" 
+            <Border x:Name="ImageFrame" Style="{StaticResource ModernCard}" IsVisible="False">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="選擇影像" Style="{StaticResource ModernH4}"/>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <Button Grid.Column="0"
+                                Text="📷 拍照"
+                                Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnTakePhotoClicked"/>
-                        <Button Grid.Column="1" Text="📁 選擇檔案" Style="{StaticResource SecondaryButtonStyle}" 
+                        <Button Grid.Column="1"
+                                Text="📁 選擇檔案"
+                                Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnSelectFileClicked"/>
-                        <Button Grid.Column="2" Text="❌ 取消" Style="{StaticResource SecondaryButtonStyle}" 
+                        <Button Grid.Column="2"
+                                Text="❌ 取消"
+                                Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnCancelClicked"/>
                     </Grid>
 
                     <!-- 影像預覽 -->
-                    <Image x:Name="PreviewImage" 
-                           HeightRequest="300" 
-                           WidthRequest="300"
-                           Aspect="AspectFit"
-                           BackgroundColor="#2D2D30"
-                           IsVisible="False"/>
+                    <Border IsVisible="{Binding Source={x:Reference PreviewImage}, Path=IsVisible}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="0">
+                        <Image x:Name="PreviewImage"
+                               HeightRequest="400"
+                               WidthRequest="400"
+                               Aspect="AspectFit"
+                               IsVisible="False"/>
+                    </Border>
 
                     <!-- 處理按鈕 -->
-                    <StackLayout x:Name="ProcessingButtons" Orientation="Horizontal" HorizontalOptions="Center" Spacing="10" IsVisible="False">
-                        <Button x:Name="ProcessButton" Text="🔄 處理影像" Style="{StaticResource PrimaryButtonStyle}" 
+                    <Grid x:Name="ProcessingButtons"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="12"
+                          IsVisible="False">
+                        <Button Grid.Column="0"
+                                x:Name="ProcessButton"
+                                Text="🔄 處理影像"
+                                Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnProcessImageClicked"/>
-                        <Button Text="🗑️ 重新選擇" Style="{StaticResource SecondaryButtonStyle}" 
+                        <Button Grid.Column="1"
+                                Text="🗑️ 重新選擇"
+                                Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnResetClicked"/>
-                    </StackLayout>
+                    </Grid>
 
                     <!-- 名稱輸入 (訓練模式) -->
-                    <StackLayout x:Name="NameInputArea" IsVisible="False" Spacing="10">
-                        <Label Text="請輸入人臉名稱:" Style="{StaticResource LabelStyle}"/>
-                        <Entry x:Name="NameEntry" Placeholder="例如: 張三" Style="{StaticResource DarkEntryStyle}"/>
-                        <Button Text="💾 儲存人臉" Style="{StaticResource SuccessButtonStyle}" 
+                    <VerticalStackLayout x:Name="NameInputArea" IsVisible="False" Spacing="12">
+                        <Label Text="請輸入人臉名稱:" Style="{StaticResource ModernBody}"/>
+                        <Entry x:Name="NameEntry"
+                               Placeholder="例如: 張三"
+                               Style="{StaticResource ModernEntry}"/>
+                        <Button Text="💾 儲存人臉"
+                                Style="{StaticResource ModernButtonSuccess}"
                                 Clicked="OnSaveFaceClicked"/>
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>
 
             <!-- 結果顯示區域 -->
-            <Border x:Name="ResultFrame" Style="{StaticResource CardFrameStyle}" IsVisible="False">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="處理結果" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold"/>
-                    <Label x:Name="ResultLabel" Style="{StaticResource LabelStyle}" HorizontalTextAlignment="Center"/>
-                    
+            <Border x:Name="ResultFrame" Style="{StaticResource ModernCard}" IsVisible="False">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="處理結果" Style="{StaticResource ModernH4}"/>
+                    <Label x:Name="ResultLabel" Style="{StaticResource ModernBody}" HorizontalTextAlignment="Center"/>
+
                     <!-- 偵測到的人臉資訊 -->
                     <CollectionView x:Name="DetectedFacesCollection" IsVisible="False">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="10" ColumnDefinitions="60,*,80" RowDefinitions="Auto,Auto">
-                                    <Label Grid.Column="0" Grid.Row="0" Text="👤" FontSize="24" VerticalOptions="Center"/>
-                                    <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" Style="{StaticResource LabelStyle}" FontAttributes="Bold"/>
-                                    <Label Grid.Column="2" Grid.Row="0" Text="{Binding Confidence, StringFormat='{0:P1}'}" Style="{StaticResource SmallLabelStyle}" HorizontalTextAlignment="End"/>
-                                    <Label Grid.Column="1" Grid.Row="1" Text="{Binding StatusText}" Style="{StaticResource SmallLabelStyle}"/>
-                                </Grid>
+                                <Border Style="{StaticResource ModernListItem}" Margin="0,6">
+                                    <Grid Padding="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
+                                        <Border Grid.Column="0" Grid.RowSpan="2"
+                                                BackgroundColor="{StaticResource ModernPrimaryLight}"
+                                                StrokeShape="RoundRectangle 12"
+                                                WidthRequest="48"
+                                                HeightRequest="48"
+                                                Padding="0"
+                                                VerticalOptions="Center">
+                                            <Label Text="👤"
+                                                   FontSize="24"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource ModernPrimary}"/>
+                                        </Border>
+                                        <Label Grid.Column="1" Grid.Row="0"
+                                               Text="{Binding Name}"
+                                               Style="{StaticResource ModernBody}"
+                                               FontAttributes="Bold"/>
+                                        <Label Grid.Column="1" Grid.Row="1"
+                                               Text="{Binding StatusText}"
+                                               Style="{StaticResource ModernBodySmall}"/>
+                                        <Border Grid.Column="2" Grid.RowSpan="2"
+                                                Style="{StaticResource ModernBadgeSuccess}"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Confidence, StringFormat='{0:P1}'}"
+                                                   Style="{StaticResource ModernCaption}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -201,29 +304,86 @@
             </Border>
 
             <!-- 系統狀態資訊 -->
-            <Border Style="{StaticResource CardFrameStyle}">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="系統狀態" Style="{StaticResource LabelStyle}" FontSize="16" FontAttributes="Bold"/>
-                    
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="10">
-                        <Label Grid.Row="0" Grid.Column="0" Text="🤖" FontSize="16"/>
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="SystemStatusLabel" Text="FaceAiSharp 系統: 準備就緒" Style="{StaticResource SmallLabelStyle}"/>
-                        
-                        <Label Grid.Row="1" Grid.Column="0" Text="📊" FontSize="16"/>
-                        <Label Grid.Row="1" Grid.Column="1" x:Name="DatabaseStatusLabel" Text="資料庫: 載入中..." Style="{StaticResource SmallLabelStyle}"/>
-                        
-                        <Label Grid.Row="2" Grid.Column="0" Text="💾" FontSize="16"/>
-                        <Label Grid.Row="2" Grid.Column="1" x:Name="StorageStatusLabel" Text="儲存空間: 可用" Style="{StaticResource SmallLabelStyle}"/>
-                    </Grid>
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="系統狀態" Style="{StaticResource ModernH4}"/>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource ModernSuccessLight}"
+                                    StrokeShape="RoundRectangle 8"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Padding="0">
+                                <Label Text="🤖"
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <Label Grid.Column="1"
+                                   x:Name="SystemStatusLabel"
+                                   Text="FaceAiSharp 系統: 準備就緒"
+                                   Style="{StaticResource ModernBody}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+
+                        <BoxView Style="{StaticResource ModernSeparator}"/>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource ModernInfoLight}"
+                                    StrokeShape="RoundRectangle 8"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Padding="0">
+                                <Label Text="📊"
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <Label Grid.Column="1"
+                                   x:Name="DatabaseStatusLabel"
+                                   Text="資料庫: 載入中..."
+                                   Style="{StaticResource ModernBody}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+
+                        <BoxView Style="{StaticResource ModernSeparator}"/>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource ModernPrimaryLight}"
+                                    StrokeShape="RoundRectangle 8"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Padding="0">
+                                <Label Text="💾"
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <Label Grid.Column="1"
+                                   x:Name="StorageStatusLabel"
+                                   Text="儲存空間: 可用"
+                                   Style="{StaticResource ModernBody}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>
 
             <!-- 說明文字 -->
-            <Label Text="提示：Windows 平台支援完整的 FaceAiSharp 人臉辨識功能，包括高精度的人臉偵測和識別。" 
-                   Style="{StaticResource SmallLabelStyle}" 
-                   HorizontalOptions="Center" 
-                   HorizontalTextAlignment="Center"
-                   Margin="0,10,0,20"/>
+            <Border BackgroundColor="{StaticResource ModernInfoLight}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16"
+                    Margin="0,0,0,20">
+                <Label Text="提示：Windows 平台支援完整的 FaceAiSharp 人臉辨識功能，包括高精度的人臉偵測和識別。"
+                       Style="{StaticResource ModernBody}"
+                       TextColor="{StaticResource ModernInfo}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

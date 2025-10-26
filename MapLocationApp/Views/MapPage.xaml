@@ -3,11 +3,15 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             Title="🗺️ 地圖導航"
-             Style="{StaticResource DarkPageStyle}">
+             Title="地圖導航"
+             Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
-        <ResourceDictionary Source="../Resources/Styles/DarkTheme.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </ContentPage.Resources>
     
     <Grid>
@@ -16,128 +20,125 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- 地圖區域 -->
-        <Border Grid.Row="0" 
-                StrokeShape="RoundRectangle 20" 
-                Stroke="Transparent" 
-                Margin="16,16,16,8">
-            <Grid>
-                <!-- 地圖控制項 -->
-                <mapsui:MapControl x:Name="MapControl" 
-                                   VerticalOptions="Fill"
-                                   HorizontalOptions="Fill" />
+        <!-- Map Area -->
+        <Grid Grid.Row="0">
+            <!-- Map Control -->
+            <mapsui:MapControl x:Name="MapControl"
+                               VerticalOptions="Fill"
+                               HorizontalOptions="Fill" />
 
-                <!-- 浮動控制按鈕 -->
-                <VerticalStackLayout HorizontalOptions="End" 
-                                     VerticalOptions="Start" 
-                                     Margin="16" 
-                                     Spacing="8">
-                    <Button x:Name="LocationButton"
-                            Text="📍"
-                            FontSize="20"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            CornerRadius="24"
-                            BackgroundColor="{StaticResource InfoColor}"
-                            TextColor="{StaticResource WhiteTextColor}"
-                            Clicked="OnLocationButtonClicked" />
-                    
-                    <Button x:Name="ZoomInButton"
-                            Text="+"
-                            FontSize="20"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            CornerRadius="24"
-                            BackgroundColor="{StaticResource DarkSecondaryColor}"
-                            TextColor="{StaticResource WhiteTextColor}"
-                            Clicked="OnZoomInClicked" />
-                    
-                    <Button x:Name="ZoomOutButton"
-                            Text="-"
-                            FontSize="20"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            CornerRadius="24"
-                            BackgroundColor="{StaticResource DarkSecondaryColor}"
-                            TextColor="{StaticResource WhiteTextColor}"
-                            Clicked="OnZoomOutClicked" />
+            <!-- Floating Control Buttons -->
+            <VerticalStackLayout HorizontalOptions="End"
+                                 VerticalOptions="Start"
+                                 Margin="16,24,16,0"
+                                 Spacing="8">
+                <Button x:Name="LocationButton"
+                        Text="📍"
+                        Style="{StaticResource ModernButtonIcon}"
+                        BackgroundColor="{StaticResource ModernPrimary}"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Shadow="{StaticResource ModernPrimary}"
+                        Clicked="OnLocationButtonClicked" />
+
+                <Button x:Name="ZoomInButton"
+                        Text="+"
+                        Style="{StaticResource ModernButtonIcon}"
+                        Clicked="OnZoomInClicked" />
+
+                <Button x:Name="ZoomOutButton"
+                        Text="-"
+                        Style="{StaticResource ModernButtonIcon}"
+                        Clicked="OnZoomOutClicked" />
+            </VerticalStackLayout>
+
+            <!-- Attribution Badge -->
+            <Border HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Style="{StaticResource ModernCardSmall}"
+                    Margin="16"
+                    Opacity="0.95">
+                <Label x:Name="AttributionLabel"
+                       Text="© OpenStreetMap"
+                       Style="{StaticResource ModernCaption}" />
+            </Border>
+
+            <!-- Status Indicator -->
+            <Border HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Style="{StaticResource ModernCardSmall}"
+                    Margin="16,24,0,0">
+                <HorizontalStackLayout Spacing="8">
+                    <Border BackgroundColor="{StaticResource ModernSuccess}"
+                            StrokeShape="RoundRectangle 6"
+                            WidthRequest="8"
+                            HeightRequest="8"
+                            VerticalOptions="Center"/>
+                    <Label x:Name="StatusLabel"
+                           Text="準備就緒"
+                           Style="{StaticResource ModernBodySmall}"
+                           FontAttributes="Bold" />
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
+
+        <!-- Bottom Control Panel -->
+        <Border Grid.Row="1"
+                Style="{StaticResource ModernCardElevated}"
+                Margin="16,0,16,24">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Location Information -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="當前位置"
+                           Style="{StaticResource ModernBodySmall}"
+                           FontAttributes="Bold"/>
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="6" ColumnSpacing="12">
+                        <Label Grid.Row="0" Grid.Column="0" Text="📍" FontSize="16" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="LocationLabel"
+                               Text="位置: 準備獲取..."
+                               Style="{StaticResource ModernBodySmall}"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="🎯" FontSize="16" VerticalOptions="Center"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="AccuracyLabel"
+                               Text="精確度: 未知"
+                               Style="{StaticResource ModernCaption}"/>
+                    </Grid>
                 </VerticalStackLayout>
 
-                <!-- Attribution 標籤 -->
-                <Border HorizontalOptions="End"
-                        VerticalOptions="End"
-                        BackgroundColor="{StaticResource DarkSecondaryColor}"
-                        StrokeShape="RoundRectangle 8"
-                        Stroke="Transparent"
-                        Padding="8"
-                        Margin="16"
-                        Opacity="0.9">
-                    <Label x:Name="AttributionLabel"
-                           Text="© OpenStreetMap contributors"
-                           FontSize="10"
-                           TextColor="{StaticResource GrayTextColor}" />
-                </Border>
-
-                <!-- 狀態指示器 -->
-                <Border HorizontalOptions="Start"
-                        VerticalOptions="Start"
-                        BackgroundColor="{StaticResource DarkSecondaryColor}"
-                        StrokeShape="RoundRectangle 8"
-                        Stroke="Transparent"
-                        Padding="12"
-                        Margin="16">
-                    <Label x:Name="StatusLabel"
-                           Text="🔄 準備就緒"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource InfoColor}" />
-                </Border>
-            </Grid>
-        </Border>
-
-        <!-- 底部控制面板 -->
-        <Frame Grid.Row="1" 
-               Style="{StaticResource CardFrameStyle}" 
-               Margin="16,8,16,16">
-            <VerticalStackLayout Spacing="16">
-                
-                <!-- 位置資訊 -->
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="4" ColumnSpacing="12">
-                    <Label Grid.Row="0" Grid.Column="0" Text="📍" FontSize="16"/>
-                    <Label Grid.Row="0" Grid.Column="1" x:Name="LocationLabel" 
-                           Text="位置: 準備獲取..." 
-                           Style="{StaticResource LabelStyle}"/>
-                    
-                    <Label Grid.Row="1" Grid.Column="0" Text="🎯" FontSize="16"/>
-                    <Label Grid.Row="1" Grid.Column="1" x:Name="AccuracyLabel"
-                           Text="精確度: 未知"
-                           Style="{StaticResource SmallLabelStyle}"/>
-                </Grid>
-
-                <!-- 控制按鈕群組 -->
-                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                    <Button Grid.Column="0"
-                            Text="🎯 定位"
-                            Style="{StaticResource PrimaryButtonStyle}"
+                <!-- Control Buttons -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
+                    <Button Grid.Column="0" Grid.Row="0"
+                            Text="定位"
+                            Style="{StaticResource ModernButtonPrimary}"
+                            HeightRequest="44"
                             Clicked="OnLocationButtonClicked" />
-                    
-                    <Picker Grid.Column="1"
-                            x:Name="TileProviderPicker"
-                            Title="🗺️ 地圖類型"
-                            BackgroundColor="{StaticResource DarkSecondaryColor}"
-                            TextColor="{StaticResource WhiteTextColor}"
-                            TitleColor="{StaticResource GrayTextColor}"
-                            SelectedIndexChanged="OnTileProviderChanged" />
-                    
-                    <Button Grid.Column="2"
+
+                    <Button Grid.Column="1" Grid.Row="0"
                             x:Name="GeofenceButton"
-                            Text="🔍 圍欄"
-                            Style="{StaticResource SecondaryButtonStyle}"
+                            Text="圍欄"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            HeightRequest="44"
                             Clicked="OnGeofenceButtonClicked" />
+
+                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="{StaticResource ModernBorder}"
+                            StrokeThickness="1"
+                            Padding="12">
+                        <Picker x:Name="TileProviderPicker"
+                                Title="選擇地圖類型"
+                                Style="{StaticResource ModernPicker}"
+                                BackgroundColor="Transparent"
+                                Margin="0"
+                                HeightRequest="36"
+                                SelectedIndexChanged="OnTileProviderChanged" />
+                    </Border>
                 </Grid>
 
             </VerticalStackLayout>
-        </Frame>
+        </Border>
 
     </Grid>
 

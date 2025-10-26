@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ==================== PREMIUM MODERN DESIGN SYSTEM ==================== -->
+    <!-- Inspired by Notion, Linear, Figma - Professional SaaS Aesthetics -->
+
+    <!-- ==================== MODERN COLOR PALETTE ==================== -->
+
+    <!-- Primary Colors - Modern Blue -->
+    <Color x:Key="ModernPrimary">#6366F1</Color>
+    <Color x:Key="ModernPrimaryHover">#4F46E5</Color>
+    <Color x:Key="ModernPrimaryLight">#A5B4FC</Color>
+    <Color x:Key="ModernPrimaryLighter">#C7D2FE</Color>
+    <Color x:Key="ModernPrimaryDark">#3730A3</Color>
+
+    <!-- Secondary Colors - Purple -->
+    <Color x:Key="ModernSecondary">#8B5CF6</Color>
+    <Color x:Key="ModernSecondaryHover">#7C3AED</Color>
+    <Color x:Key="ModernSecondaryLight">#C4B5FD</Color>
+
+    <!-- Accent Colors -->
+    <Color x:Key="ModernAccent">#EC4899</Color>
+    <Color x:Key="ModernAccentLight">#F9A8D4</Color>
+
+    <!-- Semantic Colors -->
+    <Color x:Key="ModernSuccess">#10B981</Color>
+    <Color x:Key="ModernSuccessLight">#6EE7B7</Color>
+    <Color x:Key="ModernWarning">#F59E0B</Color>
+    <Color x:Key="ModernWarningLight">#FCD34D</Color>
+    <Color x:Key="ModernError">#EF4444</Color>
+    <Color x:Key="ModernErrorLight">#FCA5A5</Color>
+    <Color x:Key="ModernInfo">#3B82F6</Color>
+    <Color x:Key="ModernInfoLight">#93C5FD</Color>
+
+    <!-- Neutral Palette - Sophisticated Grays -->
+    <Color x:Key="ModernGray50">#F9FAFB</Color>
+    <Color x:Key="ModernGray100">#F3F4F6</Color>
+    <Color x:Key="ModernGray200">#E5E7EB</Color>
+    <Color x:Key="ModernGray300">#D1D5DB</Color>
+    <Color x:Key="ModernGray400">#9CA3AF</Color>
+    <Color x:Key="ModernGray500">#6B7280</Color>
+    <Color x:Key="ModernGray600">#4B5563</Color>
+    <Color x:Key="ModernGray700">#374151</Color>
+    <Color x:Key="ModernGray800">#1F2937</Color>
+    <Color x:Key="ModernGray900">#111827</Color>
+
+    <!-- Background Colors -->
+    <Color x:Key="ModernBgPrimary">#FFFFFF</Color>
+    <Color x:Key="ModernBgSecondary">#F9FAFB</Color>
+    <Color x:Key="ModernBgTertiary">#F3F4F6</Color>
+
+    <!-- Dark Mode Colors -->
+    <Color x:Key="ModernBgPrimaryDark">#0F172A</Color>
+    <Color x:Key="ModernBgSecondaryDark">#1E293B</Color>
+    <Color x:Key="ModernBgTertiaryDark">#334155</Color>
+
+    <!-- Text Colors -->
+    <Color x:Key="ModernTextPrimary">#111827</Color>
+    <Color x:Key="ModernTextSecondary">#6B7280</Color>
+    <Color x:Key="ModernTextTertiary">#9CA3AF</Color>
+    <Color x:Key="ModernTextPrimaryDark">#F9FAFB</Color>
+    <Color x:Key="ModernTextSecondaryDark">#D1D5DB</Color>
+
+    <!-- Border & Separator -->
+    <Color x:Key="ModernBorder">#E5E7EB</Color>
+    <Color x:Key="ModernBorderDark">#334155</Color>
+    <Color x:Key="ModernBorderHover">#D1D5DB</Color>
+
+    <!-- Shadow Colors -->
+    <Color x:Key="ModernShadowLight">#00000010</Color>
+    <Color x:Key="ModernShadowMedium">#00000020</Color>
+    <Color x:Key="ModernShadowStrong">#00000040</Color>
+
+    <!-- ==================== SPACING SYSTEM ==================== -->
+
+    <x:Double x:Key="Spacing4">4</x:Double>
+    <x:Double x:Key="Spacing8">8</x:Double>
+    <x:Double x:Key="Spacing12">12</x:Double>
+    <x:Double x:Key="Spacing16">16</x:Double>
+    <x:Double x:Key="Spacing20">20</x:Double>
+    <x:Double x:Key="Spacing24">24</x:Double>
+    <x:Double x:Key="Spacing32">32</x:Double>
+    <x:Double x:Key="Spacing40">40</x:Double>
+    <x:Double x:Key="Spacing48">48</x:Double>
+    <x:Double x:Key="Spacing64">64</x:Double>
+
+    <!-- ==================== RADIUS SYSTEM ==================== -->
+
+    <x:Double x:Key="RadiusSmall">6</x:Double>
+    <x:Double x:Key="RadiusMedium">8</x:Double>
+    <x:Double x:Key="RadiusLarge">12</x:Double>
+    <x:Double x:Key="RadiusXLarge">16</x:Double>
+    <x:Double x:Key="RadiusFull">999</x:Double>
+
+    <!-- ==================== TYPOGRAPHY SCALE ==================== -->
+
+    <x:Double x:Key="FontSize10">10</x:Double>
+    <x:Double x:Key="FontSize12">12</x:Double>
+    <x:Double x:Key="FontSize14">14</x:Double>
+    <x:Double x:Key="FontSize16">16</x:Double>
+    <x:Double x:Key="FontSize18">18</x:Double>
+    <x:Double x:Key="FontSize20">20</x:Double>
+    <x:Double x:Key="FontSize24">24</x:Double>
+    <x:Double x:Key="FontSize28">28</x:Double>
+    <x:Double x:Key="FontSize32">32</x:Double>
+    <x:Double x:Key="FontSize36">36</x:Double>
+    <x:Double x:Key="FontSize48">48</x:Double>
+
+    <!-- ==================== MODERN GRADIENTS ==================== -->
+
+    <LinearGradientBrush x:Key="ModernGradientPrimary" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#6366F1" Offset="0.0" />
+        <GradientStop Color="#8B5CF6" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ModernGradientSuccess" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#10B981" Offset="0.0" />
+        <GradientStop Color="#059669" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ModernGradientWarning" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F59E0B" Offset="0.0" />
+        <GradientStop Color="#D97706" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ModernGradientError" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#EF4444" Offset="0.0" />
+        <GradientStop Color="#DC2626" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ModernBackgroundGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource ModernBgPrimary}" Offset="0.0" />
+        <GradientStop Color="{StaticResource ModernBgSecondary}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- ==================== PAGE STYLES ==================== -->
+
+    <Style x:Key="ModernPage" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgSecondary}, Dark={StaticResource ModernBgPrimaryDark}}" />
+    </Style>
+
+    <!-- ==================== CARD STYLES ==================== -->
+
+    <!-- Premium Card with subtle shadow -->
+    <Style x:Key="ModernCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,8" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{AppThemeBinding Light={StaticResource ModernShadowMedium}, Dark=#00000080}"
+                    Offset="0,2"
+                    Radius="8"
+                    Opacity="0.08" />
+        </Setter>
+    </Style>
+
+    <!-- Elevated Card (more prominent) -->
+    <Style x:Key="ModernCardElevated" TargetType="Border" BasedOn="{StaticResource ModernCard}">
+        <Setter Property="Shadow">
+            <Shadow Brush="{AppThemeBinding Light={StaticResource ModernShadowStrong}, Dark=#000000B0}"
+                    Offset="0,4"
+                    Radius="16"
+                    Opacity="0.12" />
+        </Setter>
+    </Style>
+
+    <!-- Small Card -->
+    <Style x:Key="ModernCardSmall" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{AppThemeBinding Light={StaticResource ModernShadowLight}, Dark=#00000060}"
+                    Offset="0,1"
+                    Radius="4"
+                    Opacity="0.06" />
+        </Setter>
+    </Style>
+
+    <!-- Interactive Card (hover effect) -->
+    <Style x:Key="ModernCardInteractive" TargetType="Border" BasedOn="{StaticResource ModernCard}">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource ModernPrimary}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- ==================== BUTTON STYLES ==================== -->
+
+    <!-- Primary Button -->
+    <Style x:Key="ModernButtonPrimary" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{StaticResource ModernPrimary}"
+                    Offset="0,2"
+                    Radius="8"
+                    Opacity="0.20" />
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimaryHover}" />
+                            <Setter Property="Scale" Value="1.02" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernGray300}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Secondary Button -->
+    <Style x:Key="ModernButtonSecondary" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernGray100}" />
+                            <Setter Property="Scale" Value="1.02" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Ghost Button -->
+    <Style x:Key="ModernButtonGhost" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimaryLight}" />
+                            <Setter Property="Scale" Value="1.02" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Success Button -->
+    <Style x:Key="ModernButtonSuccess" TargetType="Button" BasedOn="{StaticResource ModernButtonPrimary}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernSuccess}" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{StaticResource ModernSuccess}"
+                    Offset="0,2"
+                    Radius="8"
+                    Opacity="0.20" />
+        </Setter>
+    </Style>
+
+    <!-- Warning Button -->
+    <Style x:Key="ModernButtonWarning" TargetType="Button" BasedOn="{StaticResource ModernButtonPrimary}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernWarning}" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{StaticResource ModernWarning}"
+                    Offset="0,2"
+                    Radius="8"
+                    Opacity="0.20" />
+        </Setter>
+    </Style>
+
+    <!-- Error/Danger Button -->
+    <Style x:Key="ModernButtonDanger" TargetType="Button" BasedOn="{StaticResource ModernButtonPrimary}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernError}" />
+        <Setter Property="Shadow">
+            <Shadow Brush="{StaticResource ModernError}"
+                    Offset="0,2"
+                    Radius="8"
+                    Opacity="0.20" />
+        </Setter>
+    </Style>
+
+    <!-- Small Button -->
+    <Style x:Key="ModernButtonSmall" TargetType="Button" BasedOn="{StaticResource ModernButtonPrimary}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="Padding" Value="16,8" />
+    </Style>
+
+    <!-- Icon Button -->
+    <Style x:Key="ModernButtonIcon" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="WidthRequest" Value="44" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernGray300}" />
+                            <Setter Property="Scale" Value="1.05" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.95" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- ==================== INPUT STYLES ==================== -->
+
+    <!-- Modern Entry -->
+    <Style x:Key="ModernEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource ModernTextTertiary}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Margin" Value="0,4" />
+    </Style>
+
+    <!-- Modern Picker -->
+    <Style x:Key="ModernPicker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="TitleColor" Value="{StaticResource ModernTextTertiary}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Margin" Value="0,4" />
+    </Style>
+
+    <!-- Modern Switch -->
+    <Style x:Key="ModernSwitch" TargetType="Switch">
+        <Setter Property="OnColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="ThumbColor" Value="White" />
+    </Style>
+
+    <!-- Modern CheckBox -->
+    <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource ModernPrimary}" />
+    </Style>
+
+    <!-- ==================== TYPOGRAPHY STYLES ==================== -->
+
+    <!-- Display -->
+    <Style x:Key="ModernDisplay" TargetType="Label">
+        <Setter Property="FontSize" Value="48" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+    <!-- Heading 1 -->
+    <Style x:Key="ModernH1" TargetType="Label">
+        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+    <!-- Heading 2 -->
+    <Style x:Key="ModernH2" TargetType="Label">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.3" />
+    </Style>
+
+    <!-- Heading 3 -->
+    <Style x:Key="ModernH3" TargetType="Label">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.3" />
+    </Style>
+
+    <!-- Heading 4 -->
+    <Style x:Key="ModernH4" TargetType="Label">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <!-- Body Large -->
+    <Style x:Key="ModernBodyLarge" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.5" />
+    </Style>
+
+    <!-- Body -->
+    <Style x:Key="ModernBody" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.5" />
+    </Style>
+
+    <!-- Body Small -->
+    <Style x:Key="ModernBodySmall" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextSecondary}, Dark={StaticResource ModernTextSecondaryDark}}" />
+        <Setter Property="LineHeight" Value="1.5" />
+    </Style>
+
+    <!-- Caption -->
+    <Style x:Key="ModernCaption" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextTertiary}, Dark={StaticResource ModernTextSecondaryDark}}" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <!-- Overline -->
+    <Style x:Key="ModernOverline" TargetType="Label">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextTertiary}, Dark={StaticResource ModernTextSecondaryDark}}" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="CharacterSpacing" Value="1" />
+    </Style>
+
+    <!-- ==================== ICON & BADGE STYLES ==================== -->
+
+    <!-- Icon Container -->
+    <Style x:Key="ModernIconContainer" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimaryLight}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="WidthRequest" Value="56" />
+        <Setter Property="HeightRequest" Value="56" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Badge -->
+    <Style x:Key="ModernBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Padding" Value="8,4" />
+    </Style>
+
+    <!-- Badge Success -->
+    <Style x:Key="ModernBadgeSuccess" TargetType="Border" BasedOn="{StaticResource ModernBadge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernSuccess}" />
+    </Style>
+
+    <!-- Badge Warning -->
+    <Style x:Key="ModernBadgeWarning" TargetType="Border" BasedOn="{StaticResource ModernBadge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernWarning}" />
+    </Style>
+
+    <!-- Badge Error -->
+    <Style x:Key="ModernBadgeError" TargetType="Border" BasedOn="{StaticResource ModernBadge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernError}" />
+    </Style>
+
+    <!-- ==================== LIST & ITEM STYLES ==================== -->
+
+    <!-- List Item -->
+    <Style x:Key="ModernListItem" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgPrimary}, Dark={StaticResource ModernBgSecondaryDark}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,4" />
+    </Style>
+
+    <!-- Separator -->
+    <Style x:Key="ModernSeparator" TargetType="BoxView">
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource ModernBorder}, Dark={StaticResource ModernBorderDark}}" />
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="Margin" Value="0,12" />
+    </Style>
+
+</ResourceDictionary>
