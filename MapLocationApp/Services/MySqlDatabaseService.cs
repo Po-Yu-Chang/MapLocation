@@ -1,5 +1,6 @@
 using MapLocationApp.Models;
 using MapLocationApp.Services;
+using MapLocationApp.Services.Interfaces;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,25 +10,43 @@ namespace MapLocationApp.Services
     public class MySqlDatabaseService : IDatabaseService
     {
         private readonly IConfigService _configService;
+        private readonly ISecureConfigService _secureConfig;
         private string? _connectionString;
+        private bool _isInitialized;
 
-        public MySqlDatabaseService(IConfigService configService)
+        public MySqlDatabaseService(IConfigService configService, ISecureConfigService secureConfig)
         {
             _configService = configService;
-            InitializeConnectionString();
+            _secureConfig = secureConfig;
+            _isInitialized = false;
         }
 
-        private async void InitializeConnectionString()
+        private async Task InitializeConnectionStringAsync()
         {
+            if (_isInitialized && !string.IsNullOrEmpty(_connectionString))
+                return;
+
             try
             {
                 var config = await _configService.GetDatabaseConfigAsync();
-                _connectionString = $"Server={config.Host};Port={config.Port};Database={config.DatabaseName};Uid={config.Username};Pwd={config.Password};Connection Timeout=30;Command Timeout=60;Default Command Timeout=60;";
+                var password = await _secureConfig.GetDatabasePasswordAsync();
+
+                if (string.IsNullOrEmpty(password))
+                {
+                    System.Diagnostics.Debug.WriteLine("資料庫密碼未在 SecureStorage 中設定。請透過設定頁面配置密碼。");
+                    throw new InvalidOperationException("Database password not configured in SecureStorage. Please configure via settings.");
+                }
+
+                // T014: Enable SSL/TLS for MySQL connections
+                _connectionString = $"Server={config.Host};Port={config.Port};Database={config.DatabaseName};Uid={config.Username};Pwd={password};SslMode=Required;Connection Timeout=30;Command Timeout=60;Default Command Timeout=60;";
+                _isInitialized = true;
+                System.Diagnostics.Debug.WriteLine("資料庫連線字串已成功初始化 (使用 SSL/TLS)");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"初始化資料庫連線字串失敗: {ex.Message}");
-                _connectionString = "Server=221.22.103.220;Port=3307;Database=MapLocation;Uid=CINPHOWN;Pwd=Cin84076382~;Connection Timeout=30;Command Timeout=60;Default Command Timeout=60;";
+                _isInitialized = false;
+                throw;
             }
         }
 
@@ -35,13 +54,10 @@ namespace MapLocationApp.Services
         {
             try
             {
+                await InitializeConnectionStringAsync();
+
                 if (string.IsNullOrEmpty(_connectionString))
-                {
-                    await Task.Delay(100);
-                    InitializeConnectionString();
-                    if (string.IsNullOrEmpty(_connectionString))
-                        return false;
-                }
+                    return false;
 
                 using var connection = new MySqlConnection(_connectionString);
                 
@@ -73,6 +89,8 @@ namespace MapLocationApp.Services
         {
             try
             {
+                await InitializeConnectionStringAsync();
+
                 if (string.IsNullOrEmpty(_connectionString))
                     return false;
 

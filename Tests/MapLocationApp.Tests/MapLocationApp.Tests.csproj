@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MapLocationApp\MapLocationApp.csproj">
+      <PrivateAssets>contentfiles</PrivateAssets>
+      <ExcludeAssets>buildtransitive</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Disable MAUI image resizer for test projects -->
+    <EnableMauiImageResizetizer>false</EnableMauiImageResizetizer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Moq" />
+    <Using Include="FluentAssertions" />
+  </ItemGroup>
+
+</Project>

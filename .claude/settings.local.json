@@ -8,7 +8,14 @@
       "Bash(dotnet new:*)",
       "Bash(dotnet:*)",
       "Bash(mkdir:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "WebFetch(domain:nominatim.openstreetmap.org)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "Bash(git checkout:*)",
+      "WebSearch",
+      "Bash(gh pr:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": []
   }

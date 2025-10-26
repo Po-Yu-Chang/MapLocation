@@ -392,3 +392,16 @@ $RECYCLE.BIN/
 ## Custom additions
 appsettings.json
 *.csproj.user
+
+## Environment and secrets
+.env
+.env.*
+!.env.example
+*.secret
+secrets.json
+
+## Test coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml

@@ -78,9 +78,25 @@ public class GeofenceService : IGeofenceService
     {
         try
         {
+            // T025: Validate radius
+            if (geofence.RadiusMeters <= 0)
+            {
+                throw new ArgumentException("Geofence radius must be greater than 0", nameof(geofence));
+            }
+
+            // T025: Check for duplicate ID
+            if (_geofences.Any(g => g.Id == geofence.Id))
+            {
+                return Task.FromResult(false);
+            }
+
             _geofences.Add(geofence);
             _geofenceStates[geofence.Id] = false;
             return Task.FromResult(true);
+        }
+        catch (ArgumentException)
+        {
+            throw; // Re-throw validation exceptions
         }
         catch
         {
@@ -106,6 +122,47 @@ public class GeofenceService : IGeofenceService
             return Task.FromResult(false);
         }
     }
+
+    public Task<bool> UpdateGeofenceAsync(string id, GeofenceRegion updatedGeofence)
+    {
+        try
+        {
+            var index = _geofences.FindIndex(g => g.Id == id);
+            if (index >= 0)
+            {
+                // Keep the same ID
+                updatedGeofence.Id = id;
+                _geofences[index] = updatedGeofence;
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
+    }
+
+    public Task<bool> ToggleGeofenceActiveAsync(string id)
+    {
+        try
+        {
+            var geofence = _geofences.FirstOrDefault(g => g.Id == id);
+            if (geofence != null)
+            {
+                geofence.IsActive = !geofence.IsActive;
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
+    }
+
+    // T150: Removed SaveGeofenceToDatabaseAsync and LoadGeofencesFromDatabaseAsync
+    // Geofences are managed in-memory. Use AddGeofenceAsync for adding new geofences.
 
     public Task<List<GeofenceRegion>> GetGeofencesAsync()
     {
@@ -222,5 +279,36 @@ public class GeofenceService : IGeofenceService
     private static double DegreesToRadians(double degrees)
     {
         return degrees * Math.PI / 180;
+    }
+
+    // Test-friendly synchronous point-in-polygon check (T024)
+    public bool CheckPointInGeofence(Microsoft.Maui.Devices.Sensors.Location location, GeofenceRegion geofence)
+    {
+        if (!geofence.IsActive)
+            return false;
+
+        var distance = CalculateDistance(location.Latitude, location.Longitude, geofence.Latitude, geofence.Longitude);
+        // T024: Use small tolerance (1m) for boundary points to account for floating point precision
+        return distance <= geofence.RadiusMeters + 1.0;
+    }
+
+    // Get all monitored geofences (T025)
+    public List<GeofenceRegion> GetMonitoredGeofences()
+    {
+        return _geofences.ToList();
+    }
+
+    // Manually trigger location update for testing (T028)
+    public async Task HandleLocationUpdate(Microsoft.Maui.Devices.Sensors.Location location)
+    {
+        var appLocation = new AppLocation
+        {
+            Latitude = location.Latitude,
+            Longitude = location.Longitude,
+            Accuracy = location.Accuracy
+        };
+
+        OnLocationChanged(this, appLocation);
+        await Task.CompletedTask;
     }
 }

@@ -81,11 +81,12 @@
 		<PackageReference Include="MySql.Data" Version="9.1.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" /><!-- T012: BCrypt for secure password hashing -->
 		
 		<!-- Face Recognition packages for Windows -->
 		<PackageReference Include="FaceAiSharp.Bundle" Version="0.5.23" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
 		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
 		<!-- UI Toolkit -->
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
 

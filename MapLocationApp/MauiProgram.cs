@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using MapLocationApp.Services;
+using MapLocationApp.Services.Interfaces;
 using MapLocationApp.Views;
 using System.Reflection;
 using CommunityToolkit.Maui;
@@ -46,12 +47,14 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IRouteService, RouteService>();
 		builder.Services.AddSingleton<ITeamLocationService, TeamLocationService>();
 		builder.Services.AddSingleton<IReportService, ReportService>();
+		builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
 		builder.Services.AddSingleton<LocalizationService>();
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
-		builder.Services.AddSingleton<INotificationIntegrationService, NotificationIntegrationService>();
+		// T149: Removed INotificationIntegrationService - unnecessary abstraction layer
 
 		// 註冊認證和資料庫服務
 		builder.Services.AddSingleton<IConfigService, SqliteConfigService>();
+		builder.Services.AddSingleton<ISecureConfigService, SecureConfigService>(); // T011: SecureConfigService for credential management
 		builder.Services.AddSingleton<IDatabaseService, MySqlDatabaseService>();
 		builder.Services.AddSingleton<IUserSessionService, UserSessionService>();
 

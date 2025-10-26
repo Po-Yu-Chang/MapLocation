@@ -22,4 +22,23 @@ public interface IGeofenceService
     
     // 為當前位置建立地理圍欄
     Task<GeofenceRegion?> CreateGeofenceForCurrentLocationAsync(string name, string category = "Custom", int radiusMeters = 100);
+
+    // Test-friendly synchronous point-in-polygon check
+    bool CheckPointInGeofence(Microsoft.Maui.Devices.Sensors.Location location, GeofenceRegion geofence);
+
+    // Get all monitored geofences
+    List<GeofenceRegion> GetMonitoredGeofences();
+
+    // Manually trigger location update for testing
+    Task HandleLocationUpdate(Microsoft.Maui.Devices.Sensors.Location location);
+
+    // Update an existing geofence
+    Task<bool> UpdateGeofenceAsync(string id, GeofenceRegion updatedGeofence);
+
+    // Toggle geofence active status
+    Task<bool> ToggleGeofenceActiveAsync(string id);
+
+    // T150: Removed SaveGeofenceToDatabaseAsync and LoadGeofencesFromDatabaseAsync
+    // Geofences are stored in-memory only. For persistent storage, use AddGeofenceAsync
+    // and maintain geofences through application lifecycle or external persistence layer.
 }

@@ -34,7 +34,8 @@ public partial class LoginPage : ContentPage
                 UsernameEntry.Text = rememberedUser.Username;
                 if (rememberedUser.RememberMe)
                 {
-                    PasswordEntry.Text = rememberedUser.Password;
+                    // T012: BCrypt security - do not auto-fill password (one-way hash)
+                    // Only remember username, user must re-enter password
                     RememberMeCheckbox.IsChecked = true;
                 }
             }
@@ -108,12 +109,14 @@ public partial class LoginPage : ContentPage
             {
                 if (RememberMeCheckbox.IsChecked)
                 {
-                    await _configService.SaveRememberedUserAsync(new RememberedUser
+                    // T012: Use BCrypt SetPassword() method for secure password hashing
+                    var rememberedUser = new RememberedUser
                     {
                         Username = username,
-                        Password = password,
                         RememberMe = true
-                    });
+                    };
+                    rememberedUser.SetPassword(password);
+                    await _configService.SaveRememberedUserAsync(rememberedUser);
                 }
                 else
                 {

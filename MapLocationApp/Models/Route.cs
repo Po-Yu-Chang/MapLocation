@@ -104,6 +104,45 @@ namespace MapLocationApp.Models
         public string DisplayStartAddress => StartAddress ?? $"{StartLatitude:F4}, {StartLongitude:F4}";
         public string DisplayEndAddress => EndAddress ?? $"{EndLatitude:F4}, {EndLongitude:F4}";
 
+        // T040-T045: Helper properties for navigation tests
+        public Microsoft.Maui.Devices.Sensors.Location? StartLocation
+        {
+            get => new Microsoft.Maui.Devices.Sensors.Location(StartLatitude, StartLongitude);
+            set
+            {
+                if (value != null)
+                {
+                    StartLatitude = value.Latitude;
+                    StartLongitude = value.Longitude;
+                }
+            }
+        }
+
+        public Microsoft.Maui.Devices.Sensors.Location? EndLocation
+        {
+            get => new Microsoft.Maui.Devices.Sensors.Location(EndLatitude, EndLongitude);
+            set
+            {
+                if (value != null)
+                {
+                    EndLatitude = value.Latitude;
+                    EndLongitude = value.Longitude;
+                }
+            }
+        }
+
+        public double TotalDistance
+        {
+            get => Distance * 1000; // Convert km to meters
+            set => Distance = value / 1000;
+        }
+
+        public double TotalDuration
+        {
+            get => EstimatedDuration.TotalSeconds;
+            set => EstimatedDuration = TimeSpan.FromSeconds(value);
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

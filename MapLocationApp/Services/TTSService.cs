@@ -82,6 +82,23 @@ namespace MapLocationApp.Services
             }
         }
 
+        // T043: Set language for TTS
+        public async Task<bool> SetLanguageAsync(string languageCode)
+        {
+            try
+            {
+                _currentLanguage = languageCode ?? "zh-TW";
+                Debug.WriteLine($"TTS: 設定語言為 {_currentLanguage}");
+                await Task.CompletedTask;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"設定 TTS 語言錯誤: {ex.Message}");
+                return false;
+            }
+        }
+
         private async Task SpeakTextAsync(string text)
         {
             try

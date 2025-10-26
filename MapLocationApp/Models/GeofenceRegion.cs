@@ -35,20 +35,6 @@ public class GeofenceEvent
     public string UserId { get; set; } = string.Empty;
 }
 
-public class CheckInRecord
-{
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string UserId { get; set; } = string.Empty;
-    public string GeofenceId { get; set; } = string.Empty;
-    public string GeofenceName { get; set; } = string.Empty;
-    public DateTime CheckInTime { get; set; } = DateTime.UtcNow;
-    public DateTime? CheckOutTime { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-    public string Notes { get; set; } = string.Empty;
-    public CheckInType Type { get; set; } = CheckInType.Manual;
-}
-
 public enum CheckInType
 {
     Manual,

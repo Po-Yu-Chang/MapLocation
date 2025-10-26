@@ -80,6 +80,33 @@ namespace MapLocationApp.Models
         // 為了相容性，提供 DistanceInMeters 屬性
         public double DistanceInMeters => Distance;
 
+        // T040-T045: Helper properties for navigation tests
+        public Microsoft.Maui.Devices.Sensors.Location? StartLocation
+        {
+            get => new Microsoft.Maui.Devices.Sensors.Location(StartLatitude, StartLongitude);
+            set
+            {
+                if (value != null)
+                {
+                    StartLatitude = value.Latitude;
+                    StartLongitude = value.Longitude;
+                }
+            }
+        }
+
+        public Microsoft.Maui.Devices.Sensors.Location? EndLocation
+        {
+            get => new Microsoft.Maui.Devices.Sensors.Location(EndLatitude, EndLongitude);
+            set
+            {
+                if (value != null)
+                {
+                    EndLatitude = value.Latitude;
+                    EndLongitude = value.Longitude;
+                }
+            }
+        }
+
         public string FormattedDistance => Distance < 1000 
             ? $"{Distance:F0} 公尺" 
             : $"{Distance / 1000:F1} 公里";

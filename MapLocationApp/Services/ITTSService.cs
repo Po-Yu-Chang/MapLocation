@@ -42,6 +42,13 @@ namespace MapLocationApp.Services
         Task StopSpeakingAsync();
 
         /// <summary>
+        /// 設定語言 (T043)
+        /// </summary>
+        /// <param name="languageCode">語言代碼 (例如: "zh-TW", "en-US")</param>
+        /// <returns></returns>
+        Task<bool> SetLanguageAsync(string languageCode);
+
+        /// <summary>
         /// 檢查是否正在播放語音
         /// </summary>
         bool IsSpeaking { get; }

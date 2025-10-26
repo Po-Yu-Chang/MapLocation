@@ -907,7 +907,8 @@ namespace MapLocationApp.Views
         
         private void OnZoomToRouteClicked(object sender, EventArgs e)
         {
-            // TODO: 縮放到路線功能
+            // Zoom to route functionality - feature not yet implemented
+            // This would adjust the map view to fit the entire route
         }
 
         private void OnRecentRouteTapped(object sender, EventArgs e)

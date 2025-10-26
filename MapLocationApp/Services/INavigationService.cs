@@ -60,6 +60,21 @@ namespace MapLocationApp.Services
         bool IsNavigating { get; }
 
         /// <summary>
+        /// 目前路線 (T040-T045)
+        /// </summary>
+        Route? CurrentRoute { get; }
+
+        /// <summary>
+        /// 目前步驟索引 (T041)
+        /// </summary>
+        int CurrentStepIndex { get; }
+
+        /// <summary>
+        /// 設定語音語言 (T043)
+        /// </summary>
+        Task SetVoiceLanguageAsync(string languageCode);
+
+        /// <summary>
         /// 開始導航
         /// </summary>
         /// <param name="route">導航路線</param>
@@ -149,5 +164,15 @@ namespace MapLocationApp.Services
         /// 錯誤事件
         /// </summary>
         event EventHandler<Exception> NavigationError;
+
+        /// <summary>
+        /// 路線重新計算事件 (T044)
+        /// </summary>
+        event EventHandler<EventArgs> RouteRecalculating;
+
+        /// <summary>
+        /// 導航完成事件 (T045)
+        /// </summary>
+        event EventHandler<EventArgs> NavigationCompleted;
     }
 }

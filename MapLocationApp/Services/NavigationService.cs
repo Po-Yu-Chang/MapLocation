@@ -39,6 +39,10 @@ namespace MapLocationApp.Services
         public NavigationState CurrentState => _currentState ?? new NavigationState();
         public bool IsNavigating => _currentState?.IsActive == true;
 
+        // T040-T045: Public properties for tests
+        public Route? CurrentRoute => _currentState?.CurrentRoute;
+        public int CurrentStepIndex => _currentStepIndex;
+
         // 事件
         public event EventHandler<NavigationInstruction> InstructionUpdated;
         public event EventHandler<AppLocation> LocationUpdated;
@@ -46,6 +50,10 @@ namespace MapLocationApp.Services
         public event EventHandler DestinationReached;
         public event EventHandler<NavigationState> StateChanged;
         public event EventHandler<Exception> NavigationError;
+
+        // T044-T045: Additional events for tests
+        public event EventHandler<EventArgs> RouteRecalculating;
+        public event EventHandler<EventArgs> NavigationCompleted;
 
         public NavigationService(
             ILocationService locationService,
@@ -57,8 +65,17 @@ namespace MapLocationApp.Services
             _routeService = routeService ?? throw new ArgumentNullException(nameof(routeService));
             _ttsService = ttsService ?? throw new ArgumentNullException(nameof(ttsService));
             _telegramService = telegramService;
-            
+
             _currentState = new NavigationState();
+
+            // T041-T045: Subscribe to location changes for immediate response (needed for tests)
+            _locationService.LocationChanged += async (sender, location) =>
+            {
+                if (_currentState?.IsActive == true && location != null)
+                {
+                    await UpdateNavigationStateAsync(location);
+                }
+            };
         }
 
         public async Task StartNavigationAsync(Route route)
@@ -149,22 +166,24 @@ namespace MapLocationApp.Services
                 if (_telegramService != null && _currentState?.CurrentRoute != null)
                 {
                     await _telegramService.SendRouteNotificationAsync(
-                        "使用者", 
-                        "導航結束", 
-                        _currentState.CurrentRoute.StartLatitude, 
-                        _currentState.CurrentRoute.StartLongitude, 
-                        _currentState.CurrentRoute.EndLatitude, 
+                        "使用者",
+                        "導航結束",
+                        _currentState.CurrentRoute.StartLatitude,
+                        _currentState.CurrentRoute.StartLongitude,
+                        _currentState.CurrentRoute.EndLatitude,
                         _currentState.CurrentRoute.EndLongitude);
                 }
 
-                // 重置狀態
+                // T045: Reset state completely - clear route and reset step index
                 if (_currentState != null)
                 {
                     _currentState.IsActive = false;
+                    _currentState.CurrentRoute = null;
                 }
+                _currentStepIndex = 0;
 
                 StateChanged?.Invoke(this, _currentState);
-                
+
                 Debug.WriteLine("NavigationService: 導航已停止");
             }
             catch (Exception ex)
@@ -178,8 +197,10 @@ namespace MapLocationApp.Services
         {
             try
             {
+                // T045: Pause sets IsActive to false but keeps route
                 if (_currentState != null)
                 {
+                    _currentState.IsActive = false;
                     StopLocationTracking();
                     await _ttsService.SpeakAsync("導航已暫停");
                     StateChanged?.Invoke(this, _currentState);
@@ -195,12 +216,27 @@ namespace MapLocationApp.Services
         {
             try
             {
+                // T045: Resume sets IsActive to true and resumes tracking
                 if (_currentState?.CurrentRoute != null)
                 {
+                    _currentState.IsActive = true;
                     StartLocationTracking();
                     await _ttsService.SpeakAsync("導航已恢復");
                     StateChanged?.Invoke(this, _currentState);
                 }
+            }
+            catch (Exception ex)
+            {
+                NavigationError?.Invoke(this, ex);
+            }
+        }
+
+        // T043: Set voice language for TTS
+        public async Task SetVoiceLanguageAsync(string languageCode)
+        {
+            try
+            {
+                await _ttsService.SetLanguageAsync(languageCode);
             }
             catch (Exception ex)
             {
@@ -262,7 +298,10 @@ namespace MapLocationApp.Services
                     return null;
 
                 Debug.WriteLine("重新計算路線");
-                
+
+                // T044: Trigger RouteRecalculating event
+                RouteRecalculating?.Invoke(this, EventArgs.Empty);
+
                 var newRoute = await _routeService.CalculateRouteAsync(
                     currentLocation.Latitude,
                     currentLocation.Longitude,
@@ -275,10 +314,10 @@ namespace MapLocationApp.Services
                     _currentState.CurrentRoute = newRoute.Route;
                     _currentState.IsOffRoute = false;
                     _consecutiveDeviations = 0;
-                    
+
                     await _ttsService.SpeakAsync("路線已重新規劃");
                     StateChanged?.Invoke(this, _currentState);
-                    
+
                     return newRoute.Route;
                 }
             }
@@ -317,6 +356,12 @@ namespace MapLocationApp.Services
                 // 檢查路線偏離
                 var deviationResult = await CheckRouteDeviationAsync(currentLocation);
                 _currentState.IsOffRoute = deviationResult.IsDeviated;
+
+                // T044: Trigger recalculation when deviation detected
+                if (deviationResult.IsDeviated && deviationResult.SuggestedAction == RouteAction.Recalculate)
+                {
+                    await RecalculateRouteAsync(currentLocation);
+                }
 
                 // 檢查是否到達目的地
                 if (await CheckArrivalAsync(currentLocation))
@@ -390,32 +435,43 @@ namespace MapLocationApp.Services
             try
             {
                 var steps = route.Steps.ToList();
-                
-                // 找到當前最接近的路線步驟
+
+                // T041: Find current step and advance if we've reached the end of current step
                 var currentStep = FindCurrentStep(currentLocation, steps);
                 if (currentStep == null)
                 {
                     // 如果找不到當前步驟，使用最後一個步驟
                     currentStep = steps.Last();
                 }
-                
+
                 var stepIndex = steps.IndexOf(currentStep);
-                _currentStepIndex = stepIndex;
-                
-                // 計算到當前步驟終點的距離
+
+                // T041: Check if we've reached the end of current step (within 20m threshold)
                 var distanceToStepEnd = CalculateDistance(
                     currentLocation.Latitude, currentLocation.Longitude,
                     currentStep.EndLatitude, currentStep.EndLongitude);
-                    
+
+                // If we're very close to step end and there's a next step, advance to next step
+                if (distanceToStepEnd <= ARRIVAL_THRESHOLD && stepIndex < steps.Count - 1)
+                {
+                    stepIndex++;
+                    currentStep = steps[stepIndex];
+                    distanceToStepEnd = CalculateDistance(
+                        currentLocation.Latitude, currentLocation.Longitude,
+                        currentStep.EndLatitude, currentStep.EndLongitude);
+                }
+
+                _currentStepIndex = stepIndex;
+
                 // 更新行程進度
                 UpdateRouteProgress(currentLocation, route);
-                
+
                 // 檢查是否接近轉彎點
                 if (distanceToStepEnd <= APPROACH_INSTRUCTION_THRESHOLD && stepIndex < steps.Count - 1)
                 {
                     var nextStep = steps[stepIndex + 1];
                     var turnDirection = CalculateTurnDirection(currentStep, nextStep);
-                    
+
                     return new NavigationInstruction
                     {
                         Text = $"在 {FormatDistance(distanceToStepEnd)} 後{GetTurnInstruction(turnDirection)}",
@@ -428,7 +484,7 @@ namespace MapLocationApp.Services
                 {
                     var nextStep = steps[stepIndex + 1];
                     var turnDirection = CalculateTurnDirection(currentStep, nextStep);
-                    
+
                     return new NavigationInstruction
                     {
                         Text = $"準備{GetTurnInstruction(turnDirection)}，距離 {FormatDistance(distanceToStepEnd)}",
@@ -709,9 +765,9 @@ namespace MapLocationApp.Services
             try
             {
                 Debug.WriteLine("到達目的地");
-                
+
                 await _ttsService.SpeakAsync("您已到達目的地");
-                
+
                 // 震動提醒（如果支援）
                 try
                 {
@@ -724,7 +780,10 @@ namespace MapLocationApp.Services
                 }
 
                 DestinationReached?.Invoke(this, EventArgs.Empty);
-                
+
+                // T045: Trigger NavigationCompleted event
+                NavigationCompleted?.Invoke(this, EventArgs.Empty);
+
                 // 自動停止導航
                 await StopNavigationAsync();
             }

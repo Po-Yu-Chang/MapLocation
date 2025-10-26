@@ -15,6 +15,10 @@ namespace MapLocationApp.Services
         Task<List<CheckInRecord>> GetCheckInRecordsAsync(int userId, DateTime? date = null);
         Task<CheckInRecord?> GetLatestCheckInAsync(int userId);
         Task<bool> UpdateCheckInRecordAsync(CheckInRecord record);
+
+        // Aliases for test compatibility
+        Task<bool> SaveCheckInAsync(CheckInRecord record) => SaveCheckInRecordAsync(record);
+        Task<bool> UpdateCheckInAsync(CheckInRecord record) => UpdateCheckInRecordAsync(record);
         
         Task<bool> TestConnectionAsync();
         Task<bool> InitializeDatabaseAsync();
