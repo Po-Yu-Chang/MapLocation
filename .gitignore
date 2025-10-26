@@ -25,6 +25,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+## Additional build output directories
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+
 ## Visual Studio 2015/2017 cache/options directory
 .vs/
 
@@ -405,3 +411,26 @@ TestResults/
 coverage/
 *.coverage
 *.coveragexml
+
+## SpecKit and Claude Code related
+.specify/
+specs/
+.claude/commands/
+.claude/settings.local.json
+.playwright-mcp/
+
+## Temporary and documentation files
+NUL
+**/NUL
+FINAL_IMPLEMENTATION_REPORT.md
+IMPLEMENTATION_STATUS.md
+VALIDATION_REPORT.md
+AGENTS.md
+DARK_THEME_AND_LOGIN_SUMMARY.md
+
+## Chinese documentation (keep only essential ones)
+人臉辨識功能技術文件.md
+人臉辨識功能流程圖.md
+
+## Development documentation folder
+Doucment/
