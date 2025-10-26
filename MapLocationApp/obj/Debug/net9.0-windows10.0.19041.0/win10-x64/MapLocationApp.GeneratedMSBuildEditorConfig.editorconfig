@@ -46,6 +46,24 @@ build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Resources.S
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
 
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Resources/Styles/DarkTheme.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Resources.Styles.DarkTheme.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\DarkTheme.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\DarkTheme.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Resources/Styles/LiquidGlassTheme.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Resources.Styles.LiquidGlassTheme.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\LiquidGlassTheme.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\LiquidGlassTheme.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Resources/Styles/ModernTheme.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Resources.Styles.ModernTheme.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\ModernTheme.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\ModernTheme.xaml
+
 [C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Resources/Styles/Styles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Resources.Styles.Styles.xaml
@@ -57,6 +75,18 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.CheckInPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\CheckInPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\CheckInPage.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Views/FaceRecognitionPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.FaceRecognitionPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\FaceRecognitionPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\FaceRecognitionPage.xaml
+
+[C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Views/LoginPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MapLocationApp.Views.LoginPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\LoginPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\LoginPage.xaml
 
 [C:/Users/qoose/Desktop/文件資料/學習文件/M-MapLocation/MapLocation/MapLocationApp/Views/MapPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
