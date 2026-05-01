@@ -69,6 +69,17 @@
                            Keyboard="Numeric"
                            Style="{StaticResource ModernEntry}"/>
 
+                    <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <HorizontalStackLayout Spacing="16">
+                        <RadioButton x:Name="WorkTypeOfficeRadio"
+                                     GroupName="WorkType"
+                                     IsChecked="True"
+                                     Content="{Binding [Office], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                        <RadioButton x:Name="WorkTypeFieldRadio"
+                                     GroupName="WorkType"
+                                     Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                    </HorizontalStackLayout>
+
                     <HorizontalStackLayout Spacing="8">
                         <CheckBox x:Name="IsActiveCheckBox" IsChecked="True"/>
                         <Label Text="{Binding [EnableThisLocation], Source={x:Static svc:LocalizationManager.Instance}}" VerticalOptions="Center" Style="{StaticResource ModernBody}"/>

@@ -90,6 +90,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<LoginPage>();
 		builder.Services.AddTransient<FaceRecognitionPage>();
 		builder.Services.AddTransient<GeofenceManagementPage>();
+		builder.Services.AddTransient<ProfilePage>();
+		builder.Services.AddTransient<EditCheckInPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

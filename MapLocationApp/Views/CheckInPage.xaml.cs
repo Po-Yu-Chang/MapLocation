@@ -486,7 +486,9 @@ public partial class CheckInPage : ContentPage
                 Notes = (NotesEntry.Text ?? string.Empty).Trim().Length > 500
                     ? (NotesEntry.Text ?? string.Empty).Trim()[..500]
                     : (NotesEntry.Text ?? string.Empty).Trim(),
-                Type = CheckInType.Manual
+                Type = CheckInType.Manual,
+                Method = CheckInMethod.GPS,
+                WorkType = selectedGeofence.WorkType
             };
 
             // 保存打卡記錄：先嘗試資料庫，再保存到本地（離線備援）
@@ -630,6 +632,18 @@ public partial class CheckInPage : ContentPage
         {
             await DisplayAlert("錯誤", $"無法開啟管理頁面: {ex.Message}", "確定");
         }
+    }
+
+    private async void OnManageRecordsClicked(object sender, EventArgs e)
+    {
+        try { await Shell.Current.GoToAsync("EditCheckInPage"); }
+        catch (Exception ex) { await DisplayAlert("錯誤", ex.Message, "確定"); }
+    }
+
+    private async void OnProfileClicked(object sender, EventArgs e)
+    {
+        try { await Shell.Current.GoToAsync("ProfilePage"); }
+        catch (Exception ex) { await DisplayAlert("錯誤", ex.Message, "確定"); }
     }
 }
 

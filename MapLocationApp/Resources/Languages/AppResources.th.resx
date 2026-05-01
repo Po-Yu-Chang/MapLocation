@@ -572,4 +572,122 @@
   <data name="Disabled" xml:space="preserve">
     <value>ปิดใช้งาน</value>
   </data>
+  <!-- M1: Profile / WorkType / EditCheckIn -->
+  <data name="ProfileTitle" xml:space="preserve">
+    <value>โปรไฟล์</value>
+  </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>โปรไฟล์ของฉัน</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>รูปโปรไฟล์</value>
+  </data>
+  <data name="ChangeAvatar" xml:space="preserve">
+    <value>เปลี่ยนรูปโปรไฟล์</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>เบอร์โทรศัพท์</value>
+  </data>
+  <data name="WorkHoursStart" xml:space="preserve">
+    <value>เวลาเริ่มงานเริ่มต้น</value>
+  </data>
+  <data name="WorkHoursEnd" xml:space="preserve">
+    <value>เวลาเลิกงานเริ่มต้น</value>
+  </data>
+  <data name="ResetWorkHours" xml:space="preserve">
+    <value>ล้างเวลาทำงาน</value>
+  </data>
+  <data name="SaveProfile" xml:space="preserve">
+    <value>บันทึกโปรไฟล์</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>อัปเดตโปรไฟล์แล้ว</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>ชื่อ-สกุล</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>แผนก</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>ตำแหน่ง</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>อีเมล</value>
+  </data>
+  <data name="WorkType" xml:space="preserve">
+    <value>ประเภทงาน</value>
+  </data>
+  <data name="Office" xml:space="preserve">
+    <value>ออฟฟิศ</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>ภาคสนาม</value>
+  </data>
+  <data name="CheckInMethodLabel" xml:space="preserve">
+    <value>วิธีระบุตำแหน่ง</value>
+  </data>
+  <data name="MethodGPS" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="MethodWifi" xml:space="preserve">
+    <value>Wi-Fi</value>
+  </data>
+  <data name="MethodManual" xml:space="preserve">
+    <value>กำหนดเอง</value>
+  </data>
+  <data name="EditCheckInTitle" xml:space="preserve">
+    <value>แก้ไขประวัติการตอกบัตร</value>
+  </data>
+  <data name="ManualCheckInTitle" xml:space="preserve">
+    <value>ตอกบัตรย้อนหลัง</value>
+  </data>
+  <data name="EditReason" xml:space="preserve">
+    <value>เหตุผลการแก้ไข</value>
+  </data>
+  <data name="EditReasonPlaceholder" xml:space="preserve">
+    <value>กรุณาระบุเหตุผลการแก้ไขหรือเพิ่มย้อนหลัง (ไม่บังคับ)</value>
+  </data>
+  <data name="CheckInTimeLabel" xml:space="preserve">
+    <value>เวลาเข้างาน</value>
+  </data>
+  <data name="CheckOutTimeLabel" xml:space="preserve">
+    <value>เวลาเลิกงาน</value>
+  </data>
+  <data name="ClearCheckOut" xml:space="preserve">
+    <value>ล้างเวลาเลิกงาน</value>
+  </data>
+  <data name="DeleteRecord" xml:space="preserve">
+    <value>ลบรายการ</value>
+  </data>
+  <data name="DeleteRecordConfirm" xml:space="preserve">
+    <value>ลบรายการตอกบัตรนี้หรือไม่? ไม่สามารถย้อนกลับได้</value>
+  </data>
+  <data name="EditedAt" xml:space="preserve">
+    <value>แก้ไขเมื่อ {0}</value>
+  </data>
+  <data name="NoCheckInRecords" xml:space="preserve">
+    <value>ยังไม่มีประวัติการตอกบัตร</value>
+  </data>
+  <data name="DateFilter" xml:space="preserve">
+    <value>กรองตามวันที่</value>
+  </data>
+  <data name="AllDates" xml:space="preserve">
+    <value>ทั้งหมด</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>วันนี้</value>
+  </data>
+  <data name="GeofenceLocation" xml:space="preserve">
+    <value>สถานที่ตอกบัตร</value>
+  </data>
+  <data name="NoGeofence" xml:space="preserve">
+    <value>ไม่ระบุสถานที่</value>
+  </data>
+  <data name="ManageCheckInRecords" xml:space="preserve">
+    <value>จัดการประวัติการตอกบัตร</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>หมายเหตุ</value>
+  </data>
 </root>

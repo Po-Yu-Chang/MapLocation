@@ -283,7 +283,7 @@
             </Border>
 
             <!-- 重新整理按鈕 -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Button Grid.Column="0"
                         x:Name="RefreshButton"
                         Text="🔄 重新整理"
@@ -293,6 +293,17 @@
                         Text="⚙️ 管理打卡地點"
                         Style="{StaticResource ModernButtonSecondary}"
                         Clicked="OnManageGeofencesClicked" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+                <Button Grid.Column="0"
+                        Text="{Binding [ManageCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnManageRecordsClicked" />
+                <Button Grid.Column="1"
+                        Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnProfileClicked" />
             </Grid>
 
         </VerticalStackLayout>

@@ -55,5 +55,17 @@
         Route="FaceRecognitionPage"
         FlyoutItemIsVisible="False" />
 
+    <ShellContent
+        Title="{Binding [ProfileTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:ProfilePage}"
+        Route="ProfilePage"
+        FlyoutItemIsVisible="False" />
+
+    <ShellContent
+        Title="{Binding [EditCheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:EditCheckInPage}"
+        Route="EditCheckInPage"
+        FlyoutItemIsVisible="False" />
+
 </Shell>
 

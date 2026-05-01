@@ -74,13 +74,17 @@ public partial class GeofenceManagementPage : ContentPage
         }
     }
 
-    private GeofenceDisplay ToDisplay(GeofenceRegion g) => new()
+    private GeofenceDisplay ToDisplay(GeofenceRegion g)
     {
-        Id = g.Id,
-        Name = g.Name,
-        DetailText = $"📍 {g.Latitude:F6}, {g.Longitude:F6}  •  {L("Radius")} {g.RadiusMeters:F0}m",
-        StatusText = $"{L("Category")}: {(string.IsNullOrEmpty(g.Category) ? L("Uncategorized") : g.Category)}  •  {(g.IsActive ? $"✅ {L("Enabled")}" : $"⛔ {L("Disabled")}")}",
-    };
+        var workType = g.WorkType == WorkType.Field ? L("Field") : L("Office");
+        return new GeofenceDisplay
+        {
+            Id = g.Id,
+            Name = g.Name,
+            DetailText = $"📍 {g.Latitude:F6}, {g.Longitude:F6}  •  {L("Radius")} {g.RadiusMeters:F0}m",
+            StatusText = $"{workType}  •  {L("Category")}: {(string.IsNullOrEmpty(g.Category) ? L("Uncategorized") : g.Category)}  •  {(g.IsActive ? $"✅ {L("Enabled")}" : $"⛔ {L("Disabled")}")}",
+        };
+    }
 
     private async void OnUseCurrentLocationClicked(object sender, EventArgs e)
     {
@@ -153,6 +157,7 @@ public partial class GeofenceManagementPage : ContentPage
                 RadiusMeters = radius,
                 IsActive = IsActiveCheckBox.IsChecked,
                 TransitionType = GeofenceTransitionType.Both,
+                WorkType = WorkTypeFieldRadio.IsChecked ? WorkType.Field : WorkType.Office,
             };
 
             bool ok;
@@ -201,6 +206,8 @@ public partial class GeofenceManagementPage : ContentPage
             LongitudeEntry.Text = g.Longitude.ToString("F6", CultureInfo.InvariantCulture);
             RadiusEntry.Text = g.RadiusMeters.ToString("F0", CultureInfo.InvariantCulture);
             IsActiveCheckBox.IsChecked = g.IsActive;
+            WorkTypeOfficeRadio.IsChecked = g.WorkType == WorkType.Office;
+            WorkTypeFieldRadio.IsChecked = g.WorkType == WorkType.Field;
 
             FormTitleLabel.Text = $"{L("Edit")}: {g.Name}";
             SaveButton.Text = $"💾 {L("UpdateBtn")}";
@@ -270,6 +277,8 @@ public partial class GeofenceManagementPage : ContentPage
         LongitudeEntry.Text = string.Empty;
         RadiusEntry.Text = string.Empty;
         IsActiveCheckBox.IsChecked = true;
+        WorkTypeOfficeRadio.IsChecked = true;
+        WorkTypeFieldRadio.IsChecked = false;
         ApplyLocalizedUi();
         CancelEditButton.IsVisible = false;
     }

@@ -9,5 +9,7 @@ public partial class AppShell : Shell
 		InitializeComponent();
 
 		Routing.RegisterRoute(nameof(GeofenceManagementPage), typeof(GeofenceManagementPage));
+		Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
+		Routing.RegisterRoute(nameof(EditCheckInPage), typeof(EditCheckInPage));
 	}
 }

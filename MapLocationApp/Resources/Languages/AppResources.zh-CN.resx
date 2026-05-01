@@ -572,4 +572,122 @@
   <data name="Disabled" xml:space="preserve">
     <value>停用</value>
   </data>
+  <!-- M1: Profile / WorkType / EditCheckIn -->
+  <data name="ProfileTitle" xml:space="preserve">
+    <value>个人档案</value>
+  </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>我的档案</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>头像</value>
+  </data>
+  <data name="ChangeAvatar" xml:space="preserve">
+    <value>更换头像</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="WorkHoursStart" xml:space="preserve">
+    <value>默认上班时间</value>
+  </data>
+  <data name="WorkHoursEnd" xml:space="preserve">
+    <value>默认下班时间</value>
+  </data>
+  <data name="ResetWorkHours" xml:space="preserve">
+    <value>清除工作时段</value>
+  </data>
+  <data name="SaveProfile" xml:space="preserve">
+    <value>保存档案</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>个人档案已更新</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>部门</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>职务</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="WorkType" xml:space="preserve">
+    <value>工作类型</value>
+  </data>
+  <data name="Office" xml:space="preserve">
+    <value>内勤</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>外勤</value>
+  </data>
+  <data name="CheckInMethodLabel" xml:space="preserve">
+    <value>定位方式</value>
+  </data>
+  <data name="MethodGPS" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="MethodWifi" xml:space="preserve">
+    <value>Wi-Fi</value>
+  </data>
+  <data name="MethodManual" xml:space="preserve">
+    <value>手动</value>
+  </data>
+  <data name="EditCheckInTitle" xml:space="preserve">
+    <value>编辑打卡记录</value>
+  </data>
+  <data name="ManualCheckInTitle" xml:space="preserve">
+    <value>补打卡</value>
+  </data>
+  <data name="EditReason" xml:space="preserve">
+    <value>编辑原因</value>
+  </data>
+  <data name="EditReasonPlaceholder" xml:space="preserve">
+    <value>请说明补登或编辑原因（选填）</value>
+  </data>
+  <data name="CheckInTimeLabel" xml:space="preserve">
+    <value>上班时间</value>
+  </data>
+  <data name="CheckOutTimeLabel" xml:space="preserve">
+    <value>下班时间</value>
+  </data>
+  <data name="ClearCheckOut" xml:space="preserve">
+    <value>清除下班时间</value>
+  </data>
+  <data name="DeleteRecord" xml:space="preserve">
+    <value>删除记录</value>
+  </data>
+  <data name="DeleteRecordConfirm" xml:space="preserve">
+    <value>确定要删除此打卡记录？此动作无法复原。</value>
+  </data>
+  <data name="EditedAt" xml:space="preserve">
+    <value>已于 {0} 编辑</value>
+  </data>
+  <data name="NoCheckInRecords" xml:space="preserve">
+    <value>尚无打卡记录</value>
+  </data>
+  <data name="DateFilter" xml:space="preserve">
+    <value>日期筛选</value>
+  </data>
+  <data name="AllDates" xml:space="preserve">
+    <value>全部日期</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="GeofenceLocation" xml:space="preserve">
+    <value>打卡地点</value>
+  </data>
+  <data name="NoGeofence" xml:space="preserve">
+    <value>无指定地点</value>
+  </data>
+  <data name="ManageCheckInRecords" xml:space="preserve">
+    <value>管理打卡记录</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>备注</value>
+  </data>
 </root>

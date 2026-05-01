@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.EditCheckInPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [EditCheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+             Style="{StaticResource ModernPage}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
+    </ContentPage.ToolbarItems>
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+
+                <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        HorizontalOptions="Start"
+                        Clicked="OnBackClicked"/>
+
+                <Label Text="{Binding [ManageCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource ModernH2}"
+                       HorizontalOptions="Center"/>
+
+                <!-- 編輯/補打卡表單 -->
+                <Border Style="{StaticResource ModernCard}">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="✏️" FontSize="24"/>
+                            <Label x:Name="FormTitleLabel"
+                                   Text="{Binding [ManualCheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernH4}"/>
+                        </HorizontalStackLayout>
+
+                        <Label Text="{Binding [GeofenceLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernBodySmall}"/>
+                        <Picker x:Name="GeofencePicker" Title="{Binding [GeofenceLocation], Source={x:Static svc:LocalizationManager.Instance}}"/>
+
+                        <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                        <HorizontalStackLayout Spacing="8">
+                            <RadioButton x:Name="WorkTypeOfficeRadio"
+                                         GroupName="WorkType"
+                                         IsChecked="True"
+                                         Content="{Binding [Office], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                            <RadioButton x:Name="WorkTypeFieldRadio"
+                                         GroupName="WorkType"
+                                         Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                        </HorizontalStackLayout>
+
+                        <Label Text="{Binding [CheckInTimeLabel], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <DatePicker Grid.Column="0" x:Name="CheckInDatePicker" Format="yyyy-MM-dd"/>
+                            <TimePicker Grid.Column="1" x:Name="CheckInTimePicker" Format="HH:mm"/>
+                        </Grid>
+
+                        <Label Text="{Binding [CheckOutTimeLabel], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                        <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                            <DatePicker Grid.Column="0" x:Name="CheckOutDatePicker" Format="yyyy-MM-dd"/>
+                            <TimePicker Grid.Column="1" x:Name="CheckOutTimePicker" Format="HH:mm"/>
+                            <Button Grid.Column="2"
+                                    Text="✕"
+                                    FontSize="14"
+                                    HeightRequest="36"
+                                    Padding="10,4"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnClearCheckOutClicked"
+                                    ToolTipProperties.Text="{Binding [ClearCheckOut], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                        </Grid>
+
+                        <Label Text="{Binding [Notes], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                        <Editor x:Name="NotesEditor" HeightRequest="80" MaxLength="500"/>
+
+                        <Label Text="{Binding [EditReason], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                        <Entry x:Name="EditReasonEntry"
+                               Placeholder="{Binding [EditReasonPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernEntry}"
+                               MaxLength="200"/>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Button Grid.Column="0"
+                                    x:Name="SaveButton"
+                                    Text="{Binding [AddBtn], Source={x:Static svc:LocalizationManager.Instance}}"
+                                    Style="{StaticResource ModernButtonPrimary}"
+                                    Clicked="OnSaveClicked"/>
+                            <Button Grid.Column="1"
+                                    x:Name="CancelEditButton"
+                                    Text="{Binding [CancelEdit], Source={x:Static svc:LocalizationManager.Instance}}"
+                                    IsVisible="False"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnCancelEditClicked"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 紀錄列表 -->
+                <Border Style="{StaticResource ModernCard}">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📋" FontSize="24"/>
+                            <Label Text="{Binding [CheckInHistory], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="{Binding [DateFilter], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   VerticalOptions="Center"/>
+                            <DatePicker x:Name="FilterDatePicker" Format="yyyy-MM-dd" DateSelected="OnFilterDateChanged"/>
+                            <Button Text="{Binding [AllDates], Source={x:Static svc:LocalizationManager.Instance}}"
+                                    FontSize="12"
+                                    HeightRequest="36"
+                                    Padding="10,4"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnAllDatesClicked"/>
+                        </HorizontalStackLayout>
+
+                        <CollectionView x:Name="RecordsCollectionView">
+                            <CollectionView.EmptyView>
+                                <Label Text="{Binding [NoCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
+                                       Style="{StaticResource ModernBodySmall}"
+                                       HorizontalTextAlignment="Center"/>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ModernListItem}">
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding HeaderText}"
+                                                   Style="{StaticResource ModernBody}"
+                                                   FontAttributes="Bold"/>
+                                            <Label Grid.Row="1" Grid.Column="0"
+                                                   Text="{Binding DetailText}"
+                                                   Style="{StaticResource ModernBodySmall}"/>
+                                            <Label Grid.Row="2" Grid.Column="0"
+                                                   Text="{Binding TagsText}"
+                                                   Style="{StaticResource ModernCaption}"/>
+
+                                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Spacing="6" VerticalOptions="Center">
+                                                <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Edit]}"
+                                                        FontSize="12"
+                                                        HeightRequest="36"
+                                                        Padding="10,4"
+                                                        Style="{StaticResource ModernButtonSecondary}"
+                                                        Clicked="OnEditClicked"
+                                                        CommandParameter="{Binding Id}"/>
+                                                <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Delete]}"
+                                                        FontSize="12"
+                                                        HeightRequest="36"
+                                                        Padding="10,4"
+                                                        Style="{StaticResource ModernButtonWarning}"
+                                                        Clicked="OnDeleteClicked"
+                                                        CommandParameter="{Binding Id}"/>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnRefreshClicked"
+                        Margin="0,0,0,20"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
