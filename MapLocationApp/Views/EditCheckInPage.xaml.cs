@@ -104,6 +104,8 @@ public partial class EditCheckInPage : ContentPage
             HeaderText = $"{r.CheckInTime.ToLocalTime():yyyy-MM-dd HH:mm} → {checkOut}  ·  {loc}",
             DetailText = string.IsNullOrEmpty(r.Notes) ? "—" : r.Notes,
             TagsText = $"{workType}  ·  {method}{(string.IsNullOrEmpty(edited) ? string.Empty : "  ·  " + edited)}",
+            // Yellow accent for field, navy for office — visual classification at a glance.
+            AccentColor = r.WorkType == WorkType.Field ? Color.FromArgb("#FACC15") : Color.FromArgb("#1E3A8A"),
         };
     }
 
@@ -280,12 +282,6 @@ public partial class EditCheckInPage : ContentPage
         await LoadRecordsAsync();
     }
 
-    private async void OnBackClicked(object? sender, EventArgs e)
-    {
-        try { await Shell.Current.GoToAsync(".."); }
-        catch { await Navigation.PopAsync(); }
-    }
-
     private void ResetForm()
     {
         _editingId = null;
@@ -312,5 +308,6 @@ public partial class EditCheckInPage : ContentPage
         public string HeaderText { get; set; } = string.Empty;
         public string DetailText { get; set; } = string.Empty;
         public string TagsText { get; set; } = string.Empty;
+        public Color AccentColor { get; set; } = Colors.Transparent;
     }
 }

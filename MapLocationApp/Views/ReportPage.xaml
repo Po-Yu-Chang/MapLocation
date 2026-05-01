@@ -10,49 +10,58 @@
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
-            <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    HorizontalOptions="Start"
-                    Clicked="OnBackClicked"/>
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
-                   Style="{StaticResource ModernH2}"
-                   HorizontalOptions="Center"/>
+            <Border Style="{StaticResource HeroHeader}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" VerticalOptions="Center">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#FACC15"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            WidthRequest="48" HeightRequest="48">
+                        <Label Text="📊" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroTitle}"/>
+                        <Label x:Name="SummaryLabel" Style="{StaticResource HeroSubtitle}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="{Binding [DateFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                        <DatePicker Grid.Column="0" x:Name="StartDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
-                        <DatePicker Grid.Column="1" x:Name="EndDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding [DateFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource SectionTitle}"/>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding [StartDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="StartDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding [EndDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="EndDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
+                        </VerticalStackLayout>
                     </Grid>
 
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
                         <Button Grid.Column="0"
                                 Text="{Binding [QuickThisMonth], Source={x:Static svc:LocalizationManager.Instance}}"
-                                FontSize="12" HeightRequest="36" Padding="6,4"
-                                Style="{StaticResource ModernButtonSecondary}"
+                                Style="{StaticResource ModernButtonCompact}"
                                 Clicked="OnThisMonthClicked"/>
                         <Button Grid.Column="1"
                                 Text="{Binding [QuickLastMonth], Source={x:Static svc:LocalizationManager.Instance}}"
-                                FontSize="12" HeightRequest="36" Padding="6,4"
-                                Style="{StaticResource ModernButtonSecondary}"
+                                Style="{StaticResource ModernButtonCompact}"
                                 Clicked="OnLastMonthClicked"/>
                         <Button Grid.Column="2"
                                 Text="{Binding [QuickLast30Days], Source={x:Static svc:LocalizationManager.Instance}}"
-                                FontSize="12" HeightRequest="36" Padding="6,4"
-                                Style="{StaticResource ModernButtonSecondary}"
+                                Style="{StaticResource ModernButtonCompact}"
                                 Clicked="OnLast30DaysClicked"/>
                     </Grid>
 
-                    <Label Text="{Binding [WorkTypeFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <HorizontalStackLayout Spacing="12">
+                    <Label Text="{Binding [WorkTypeFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}" Margin="0,8,0,0"/>
+                    <HorizontalStackLayout Spacing="20">
                         <RadioButton x:Name="FilterAllRadio" GroupName="WorkTypeFilter" IsChecked="True"
                                      Content="{Binding [WorkTypeAll], Source={x:Static svc:LocalizationManager.Instance}}"
                                      CheckedChanged="OnFilterChanged"/>
@@ -63,27 +72,21 @@
                                      Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"
                                      CheckedChanged="OnFilterChanged"/>
                     </HorizontalStackLayout>
-
-                    <Label x:Name="SummaryLabel" Style="{StaticResource ModernCaption}"/>
                 </VerticalStackLayout>
             </Border>
 
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-                        <Button Grid.Column="0"
-                                Text="{Binding [ExportExcel], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonPrimary}"
-                                Clicked="OnExportExcelClicked"/>
-                        <Button Grid.Column="1"
-                                Text="{Binding [ExportPdf], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonPrimary}"
-                                Clicked="OnExportPdfClicked"/>
-                        <Button Grid.Column="2"
-                                Text="{Binding [ExportCsv], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonSecondary}"
-                                Clicked="OnExportCsvClicked"/>
-                    </Grid>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="📤" FontSize="22" HorizontalOptions="Start"/>
+                    <Button Text="{Binding [ExportExcel], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonAccent}"
+                            Clicked="OnExportExcelClicked"/>
+                    <Button Text="{Binding [ExportPdf], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonPrimary}"
+                            Clicked="OnExportPdfClicked"/>
+                    <Button Text="{Binding [ExportCsv], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            Clicked="OnExportCsvClicked"/>
                 </VerticalStackLayout>
             </Border>
 

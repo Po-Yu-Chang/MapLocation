@@ -10,41 +10,51 @@
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
-            <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    HorizontalOptions="Start"
-                    Clicked="OnBackClicked"/>
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <Label Text="{Binding [MyLeaves], Source={x:Static svc:LocalizationManager.Instance}}"
-                   Style="{StaticResource ModernH2}"
-                   HorizontalOptions="Center"/>
+            <Border Style="{StaticResource HeroHeader}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#FACC15"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            WidthRequest="48" HeightRequest="48">
+                        <Label Text="🌴" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding [MyLeaves], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroTitle}"/>
+                        <Label Text="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroSubtitle}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
-            <!-- 表單 -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="6">
                     <Label x:Name="FormTitleLabel"
                            Text="{Binding [AddBtn], Source={x:Static svc:LocalizationManager.Instance}}"
-                           Style="{StaticResource ModernH4}"/>
+                           Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
 
-                    <Label Text="{Binding [LeaveType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <Picker x:Name="TypePicker"/>
-
-                    <Label Text="{Binding [StartDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <DatePicker x:Name="StartDatePicker" Format="yyyy-MM-dd"/>
-
-                    <Label Text="{Binding [EndDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <DatePicker x:Name="EndDatePicker" Format="yyyy-MM-dd"/>
-
-                    <Label Text="{Binding [Notes], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <Editor x:Name="NoteEditor" HeightRequest="60" MaxLength="500"/>
+                    <Label Text="{Binding [LeaveType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Picker x:Name="TypePicker" Style="{StaticResource ModernPicker}"/>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding [StartDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="StartDatePicker" Format="yyyy-MM-dd"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding [EndDate], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="EndDatePicker" Format="yyyy-MM-dd"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="{Binding [Notes], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Editor x:Name="NoteEditor" HeightRequest="60" MaxLength="500"/>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
                         <Button Grid.Column="0"
                                 x:Name="SaveButton"
                                 Text="{Binding [AddBtn], Source={x:Static svc:LocalizationManager.Instance}}"
@@ -60,34 +70,44 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 列表 -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding [MyLeaves], Source={x:Static svc:LocalizationManager.Instance}}"
+                           Style="{StaticResource SectionTitle}"/>
+
                     <CollectionView x:Name="LeavesCollectionView">
                         <CollectionView.EmptyView>
                             <Label Text="{Binding [NoLeaveRecords], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBodySmall}"
-                                   HorizontalTextAlignment="Center"/>
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,16"/>
                         </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource ModernListItem}">
-                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="4">
-                                        <Label Grid.Row="0" Grid.Column="0"
-                                               Text="{Binding HeaderText}"
-                                               Style="{StaticResource ModernBody}"
-                                               FontAttributes="Bold"/>
-                                        <Label Grid.Row="1" Grid.Column="0"
-                                               Text="{Binding DetailText}"
-                                               Style="{StaticResource ModernBodySmall}"/>
-                                        <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Spacing="6" VerticalOptions="Center">
+                                <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="{StaticResource ModernBorder}"
+                                        StrokeThickness="1"
+                                        Padding="0"
+                                        Margin="0,3">
+                                    <Grid ColumnDefinitions="4,*,Auto">
+                                        <BoxView Grid.Column="0" Color="#FACC15"/>
+                                        <VerticalStackLayout Grid.Column="1" Padding="14,10" Spacing="2">
+                                            <Label Text="{Binding HeaderText}" Style="{StaticResource ModernBody}" FontAttributes="Bold"/>
+                                            <Label Text="{Binding DetailText}" Style="{StaticResource ModernBodySmall}" LineBreakMode="TailTruncation"/>
+                                        </VerticalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center" Padding="0,0,10,0">
                                             <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Edit]}"
-                                                    FontSize="12" HeightRequest="36" Padding="10,4"
-                                                    Style="{StaticResource ModernButtonSecondary}"
+                                                    Style="{StaticResource ModernButtonCompact}"
                                                     Clicked="OnEditClicked" CommandParameter="{Binding Id}"/>
                                             <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Delete]}"
-                                                    FontSize="12" HeightRequest="36" Padding="10,4"
-                                                    Style="{StaticResource ModernButtonWarning}"
+                                                    BackgroundColor="{StaticResource ModernErrorLight}"
+                                                    TextColor="{StaticResource ModernError}"
+                                                    CornerRadius="6"
+                                                    Padding="12,6"
+                                                    FontSize="13"
+                                                    FontAttributes="Bold"
+                                                    HeightRequest="34"
                                                     Clicked="OnDeleteClicked" CommandParameter="{Binding Id}"/>
                                         </HorizontalStackLayout>
                                     </Grid>
@@ -95,13 +115,13 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+
+                    <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Start"
+                            Clicked="OnRefreshClicked"/>
                 </VerticalStackLayout>
             </Border>
-
-            <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    Clicked="OnRefreshClicked"
-                    Margin="0,0,0,20"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

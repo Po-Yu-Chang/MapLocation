@@ -282,43 +282,51 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 重新整理按鈕 -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Button Grid.Column="0"
-                        x:Name="RefreshButton"
-                        Text="🔄 重新整理"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnRefreshClicked" />
-                <Button Grid.Column="1"
-                        Text="⚙️ 管理打卡地點"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnManageGeofencesClicked" />
-            </Grid>
-
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Button Grid.Column="0"
-                        Text="{Binding [ManageCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnManageRecordsClicked" />
-                <Button Grid.Column="1"
-                        Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnProfileClicked" />
-            </Grid>
-
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Button Grid.Column="0"
-                        Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnScheduleClicked" />
-                <Button Grid.Column="1"
-                        Text="{Binding [MyLeaves], Source={x:Static svc:LocalizationManager.Instance}}"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        Clicked="OnLeaveClicked" />
-            </Grid>
+            <!-- 快速入口（Dakaclock 風格 6 格 grid） -->
+            <Border Style="{StaticResource ModernCard}">
+                <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                    <Button Grid.Row="0" Grid.Column="0"
+                            Text="📋 紀錄"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnManageRecordsClicked" />
+                    <Button Grid.Row="0" Grid.Column="1"
+                            Text="📅 排班"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnScheduleClicked" />
+                    <Button Grid.Row="0" Grid.Column="2"
+                            Text="🌴 請假"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnLeaveClicked" />
+                    <Button Grid.Row="1" Grid.Column="0"
+                            Text="📍 打卡點"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnManageGeofencesClicked" />
+                    <Button Grid.Row="1" Grid.Column="1"
+                            Text="👤 檔案"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnProfileClicked" />
+                    <Button Grid.Row="1" Grid.Column="2"
+                            x:Name="RefreshButton"
+                            Text="🔄 整理"
+                            Style="{StaticResource ModernButtonSecondary}"
+                            FontSize="14"
+                            HeightRequest="58"
+                            Clicked="OnRefreshClicked" />
+                </Grid>
+            </Border>
 
             <Button Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonPrimary}"
+                    Style="{StaticResource ModernButtonAccent}"
                     Clicked="OnReportClicked"
                     Margin="0,0,0,20"/>
 

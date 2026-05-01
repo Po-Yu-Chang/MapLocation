@@ -10,84 +10,97 @@
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    HorizontalOptions="Start"
-                    Clicked="OnBackClicked"/>
+            <!-- Hero header -->
+            <Border Style="{StaticResource HeroHeader}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#FACC15"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            WidthRequest="48" HeightRequest="48">
+                        <Label Text="👤" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroTitle}"/>
+                        <Label Text="{Binding [ProfileTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroSubtitle}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
-            <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
-                   Style="{StaticResource ModernH2}"
-                   HorizontalOptions="Center"/>
-
-            <!-- Avatar -->
+            <!-- Avatar card -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🖼️" FontSize="24"/>
-                        <Label Text="{Binding [Avatar], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
-                    </HorizontalStackLayout>
-
-                    <Image x:Name="AvatarImage"
-                           HeightRequest="120"
-                           WidthRequest="120"
-                           Aspect="AspectFill"
-                           HorizontalOptions="Center"/>
-
-                    <Button x:Name="ChangeAvatarButton"
-                            Text="{Binding [ChangeAvatar], Source={x:Static svc:LocalizationManager.Instance}}"
-                            Style="{StaticResource ModernButtonSecondary}"
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Border BackgroundColor="{StaticResource ModernPrimaryLighter}"
+                            StrokeShape="RoundRectangle 60"
+                            Stroke="{StaticResource ModernPrimaryLight}"
+                            StrokeThickness="2"
+                            WidthRequest="120" HeightRequest="120"
+                            HorizontalOptions="Center">
+                        <Image x:Name="AvatarImage"
+                               Aspect="AspectFill"
+                               WidthRequest="120" HeightRequest="120"/>
+                    </Border>
+                    <Button Text="{Binding [ChangeAvatar], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Center"
                             Clicked="OnChangeAvatarClicked"/>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 基本資料 -->
+            <!-- Basic info -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="👤" FontSize="24"/>
-                        <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
-                    </HorizontalStackLayout>
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
+                           Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
 
-                    <Label Text="{Binding [FullName], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <Label Text="{Binding [FullName], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
                     <Entry x:Name="FullNameEntry" Style="{StaticResource ModernEntry}" MaxLength="100"/>
 
-                    <Label Text="{Binding [EmailAddress], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <Label Text="{Binding [EmailAddress], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
                     <Entry x:Name="EmailEntry" Keyboard="Email" Style="{StaticResource ModernEntry}" MaxLength="100"/>
 
-                    <Label Text="{Binding [PhoneNumber], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <Label Text="{Binding [PhoneNumber], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
                     <Entry x:Name="PhoneEntry" Keyboard="Telephone" Style="{StaticResource ModernEntry}" MaxLength="50"/>
 
-                    <Label Text="{Binding [Department], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <Entry x:Name="DepartmentEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
-
-                    <Label Text="{Binding [Position], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <Entry x:Name="PositionEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding [Department], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <Entry x:Name="DepartmentEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding [Position], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <Entry x:Name="PositionEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
+                        </VerticalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 預設工作時段 -->
+            <!-- Work hours -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="⏰" FontSize="24"/>
-                        <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
-                    </HorizontalStackLayout>
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}"
+                           Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
 
-                    <Label Text="{Binding [WorkHoursStart], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <TimePicker x:Name="WorkStartPicker" Format="HH:mm" />
-
-                    <Label Text="{Binding [WorkHoursEnd], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <TimePicker x:Name="WorkEndPicker" Format="HH:mm" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding [WorkHoursStart], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <TimePicker x:Name="WorkStartPicker" Format="HH:mm" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding [WorkHoursEnd], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <TimePicker x:Name="WorkEndPicker" Format="HH:mm" />
+                        </VerticalStackLayout>
+                    </Grid>
 
                     <Button Text="{Binding [ResetWorkHours], Source={x:Static svc:LocalizationManager.Instance}}"
-                            Style="{StaticResource ModernButtonSecondary}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Start"
+                            Margin="0,4,0,0"
                             Clicked="OnResetWorkHoursClicked"/>
                 </VerticalStackLayout>
             </Border>
@@ -95,7 +108,7 @@
             <Button Text="{Binding [SaveProfile], Source={x:Static svc:LocalizationManager.Instance}}"
                     Style="{StaticResource ModernButtonPrimary}"
                     Clicked="OnSaveClicked"
-                    Margin="0,0,0,20"/>
+                    Margin="0,8,0,16"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

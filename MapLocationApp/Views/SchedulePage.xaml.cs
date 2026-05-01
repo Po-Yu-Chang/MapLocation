@@ -112,12 +112,6 @@ public partial class SchedulePage : ContentPage
             ok ? L("ProfileUpdated") : L("CheckInError"), L("OK"));
     }
 
-    private async void OnBackClicked(object? sender, EventArgs e)
-    {
-        try { await Shell.Current.GoToAsync(".."); }
-        catch { await Navigation.PopAsync(); }
-    }
-
     private static string L(string key) => LocalizationService.Instance.GetLocalizedString(key);
 
     public class DayItem : INotifyPropertyChanged

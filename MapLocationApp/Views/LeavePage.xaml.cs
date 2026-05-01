@@ -188,12 +188,6 @@ public partial class LeavePage : ContentPage
 
     private async void OnRefreshClicked(object sender, EventArgs e) => await LoadAsync();
 
-    private async void OnBackClicked(object? sender, EventArgs e)
-    {
-        try { await Shell.Current.GoToAsync(".."); }
-        catch { await Navigation.PopAsync(); }
-    }
-
     private void ResetForm()
     {
         _editingId = null;

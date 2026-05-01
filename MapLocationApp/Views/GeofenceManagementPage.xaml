@@ -10,84 +10,104 @@
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <!-- 返回按鈕 -->
-            <Button Text="{Binding [BackToCheckIn], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    HorizontalOptions="Start"
-                    Clicked="OnBackClicked"/>
+            <Border Style="{StaticResource HeroHeader}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#FACC15"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            WidthRequest="48" HeightRequest="48">
+                        <Label Text="📍" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding [GeofenceManagementTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroTitle}"/>
+                        <Label Text="{Binding [ExistingLocations], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroSubtitle}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
-            <!-- 標題 -->
-            <Label Text="{Binding [GeofenceManagementTitle], Source={x:Static svc:LocalizationManager.Instance}}"
-                   Style="{StaticResource ModernH2}"
-                   HorizontalOptions="Center"/>
-
-            <!-- 編輯表單 -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="✏️" FontSize="24"/>
-                        <Label x:Name="FormTitleLabel" Text="{Binding [AddLocation], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
-                    </HorizontalStackLayout>
+                <VerticalStackLayout Spacing="6">
+                    <Label x:Name="FormTitleLabel"
+                           Text="{Binding [AddLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                           Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
+
+                    <Label Text="{Binding [LocationType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <RadioButton Grid.Column="0"
+                                     x:Name="GpsTypeRadio"
+                                     GroupName="LocationType"
+                                     IsChecked="True"
+                                     Content="{Binding [GpsLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnLocationTypeChanged"/>
+                        <RadioButton Grid.Column="1"
+                                     x:Name="WifiTypeRadio"
+                                     GroupName="LocationType"
+                                     Content="{Binding [WifiLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnLocationTypeChanged"/>
+                    </Grid>
 
                     <Entry x:Name="NameEntry"
                            Placeholder="名稱（必填）"
                            Style="{StaticResource ModernEntry}"
                            MaxLength="100"/>
 
-                    <Entry x:Name="CategoryEntry"
-                           Placeholder="分類（如：辦公室、客戶、倉庫）"
-                           Style="{StaticResource ModernEntry}"
-                           MaxLength="50"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Entry Grid.Column="0"
+                               x:Name="CategoryEntry"
+                               Placeholder="分類"
+                               Style="{StaticResource ModernEntry}"
+                               MaxLength="50"/>
+                        <Entry Grid.Column="1"
+                               x:Name="DescriptionEntry"
+                               Placeholder="描述（選填）"
+                               Style="{StaticResource ModernEntry}"
+                               MaxLength="200"/>
+                    </Grid>
 
-                    <Entry x:Name="DescriptionEntry"
-                           Placeholder="描述（選填）"
-                           Style="{StaticResource ModernEntry}"
-                           MaxLength="200"/>
-
-                    <!-- M2: 打卡點類型切換 -->
-                    <Label Text="{Binding [LocationType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <HorizontalStackLayout Spacing="16">
-                        <RadioButton x:Name="GpsTypeRadio"
-                                     GroupName="LocationType"
+                    <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <HorizontalStackLayout Spacing="20">
+                        <RadioButton x:Name="WorkTypeOfficeRadio"
+                                     GroupName="WorkType"
                                      IsChecked="True"
-                                     Content="{Binding [GpsLocation], Source={x:Static svc:LocalizationManager.Instance}}"
-                                     CheckedChanged="OnLocationTypeChanged"/>
-                        <RadioButton x:Name="WifiTypeRadio"
-                                     GroupName="LocationType"
-                                     Content="{Binding [WifiLocation], Source={x:Static svc:LocalizationManager.Instance}}"
-                                     CheckedChanged="OnLocationTypeChanged"/>
+                                     Content="{Binding [Office], Source={x:Static svc:LocalizationManager.Instance}}"/>
+                        <RadioButton x:Name="WorkTypeFieldRadio"
+                                     GroupName="WorkType"
+                                     Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"/>
                     </HorizontalStackLayout>
 
-                    <!-- GPS 欄位 -->
-                    <VerticalStackLayout x:Name="GpsFieldsPanel" Spacing="12">
+                    <!-- GPS fields -->
+                    <VerticalStackLayout x:Name="GpsFieldsPanel" Spacing="6" Margin="0,4,0,0">
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Entry Grid.Column="0"
                                    x:Name="LatitudeEntry"
-                                   Placeholder="緯度 Latitude"
+                                   Placeholder="緯度"
                                    Keyboard="Numeric"
                                    Style="{StaticResource ModernEntry}"/>
                             <Entry Grid.Column="1"
                                    x:Name="LongitudeEntry"
-                                   Placeholder="經度 Longitude"
+                                   Placeholder="經度"
                                    Keyboard="Numeric"
                                    Style="{StaticResource ModernEntry}"/>
                         </Grid>
-
                         <Entry x:Name="RadiusEntry"
                                Placeholder="半徑（公尺，建議 30~500）"
                                Keyboard="Numeric"
                                Style="{StaticResource ModernEntry}"/>
+                        <Button x:Name="UseCurrentLocationButton"
+                                Text="{Binding [UseCurrentLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonCompact}"
+                                HorizontalOptions="Start"
+                                Clicked="OnUseCurrentLocationClicked"/>
                     </VerticalStackLayout>
 
-                    <!-- Wi-Fi 欄位 -->
-                    <VerticalStackLayout x:Name="WifiFieldsPanel" Spacing="12" IsVisible="False">
+                    <!-- Wi-Fi fields -->
+                    <VerticalStackLayout x:Name="WifiFieldsPanel" Spacing="6" IsVisible="False" Margin="0,4,0,0">
                         <Entry x:Name="SsidEntry"
                                Placeholder="{Binding [WifiSsid], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernEntry}"
@@ -100,46 +120,23 @@
                             <Button Grid.Column="0"
                                     x:Name="UseCurrentWifiButton"
                                     Text="{Binding [UseCurrentWifi], Source={x:Static svc:LocalizationManager.Instance}}"
-                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Style="{StaticResource ModernButtonCompact}"
                                     Clicked="OnUseCurrentWifiClicked"/>
                             <Button Grid.Column="1"
                                     x:Name="ScanWifiButton"
                                     Text="{Binding [ScanWifi], Source={x:Static svc:LocalizationManager.Instance}}"
-                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Style="{StaticResource ModernButtonCompact}"
                                     Clicked="OnScanWifiClicked"/>
                         </Grid>
                     </VerticalStackLayout>
 
-                    <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
-                    <HorizontalStackLayout Spacing="16">
-                        <RadioButton x:Name="WorkTypeOfficeRadio"
-                                     GroupName="WorkType"
-                                     IsChecked="True"
-                                     Content="{Binding [Office], Source={x:Static svc:LocalizationManager.Instance}}"/>
-                        <RadioButton x:Name="WorkTypeFieldRadio"
-                                     GroupName="WorkType"
-                                     Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"/>
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout Spacing="8">
+                    <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
                         <CheckBox x:Name="IsActiveCheckBox" IsChecked="True"/>
-                        <Label Text="{Binding [EnableThisLocation], Source={x:Static svc:LocalizationManager.Instance}}" VerticalOptions="Center" Style="{StaticResource ModernBody}"/>
+                        <Label Text="{Binding [EnableThisLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                               VerticalOptions="Center" Style="{StaticResource ModernBody}"/>
                     </HorizontalStackLayout>
 
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                        <Button Grid.Column="0"
-                                x:Name="UseCurrentLocationButton"
-                                Text="{Binding [UseCurrentLocation], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonSecondary}"
-                                Clicked="OnUseCurrentLocationClicked"/>
-                        <Button Grid.Column="1"
-                                x:Name="ClearFormButton"
-                                Text="{Binding [ClearForm], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonSecondary}"
-                                Clicked="OnClearFormClicked"/>
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
                         <Button Grid.Column="0"
                                 x:Name="SaveButton"
                                 Text="{Binding [AddBtn], Source={x:Static svc:LocalizationManager.Instance}}"
@@ -152,73 +149,66 @@
                                 Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnCancelEditClicked"/>
                     </Grid>
+
+                    <Button x:Name="ClearFormButton"
+                            Text="{Binding [ClearForm], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Start"
+                            Clicked="OnClearFormClicked"/>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 列表 -->
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="📋" FontSize="24"/>
-                        <Label Text="{Binding [ExistingLocations], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
-                    </HorizontalStackLayout>
-
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding [ExistingLocations], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource SectionTitle}"/>
                     <CollectionView x:Name="GeofencesCollectionView">
                         <CollectionView.EmptyView>
                             <Label Text="{Binding [NoLocationsYet], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBodySmall}"
-                                   HorizontalTextAlignment="Center"/>
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,16"/>
                         </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource ModernListItem}">
-                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
-                                        <Label Grid.Row="0" Grid.Column="0"
-                                               Text="{Binding Name}"
-                                               Style="{StaticResource ModernBody}"
-                                               FontAttributes="Bold"/>
-                                        <Label Grid.Row="1" Grid.Column="0"
-                                               Text="{Binding DetailText}"
-                                               Style="{StaticResource ModernBodySmall}"/>
-                                        <Label Grid.Row="2" Grid.Column="0"
-                                               Text="{Binding StatusText}"
-                                               Style="{StaticResource ModernCaption}"/>
-
-                                        <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Spacing="6" VerticalOptions="Center">
+                                <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="{StaticResource ModernBorder}"
+                                        StrokeThickness="1"
+                                        Padding="14,10"
+                                        Margin="0,3">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="2">
+                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource ModernBody}" FontAttributes="Bold"/>
+                                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding DetailText}" Style="{StaticResource ModernBodySmall}" LineBreakMode="TailTruncation"/>
+                                        <Label Grid.Row="2" Grid.Column="0" Text="{Binding StatusText}" Style="{StaticResource ModernCaption}"/>
+                                        <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Spacing="4" VerticalOptions="Center">
                                             <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Edit]}"
-                                                    FontSize="12"
-                                                    HeightRequest="36"
-                                                    Padding="10,4"
-                                                    Style="{StaticResource ModernButtonSecondary}"
-                                                    Clicked="OnEditClicked"
-                                                    CommandParameter="{Binding Id}"/>
+                                                    Style="{StaticResource ModernButtonCompact}"
+                                                    Clicked="OnEditClicked" CommandParameter="{Binding Id}"/>
                                             <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Toggle]}"
-                                                    FontSize="12"
-                                                    HeightRequest="36"
-                                                    Padding="10,4"
-                                                    Style="{StaticResource ModernButtonSecondary}"
-                                                    Clicked="OnToggleActiveClicked"
-                                                    CommandParameter="{Binding Id}"/>
+                                                    Style="{StaticResource ModernButtonCompact}"
+                                                    Clicked="OnToggleActiveClicked" CommandParameter="{Binding Id}"/>
                                             <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Delete]}"
-                                                    FontSize="12"
-                                                    HeightRequest="36"
-                                                    Padding="10,4"
-                                                    Style="{StaticResource ModernButtonWarning}"
-                                                    Clicked="OnDeleteClicked"
-                                                    CommandParameter="{Binding Id}"/>
+                                                    BackgroundColor="{StaticResource ModernErrorLight}"
+                                                    TextColor="{StaticResource ModernError}"
+                                                    CornerRadius="6"
+                                                    Padding="12,6"
+                                                    FontSize="13"
+                                                    FontAttributes="Bold"
+                                                    HeightRequest="34"
+                                                    Clicked="OnDeleteClicked" CommandParameter="{Binding Id}"/>
                                         </HorizontalStackLayout>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+
+                    <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Start"
+                            Clicked="OnRefreshClicked"/>
                 </VerticalStackLayout>
             </Border>
-
-            <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    Clicked="OnRefreshClicked"
-                    Margin="0,0,0,20"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

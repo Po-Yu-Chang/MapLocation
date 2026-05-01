@@ -10,32 +10,44 @@
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
-            <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    HorizontalOptions="Start"
-                    Clicked="OnBackClicked"/>
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <Label Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
-                   Style="{StaticResource ModernH2}"
-                   HorizontalOptions="Center"/>
+            <Border Style="{StaticResource HeroHeader}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#FACC15"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            WidthRequest="48" HeightRequest="48">
+                        <Label Text="📅" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroTitle}"/>
+                        <Label Text="{Binding [ScheduleTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource HeroSubtitle}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
             <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="10">
                     <Button Text="{Binding [ApplyDefaultHours], Source={x:Static svc:LocalizationManager.Instance}}"
-                            Style="{StaticResource ModernButtonSecondary}"
+                            Style="{StaticResource ModernButtonCompact}"
+                            HorizontalOptions="Start"
                             Clicked="OnApplyDefaultClicked"/>
 
                     <CollectionView x:Name="DaysCollectionView">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource ModernListItem}">
-                                    <Grid ColumnDefinitions="80,Auto,*,*" RowDefinitions="Auto" ColumnSpacing="8" RowSpacing="4">
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource ModernGray50}, Dark={StaticResource ModernBgTertiaryDark}}"
+                                        StrokeShape="RoundRectangle 10"
+                                        Stroke="{StaticResource ModernBorder}"
+                                        StrokeThickness="1"
+                                        Padding="14,10"
+                                        Margin="0,3">
+                                    <Grid ColumnDefinitions="60,Auto,*,*" ColumnSpacing="10" VerticalOptions="Center">
                                         <Label Grid.Column="0"
                                                Text="{Binding DayLabel}"
                                                Style="{StaticResource ModernBody}"
@@ -64,7 +76,7 @@
             <Button Text="{Binding [Save], Source={x:Static svc:LocalizationManager.Instance}}"
                     Style="{StaticResource ModernButtonPrimary}"
                     Clicked="OnSaveClicked"
-                    Margin="0,0,0,20"/>
+                    Margin="0,8,0,16"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

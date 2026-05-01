@@ -157,11 +157,5 @@ public partial class ReportPage : ContentPage
         return $"{L("MyReport")} {StartDatePicker.Date:yyyy-MM-dd} ~ {EndDatePicker.Date:yyyy-MM-dd} ({f})";
     }
 
-    private async void OnBackClicked(object? sender, EventArgs e)
-    {
-        try { await Shell.Current.GoToAsync(".."); }
-        catch { await Navigation.PopAsync(); }
-    }
-
     private static string L(string key) => LocalizationService.Instance.GetLocalizedString(key);
 }

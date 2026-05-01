@@ -139,12 +139,6 @@ public partial class ProfilePage : ContentPage
         }
     }
 
-    private async void OnBackClicked(object? sender, EventArgs e)
-    {
-        try { await Shell.Current.GoToAsync(".."); }
-        catch { await Navigation.PopAsync(); }
-    }
-
     private static string? TrimOrNull(string? s) => string.IsNullOrWhiteSpace(s) ? null : s.Trim();
 
     private static string L(string key) => LocalizationService.Instance.GetLocalizedString(key);

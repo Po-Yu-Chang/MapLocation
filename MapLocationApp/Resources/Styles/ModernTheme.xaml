@@ -4,26 +4,27 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- ==================== PREMIUM MODERN DESIGN SYSTEM ==================== -->
-    <!-- Inspired by Notion, Linear, Figma - Professional SaaS Aesthetics -->
+    <!-- ==================== DAKACLOCK-INSPIRED DESIGN SYSTEM ==================== -->
+    <!-- Navy primary + bright yellow accent — clean, professional, friendly -->
 
-    <!-- ==================== MODERN COLOR PALETTE ==================== -->
+    <!-- ==================== COLOR PALETTE ==================== -->
 
-    <!-- Primary Colors - Modern Blue -->
-    <Color x:Key="ModernPrimary">#6366F1</Color>
-    <Color x:Key="ModernPrimaryHover">#4F46E5</Color>
-    <Color x:Key="ModernPrimaryLight">#A5B4FC</Color>
-    <Color x:Key="ModernPrimaryLighter">#C7D2FE</Color>
-    <Color x:Key="ModernPrimaryDark">#3730A3</Color>
+    <!-- Primary - Dakaclock Navy -->
+    <Color x:Key="ModernPrimary">#1E3A8A</Color>
+    <Color x:Key="ModernPrimaryHover">#1E40AF</Color>
+    <Color x:Key="ModernPrimaryLight">#DBEAFE</Color>
+    <Color x:Key="ModernPrimaryLighter">#EFF6FF</Color>
+    <Color x:Key="ModernPrimaryDark">#172554</Color>
 
-    <!-- Secondary Colors - Purple -->
-    <Color x:Key="ModernSecondary">#8B5CF6</Color>
-    <Color x:Key="ModernSecondaryHover">#7C3AED</Color>
-    <Color x:Key="ModernSecondaryLight">#C4B5FD</Color>
+    <!-- Secondary - Lighter Blue -->
+    <Color x:Key="ModernSecondary">#2563EB</Color>
+    <Color x:Key="ModernSecondaryHover">#1D4ED8</Color>
+    <Color x:Key="ModernSecondaryLight">#BFDBFE</Color>
 
-    <!-- Accent Colors -->
-    <Color x:Key="ModernAccent">#EC4899</Color>
-    <Color x:Key="ModernAccentLight">#F9A8D4</Color>
+    <!-- Accent - Dakaclock Yellow -->
+    <Color x:Key="ModernAccent">#FACC15</Color>
+    <Color x:Key="ModernAccentHover">#EAB308</Color>
+    <Color x:Key="ModernAccentLight">#FEF9C3</Color>
 
     <!-- Semantic Colors -->
     <Color x:Key="ModernSuccess">#10B981</Color>
@@ -112,8 +113,13 @@
     <!-- ==================== MODERN GRADIENTS ==================== -->
 
     <LinearGradientBrush x:Key="ModernGradientPrimary" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#6366F1" Offset="0.0" />
-        <GradientStop Color="#8B5CF6" Offset="1.0" />
+        <GradientStop Color="#1E3A8A" Offset="0.0" />
+        <GradientStop Color="#2563EB" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ModernGradientAccent" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FACC15" Offset="0.0" />
+        <GradientStop Color="#EAB308" Offset="1.0" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ModernGradientSuccess" StartPoint="0,0" EndPoint="1,1">
@@ -539,6 +545,110 @@
         <Setter Property="HeightRequest" Value="1" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="Margin" Value="0,12" />
+    </Style>
+
+    <!-- ==================== DAKACLOCK PATTERNS ==================== -->
+
+    <!-- Hero header card: large icon, title, subtitle. Use at top of content pages. -->
+    <Style x:Key="HeroHeader" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ModernGradientPrimary}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="24,20" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <Style x:Key="HeroTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <Style x:Key="HeroSubtitle" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="#DBEAFE" />
+    </Style>
+
+    <!-- Section header: small icon + label inside a card -->
+    <Style x:Key="SectionTitle" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ModernTextPrimary}, Dark={StaticResource ModernTextPrimaryDark}}" />
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource ModernGray500}" />
+        <Setter Property="Margin" Value="0,4,0,2" />
+    </Style>
+
+    <!-- Accent button: bright yellow CTA -->
+    <Style x:Key="ModernButtonAccent" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernAccent}" />
+        <Setter Property="TextColor" Value="{StaticResource ModernGray900}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernAccentHover}" />
+                            <Setter Property="Scale" Value="1.02" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Compact button (for inline actions) -->
+    <Style x:Key="ModernButtonCompact" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimaryLighter}" />
+        <Setter Property="TextColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="MinimumWidthRequest" Value="60" />
+    </Style>
+
+    <!-- Chip (selectable pill) -->
+    <Style x:Key="ChipUnselected" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernGray100}, Dark={StaticResource ModernGray800}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Stroke" Value="{StaticResource ModernBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="14,6" />
+    </Style>
+
+    <Style x:Key="ChipSelected" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="14,6" />
+    </Style>
+
+    <!-- Stat card: small KPI tile -->
+    <Style x:Key="StatCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernPrimaryLighter}, Dark={StaticResource ModernPrimaryDark}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="16,12" />
     </Style>
 
 </ResourceDictionary>
