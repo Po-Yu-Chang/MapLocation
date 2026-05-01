@@ -79,6 +79,10 @@
 		<!-- UI Toolkit -->
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
 
+		<!-- M4: 報表匯出 -->
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
+		<PackageReference Include="QuestPDF" Version="2024.12.3" />
+
 
 		<!-- Windows GPU / DirectML (可選，加上條件避免非必要平台體積) -->
 		<PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />

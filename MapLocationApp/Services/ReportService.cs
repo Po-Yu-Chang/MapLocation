@@ -1,5 +1,8 @@
 using System.Text.Json;
 using MapLocationApp.Models;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace MapLocationApp.Services
 {
@@ -15,15 +18,150 @@ namespace MapLocationApp.Services
         Task<CheckInTrend> GetCheckInTrendAsync(DateTime startDate, DateTime endDate);
         Task<List<FrequentLocation>> GetFrequentLocationsAsync(DateTime startDate, DateTime endDate, int topCount = 10);
         Task<WorkTimeAnalysis> GetWorkTimeAnalysisAsync(DateTime startDate, DateTime endDate);
+
+        // M4: WorkType filtered DB-backed report + Excel/PDF export
+        Task<List<CheckInRecord>> GetRecordsAsync(int userId, DateTime startDate, DateTime endDate, WorkType? workType = null);
+        Task<bool> ExportToExcelAsync(IEnumerable<CheckInRecord> records, string filePath, string title);
+        Task<bool> ExportToPdfAsync(IEnumerable<CheckInRecord> records, string filePath, string title);
     }
 
     public class ReportService : IReportService
     {
         private readonly CheckInStorageService _checkInStorage;
+        private readonly IDatabaseService? _databaseService;
 
-        public ReportService(CheckInStorageService checkInStorage)
+        public ReportService(CheckInStorageService checkInStorage, IDatabaseService? databaseService = null)
         {
             _checkInStorage = checkInStorage;
+            _databaseService = databaseService;
+        }
+
+        public async Task<List<CheckInRecord>> GetRecordsAsync(int userId, DateTime startDate, DateTime endDate, WorkType? workType = null)
+        {
+            // Prefer DB; fall back to local storage so the export pipeline still works offline.
+            List<CheckInRecord> records;
+            if (_databaseService != null)
+            {
+                var all = await _databaseService.GetCheckInRecordsAsync(userId);
+                records = all.Where(r => r.CheckInTime >= startDate && r.CheckInTime <= endDate).ToList();
+            }
+            else
+            {
+                var all = await _checkInStorage.GetAllCheckInRecordsAsync();
+                records = all
+                    .Where(r => r.UserId == userId.ToString() && r.CheckInTime >= startDate && r.CheckInTime <= endDate)
+                    .ToList();
+            }
+
+            if (workType.HasValue)
+                records = records.Where(r => r.WorkType == workType.Value).ToList();
+
+            return records.OrderBy(r => r.CheckInTime).ToList();
+        }
+
+        public async Task<bool> ExportToExcelAsync(IEnumerable<CheckInRecord> records, string filePath, string title)
+        {
+            try
+            {
+                using var wb = new ClosedXML.Excel.XLWorkbook();
+                var ws = wb.Worksheets.Add(SafeSheetName(title));
+                string[] headers = { "日期", "上班時間", "下班時間", "地點", "內外勤", "定位方式", "備註", "編輯時間" };
+                for (int i = 0; i < headers.Length; i++)
+                {
+                    ws.Cell(1, i + 1).Value = headers[i];
+                    ws.Cell(1, i + 1).Style.Font.Bold = true;
+                }
+
+                int row = 2;
+                foreach (var r in records)
+                {
+                    ws.Cell(row, 1).Value = r.CheckInTime.ToString("yyyy-MM-dd");
+                    ws.Cell(row, 2).Value = r.CheckInTime.ToString("HH:mm");
+                    ws.Cell(row, 3).Value = r.CheckOutTime?.ToString("HH:mm") ?? string.Empty;
+                    ws.Cell(row, 4).Value = string.IsNullOrEmpty(r.GeofenceName) ? "—" : r.GeofenceName;
+                    ws.Cell(row, 5).Value = r.WorkType == WorkType.Field ? "外勤" : "內勤";
+                    ws.Cell(row, 6).Value = r.Method.ToString();
+                    ws.Cell(row, 7).Value = r.Notes ?? string.Empty;
+                    ws.Cell(row, 8).Value = r.EditedAt?.ToString("yyyy-MM-dd HH:mm") ?? string.Empty;
+                    row++;
+                }
+                ws.Columns().AdjustToContents();
+                await Task.Run(() => wb.SaveAs(filePath));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ExportToExcelAsync failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> ExportToPdfAsync(IEnumerable<CheckInRecord> records, string filePath, string title)
+        {
+            try
+            {
+                QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+                var data = records.ToList();
+
+                await Task.Run(() =>
+                {
+                    QuestPDF.Fluent.Document.Create(doc =>
+                    {
+                        doc.Page(p =>
+                        {
+                            p.Size(QuestPDF.Helpers.PageSizes.A4);
+                            p.Margin(28);
+                            p.Header().Text(title).FontSize(18).Bold();
+                            p.Content().Table(t =>
+                            {
+                                t.ColumnsDefinition(c =>
+                                {
+                                    c.RelativeColumn(2);
+                                    c.RelativeColumn(1);
+                                    c.RelativeColumn(1);
+                                    c.RelativeColumn(2);
+                                    c.RelativeColumn(1);
+                                    c.RelativeColumn(1);
+                                });
+                                t.Header(h =>
+                                {
+                                    string[] headers = { "日期", "上班", "下班", "地點", "類型", "方式" };
+                                    foreach (var h2 in headers) h.Cell().Padding(4).Text(h2).Bold();
+                                });
+                                foreach (var r in data)
+                                {
+                                    t.Cell().Padding(4).Text(r.CheckInTime.ToString("yyyy-MM-dd"));
+                                    t.Cell().Padding(4).Text(r.CheckInTime.ToString("HH:mm"));
+                                    t.Cell().Padding(4).Text(r.CheckOutTime?.ToString("HH:mm") ?? "—");
+                                    t.Cell().Padding(4).Text(string.IsNullOrEmpty(r.GeofenceName) ? "—" : r.GeofenceName);
+                                    t.Cell().Padding(4).Text(r.WorkType == WorkType.Field ? "外勤" : "內勤");
+                                    t.Cell().Padding(4).Text(r.Method.ToString());
+                                }
+                            });
+                            p.Footer().AlignRight().Text(x =>
+                            {
+                                x.Span("Page ");
+                                x.CurrentPageNumber();
+                                x.Span(" / ");
+                                x.TotalPages();
+                            });
+                        });
+                    }).GeneratePdf(filePath);
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ExportToPdfAsync failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        private static string SafeSheetName(string name)
+        {
+            // Excel sheet names: max 31 chars, no [ ] : * ? / \
+            var s = new string(name.Where(c => "[]:*?/\\".IndexOf(c) < 0).ToArray());
+            return s.Length > 31 ? s.Substring(0, 31) : s;
         }
 
         public async Task<CheckInReport> GenerateDailyReportAsync(DateTime date)

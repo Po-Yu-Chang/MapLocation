@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.ReportPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+             Style="{StaticResource ModernPage}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+            <Button Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonSecondary}"
+                    HorizontalOptions="Start"
+                    Clicked="OnBackClicked"/>
+
+            <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                   Style="{StaticResource ModernH2}"
+                   HorizontalOptions="Center"/>
+
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{Binding [DateFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <DatePicker Grid.Column="0" x:Name="StartDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
+                        <DatePicker Grid.Column="1" x:Name="EndDatePicker" Format="yyyy-MM-dd" DateSelected="OnDateChanged"/>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="{Binding [QuickThisMonth], Source={x:Static svc:LocalizationManager.Instance}}"
+                                FontSize="12" HeightRequest="36" Padding="6,4"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnThisMonthClicked"/>
+                        <Button Grid.Column="1"
+                                Text="{Binding [QuickLastMonth], Source={x:Static svc:LocalizationManager.Instance}}"
+                                FontSize="12" HeightRequest="36" Padding="6,4"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnLastMonthClicked"/>
+                        <Button Grid.Column="2"
+                                Text="{Binding [QuickLast30Days], Source={x:Static svc:LocalizationManager.Instance}}"
+                                FontSize="12" HeightRequest="36" Padding="6,4"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnLast30DaysClicked"/>
+                    </Grid>
+
+                    <Label Text="{Binding [WorkTypeFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <HorizontalStackLayout Spacing="12">
+                        <RadioButton x:Name="FilterAllRadio" GroupName="WorkTypeFilter" IsChecked="True"
+                                     Content="{Binding [WorkTypeAll], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnFilterChanged"/>
+                        <RadioButton x:Name="FilterOfficeRadio" GroupName="WorkTypeFilter"
+                                     Content="{Binding [Office], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnFilterChanged"/>
+                        <RadioButton x:Name="FilterFieldRadio" GroupName="WorkTypeFilter"
+                                     Content="{Binding [Field], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnFilterChanged"/>
+                    </HorizontalStackLayout>
+
+                    <Label x:Name="SummaryLabel" Style="{StaticResource ModernCaption}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="{Binding [ExportExcel], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonPrimary}"
+                                Clicked="OnExportExcelClicked"/>
+                        <Button Grid.Column="1"
+                                Text="{Binding [ExportPdf], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonPrimary}"
+                                Clicked="OnExportPdfClicked"/>
+                        <Button Grid.Column="2"
+                                Text="{Binding [ExportCsv], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnExportCsvClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

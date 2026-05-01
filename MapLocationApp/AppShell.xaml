@@ -79,5 +79,11 @@
         Route="LeavePage"
         FlyoutItemIsVisible="False" />
 
+    <ShellContent
+        Title="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:ReportPage}"
+        Route="ReportPage"
+        FlyoutItemIsVisible="False" />
+
 </Shell>
 

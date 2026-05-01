@@ -105,6 +105,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<EditCheckInPage>();
 		builder.Services.AddTransient<SchedulePage>();
 		builder.Services.AddTransient<LeavePage>();
+		builder.Services.AddTransient<ReportPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

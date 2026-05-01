@@ -766,4 +766,16 @@
   <data name="LeaveDays" xml:space="preserve"><value>Days</value></data>
   <data name="NoLeaveRecords" xml:space="preserve"><value>No leave records</value></data>
   <data name="EndDateBeforeStart" xml:space="preserve"><value>End date cannot be before start date</value></data>
+  <data name="MyReport" xml:space="preserve"><value>My Report</value></data>
+  <data name="WorkTypeFilter" xml:space="preserve"><value>Work type filter</value></data>
+  <data name="WorkTypeAll" xml:space="preserve"><value>All</value></data>
+  <data name="ExportExcel" xml:space="preserve"><value>Export Excel</value></data>
+  <data name="ExportPdf" xml:space="preserve"><value>Export PDF</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>Export CSV</value></data>
+  <data name="ExportSuccess" xml:space="preserve"><value>Exported to {0}</value></data>
+  <data name="ExportFailed" xml:space="preserve"><value>Export failed</value></data>
+  <data name="TotalRecords" xml:space="preserve"><value>{0} records</value></data>
+  <data name="QuickThisMonth" xml:space="preserve"><value>This month</value></data>
+  <data name="QuickLastMonth" xml:space="preserve"><value>Last month</value></data>
+  <data name="QuickLast30Days" xml:space="preserve"><value>Last 30 days</value></data>
 </root>

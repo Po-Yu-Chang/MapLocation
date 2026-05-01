@@ -306,7 +306,7 @@
                         Clicked="OnProfileClicked" />
             </Grid>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Button Grid.Column="0"
                         Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
                         Style="{StaticResource ModernButtonSecondary}"
@@ -316,6 +316,11 @@
                         Style="{StaticResource ModernButtonSecondary}"
                         Clicked="OnLeaveClicked" />
             </Grid>
+
+            <Button Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonPrimary}"
+                    Clicked="OnReportClicked"
+                    Margin="0,0,0,20"/>
 
         </VerticalStackLayout>
     </ScrollView>

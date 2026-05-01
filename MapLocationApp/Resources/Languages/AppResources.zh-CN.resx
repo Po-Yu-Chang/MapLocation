@@ -750,4 +750,16 @@
   <data name="LeaveDays" xml:space="preserve"><value>请假天数</value></data>
   <data name="NoLeaveRecords" xml:space="preserve"><value>尚无请假记录</value></data>
   <data name="EndDateBeforeStart" xml:space="preserve"><value>结束日期不可早于起始日期</value></data>
+  <data name="MyReport" xml:space="preserve"><value>我的报表</value></data>
+  <data name="WorkTypeFilter" xml:space="preserve"><value>内外勤筛选</value></data>
+  <data name="WorkTypeAll" xml:space="preserve"><value>全部</value></data>
+  <data name="ExportExcel" xml:space="preserve"><value>导出 Excel</value></data>
+  <data name="ExportPdf" xml:space="preserve"><value>导出 PDF</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>导出 CSV</value></data>
+  <data name="ExportSuccess" xml:space="preserve"><value>已导出至 {0}</value></data>
+  <data name="ExportFailed" xml:space="preserve"><value>导出失败</value></data>
+  <data name="TotalRecords" xml:space="preserve"><value>共 {0} 笔</value></data>
+  <data name="QuickThisMonth" xml:space="preserve"><value>本月</value></data>
+  <data name="QuickLastMonth" xml:space="preserve"><value>上月</value></data>
+  <data name="QuickLast30Days" xml:space="preserve"><value>近 30 天</value></data>
 </root>

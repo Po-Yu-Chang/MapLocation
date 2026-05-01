@@ -750,4 +750,16 @@
   <data name="LeaveDays" xml:space="preserve"><value>จำนวนวัน</value></data>
   <data name="NoLeaveRecords" xml:space="preserve"><value>ยังไม่มีบันทึกการลา</value></data>
   <data name="EndDateBeforeStart" xml:space="preserve"><value>วันที่สิ้นสุดต้องไม่อยู่ก่อนวันที่เริ่ม</value></data>
+  <data name="MyReport" xml:space="preserve"><value>รายงานของฉัน</value></data>
+  <data name="WorkTypeFilter" xml:space="preserve"><value>กรองประเภทงาน</value></data>
+  <data name="WorkTypeAll" xml:space="preserve"><value>ทั้งหมด</value></data>
+  <data name="ExportExcel" xml:space="preserve"><value>ส่งออก Excel</value></data>
+  <data name="ExportPdf" xml:space="preserve"><value>ส่งออก PDF</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>ส่งออก CSV</value></data>
+  <data name="ExportSuccess" xml:space="preserve"><value>ส่งออกไปที่ {0}</value></data>
+  <data name="ExportFailed" xml:space="preserve"><value>การส่งออกล้มเหลว</value></data>
+  <data name="TotalRecords" xml:space="preserve"><value>{0} รายการ</value></data>
+  <data name="QuickThisMonth" xml:space="preserve"><value>เดือนนี้</value></data>
+  <data name="QuickLastMonth" xml:space="preserve"><value>เดือนที่แล้ว</value></data>
+  <data name="QuickLast30Days" xml:space="preserve"><value>30 วันที่ผ่านมา</value></data>
 </root>
