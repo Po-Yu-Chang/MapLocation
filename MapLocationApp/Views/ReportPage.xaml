@@ -13,22 +13,11 @@
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="640" HorizontalOptions="Center">
 
-            <Border Style="{StaticResource HeroHeader}">
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" VerticalOptions="Center">
-                    <Border Grid.Column="0"
-                            BackgroundColor="#FACC15"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="Transparent"
-                            WidthRequest="48" HeightRequest="48">
-                        <Label Text="📊" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
-                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                        <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
-                               Style="{StaticResource HeroTitle}"/>
-                        <Label x:Name="SummaryLabel" Style="{StaticResource HeroSubtitle}"/>
-                    </VerticalStackLayout>
-                </Grid>
-            </Border>
+            <VerticalStackLayout Spacing="0" Padding="4,16,4,8">
+                <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource PageTitle}"/>
+                <Label x:Name="SummaryLabel" Style="{StaticResource PageSubtitle}"/>
+            </VerticalStackLayout>
 
             <Border Style="{StaticResource ModernCard}">
                 <VerticalStackLayout Spacing="10">

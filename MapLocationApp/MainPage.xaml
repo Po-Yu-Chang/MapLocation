@@ -9,158 +9,55 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="24" MaximumWidthRequest="900" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="24,32,24,32" Spacing="24" MaximumWidthRequest="560" HorizontalOptions="Center">
 
-            <!-- Hero header -->
-            <Border Style="{StaticResource HeroHeader}" Margin="0,12,0,0">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                    <Border Grid.Column="0"
-                            BackgroundColor="#FACC15"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="Transparent"
-                            WidthRequest="48" HeightRequest="48">
-                        <Label Text="⏰" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
-                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                        <Label Text="打卡上下班" Style="{StaticResource HeroTitle}"/>
-                        <Label Text="GPS / Wi-Fi 智慧定位考勤" Style="{StaticResource HeroSubtitle}"/>
-                    </VerticalStackLayout>
-                </Grid>
-            </Border>
-
-            <!-- 主 CTA：打卡 -->
-            <Border Style="{StaticResource ModernCardElevated}">
-                <VerticalStackLayout Spacing="14" HorizontalOptions="Center" Padding="8">
-                    <Border BackgroundColor="{StaticResource ModernPrimaryLighter}"
-                            StrokeShape="RoundRectangle 32"
-                            Stroke="Transparent"
-                            WidthRequest="64" HeightRequest="64">
-                        <Label Text="📍" FontSize="34" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
-                    <Label Text="開始打卡" Style="{StaticResource ModernH3}" HorizontalOptions="Center"/>
-                    <Label Text="自動偵測打卡點 · 一鍵上下班" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                    <Button Text="進入打卡頁"
-                            Style="{StaticResource ModernButtonAccent}"
-                            Clicked="OnCheckInClicked"
-                            WidthRequest="200"
-                            Margin="0,4,0,0"/>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 副卡：人臉辨識 + 隱私 -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Border Grid.Column="0" Style="{StaticResource ModernCard}">
-                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Padding="4">
-                        <Label Text="👤" FontSize="28" HorizontalOptions="Center"/>
-                        <Label Text="AI 識別" Style="{StaticResource SectionTitle}" HorizontalOptions="Center"/>
-                        <Button Text="開啟"
-                                Style="{StaticResource ModernButtonCompact}"
-                                HorizontalOptions="Center"
-                                Clicked="OnFaceRecognitionClicked"/>
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource ModernCard}">
-                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Padding="4">
-                        <Label Text="🔒" FontSize="28" HorizontalOptions="Center"/>
-                        <Label Text="隱私政策" Style="{StaticResource SectionTitle}" HorizontalOptions="Center"/>
-                        <Button Text="查看"
-                                Style="{StaticResource ModernButtonCompact}"
-                                HorizontalOptions="Center"
-                                Clicked="OnPrivacyClicked"/>
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <!-- 系統狀態監控卡片 -->
-            <Border Style="{StaticResource ModernCard}">
-                <VerticalStackLayout Spacing="20">
-                    <HorizontalStackLayout Spacing="12">
-                        <Border Style="{StaticResource ModernIconContainer}"
-                                BackgroundColor="{StaticResource ModernPrimaryLight}"
-                                WidthRequest="40" HeightRequest="40">
-                            <Label Text="📊" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernPrimary}"/>
-                        </Border>
-                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                            <Label Text="系統狀態監控" Style="{StaticResource ModernH4}"/>
-                            <Label Text="即時監控系統運行狀態" Style="{StaticResource ModernBodySmall}"/>
-                        </VerticalStackLayout>
-                    </HorizontalStackLayout>
-
-                    <BoxView Style="{StaticResource ModernSeparator}"/>
-
-                    <VerticalStackLayout Spacing="16">
-                        <!-- GPS 狀態 -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource ModernSuccess}"
-                                    StrokeShape="RoundRectangle 8"
-                                    WidthRequest="12" HeightRequest="12"
-                                    VerticalOptions="Center"/>
-                            <Label Grid.Column="1"
-                                   Text="GPS定位服務"
-                                   Style="{StaticResource ModernBody}"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    Style="{StaticResource ModernBadgeSuccess}">
-                                <Label Text="準備就緒" Style="{StaticResource ModernCaption}" TextColor="White"/>
-                            </Border>
-                        </Grid>
-
-                        <!-- 地理圍欄狀態 -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource ModernSuccess}"
-                                    StrokeShape="RoundRectangle 8"
-                                    WidthRequest="12" HeightRequest="12"
-                                    VerticalOptions="Center"/>
-                            <Label Grid.Column="1"
-                                   Text="地理圍欄監控"
-                                   Style="{StaticResource ModernBody}"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    Style="{StaticResource ModernBadgeSuccess}">
-                                <Label Text="啟動中" Style="{StaticResource ModernCaption}" TextColor="White"/>
-                            </Border>
-                        </Grid>
-
-                        <!-- 雲端同步狀態 -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource ModernSuccess}"
-                                    StrokeShape="RoundRectangle 8"
-                                    WidthRequest="12" HeightRequest="12"
-                                    VerticalOptions="Center"/>
-                            <Label Grid.Column="1"
-                                   Text="雲端同步服務"
-                                   Style="{StaticResource ModernBody}"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    Style="{StaticResource ModernBadgeSuccess}">
-                                <Label Text="已連接" Style="{StaticResource ModernCaption}" TextColor="White"/>
-                            </Border>
-                        </Grid>
-                    </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 快速操作 -->
-            <Button Text="⚙️ 系統設定"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    Clicked="OnSettingsClicked"/>
-
-            <!-- 底部版本資訊 -->
-            <VerticalStackLayout Spacing="12" Padding="0,20,0,40">
-                <BoxView Style="{StaticResource ModernSeparator}"/>
-                <Label Text="MapLocation v1.0.0"
-                       Style="{StaticResource ModernBodySmall}"
-                       TextColor="{StaticResource ModernGray500}"
-                       HorizontalOptions="Center"/>
-                <Label Text="Powered by AI • 智慧位置管理"
-                       Style="{StaticResource ModernCaption}"
-                       TextColor="{StaticResource ModernGray400}"
-                       HorizontalOptions="Center"/>
+            <!-- Brand -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="DAKA"
+                       FontSize="40"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource ModernPrimary}"
+                       CharacterSpacing="3"/>
+                <Label Text="智慧定位打卡"
+                       Style="{StaticResource PageSubtitle}"/>
             </VerticalStackLayout>
 
+            <!-- Primary card: 打卡 -->
+            <Border Style="{StaticResource ModernCard}" Padding="24">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="今天還沒打卡"
+                           Style="{StaticResource SectionTitle}"/>
+                    <Label Text="自動偵測 GPS / Wi-Fi 打卡點，一鍵記錄上下班時間。"
+                           Style="{StaticResource ModernBodySmall}"
+                           LineBreakMode="WordWrap"/>
+                    <Button Text="進入打卡"
+                            Style="{StaticResource ModernButtonPrimary}"
+                            Clicked="OnCheckInClicked"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Secondary actions -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="其他功能" Style="{StaticResource FieldLabel}"/>
+                <Button Text="人臉辨識"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        HorizontalOptions="Fill"
+                        Clicked="OnFaceRecognitionClicked"/>
+                <Button Text="隱私政策"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        HorizontalOptions="Fill"
+                        Clicked="OnPrivacyClicked"/>
+                <Button Text="系統設定"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        HorizontalOptions="Fill"
+                        Clicked="OnSettingsClicked"/>
+            </VerticalStackLayout>
+
+            <!-- Version footer -->
+            <Label Text="MapLocation v1.0"
+                   Style="{StaticResource ModernCaption}"
+                   HorizontalOptions="Center"
+                   Margin="0,16,0,0"/>
         </VerticalStackLayout>
     </ScrollView>
 
