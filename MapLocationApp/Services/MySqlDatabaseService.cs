@@ -211,6 +211,35 @@ namespace MapLocationApp.Services
                 using var command3 = new MySqlCommand(createGeofenceRegionsTable, connection);
                 await command3.ExecuteNonQueryAsync();
 
+                var createWorkSchedulesTable = @"
+                    CREATE TABLE IF NOT EXISTS work_schedules (
+                        user_id INT NOT NULL,
+                        week_day TINYINT NOT NULL,
+                        is_rest_day BOOLEAN DEFAULT FALSE,
+                        start_time TIME NULL,
+                        end_time TIME NULL,
+                        note VARCHAR(255) NULL,
+                        PRIMARY KEY (user_id, week_day),
+                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+                using var commandWS = new MySqlCommand(createWorkSchedulesTable, connection);
+                await commandWS.ExecuteNonQueryAsync();
+
+                var createLeaveRecordsTable = @"
+                    CREATE TABLE IF NOT EXISTS leave_records (
+                        id VARCHAR(36) PRIMARY KEY,
+                        user_id INT NOT NULL,
+                        leave_type TINYINT NOT NULL DEFAULT 1,
+                        start_date DATE NOT NULL,
+                        end_date DATE NOT NULL,
+                        note VARCHAR(500) NULL,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                        INDEX idx_user_date (user_id, start_date)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+                using var commandLR = new MySqlCommand(createLeaveRecordsTable, connection);
+                await commandLR.ExecuteNonQueryAsync();
+
                 // Run idempotent migrations for existing databases that may be missing newer columns.
                 await MigrateSchemaAsync(connection);
 
@@ -789,6 +818,164 @@ namespace MapLocationApp.Services
                 System.Diagnostics.Debug.WriteLine($"更新打卡記錄失敗: {ex.Message}");
                 return false;
             }
+        }
+
+        public async Task<List<WorkSchedule>> GetWorkScheduleAsync(int userId)
+        {
+            var list = new List<WorkSchedule>();
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return list;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                var query = @"SELECT week_day, is_rest_day, start_time, end_time, note
+                              FROM work_schedules WHERE user_id = @uid ORDER BY week_day";
+                using var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@uid", userId);
+                using var r = await cmd.ExecuteReaderAsync();
+                while (await r.ReadAsync())
+                {
+                    list.Add(new WorkSchedule
+                    {
+                        WeekDay = Convert.ToInt32(r["week_day"]),
+                        IsRestDay = Convert.ToBoolean(r["is_rest_day"]),
+                        Start = r["start_time"] is DBNull ? null : (TimeSpan?)r["start_time"],
+                        End = r["end_time"] is DBNull ? null : (TimeSpan?)r["end_time"],
+                        Note = r["note"] as string,
+                    });
+                }
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"GetWorkSchedule failed: {ex.Message}"); }
+            return list;
+        }
+
+        public async Task<bool> SaveWorkScheduleAsync(int userId, IEnumerable<WorkSchedule> schedules)
+        {
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                using var tx = await connection.BeginTransactionAsync();
+                var del = new MySqlCommand("DELETE FROM work_schedules WHERE user_id = @uid", connection, (MySqlTransaction)tx);
+                del.Parameters.AddWithValue("@uid", userId);
+                await del.ExecuteNonQueryAsync();
+
+                foreach (var s in schedules)
+                {
+                    var ins = new MySqlCommand(@"INSERT INTO work_schedules
+                        (user_id, week_day, is_rest_day, start_time, end_time, note)
+                        VALUES (@uid, @wd, @rest, @start, @end, @note)", connection, (MySqlTransaction)tx);
+                    ins.Parameters.AddWithValue("@uid", userId);
+                    ins.Parameters.AddWithValue("@wd", s.WeekDay);
+                    ins.Parameters.AddWithValue("@rest", s.IsRestDay);
+                    ins.Parameters.AddWithValue("@start", (object?)s.Start ?? DBNull.Value);
+                    ins.Parameters.AddWithValue("@end", (object?)s.End ?? DBNull.Value);
+                    ins.Parameters.AddWithValue("@note", (object?)s.Note ?? DBNull.Value);
+                    await ins.ExecuteNonQueryAsync();
+                }
+                await tx.CommitAsync();
+                return true;
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"SaveWorkSchedule failed: {ex.Message}"); return false; }
+        }
+
+        public async Task<List<LeaveRecord>> GetLeaveRecordsAsync(int userId, DateTime? from = null, DateTime? to = null)
+        {
+            var list = new List<LeaveRecord>();
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return list;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                var sql = @"SELECT id, user_id, leave_type, start_date, end_date, note, created_at
+                            FROM leave_records WHERE user_id = @uid";
+                if (from.HasValue) sql += " AND end_date >= @from";
+                if (to.HasValue) sql += " AND start_date <= @to";
+                sql += " ORDER BY start_date DESC";
+                using var cmd = new MySqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@uid", userId);
+                if (from.HasValue) cmd.Parameters.AddWithValue("@from", from.Value.Date);
+                if (to.HasValue) cmd.Parameters.AddWithValue("@to", to.Value.Date);
+                using var r = await cmd.ExecuteReaderAsync();
+                while (await r.ReadAsync())
+                {
+                    list.Add(new LeaveRecord
+                    {
+                        Id = r["id"].ToString() ?? string.Empty,
+                        UserId = r["user_id"].ToString() ?? string.Empty,
+                        Type = (LeaveType)Convert.ToInt32(r["leave_type"]),
+                        StartDate = Convert.ToDateTime(r["start_date"]),
+                        EndDate = Convert.ToDateTime(r["end_date"]),
+                        Note = r["note"] as string,
+                        CreatedAt = r["created_at"] is DateTime dt ? dt : DateTime.UtcNow,
+                    });
+                }
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"GetLeaveRecords failed: {ex.Message}"); }
+            return list;
+        }
+
+        public async Task<bool> SaveLeaveRecordAsync(LeaveRecord record)
+        {
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                if (!int.TryParse(record.UserId, out var uid)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                var sql = @"INSERT INTO leave_records (id, user_id, leave_type, start_date, end_date, note)
+                            VALUES (@id, @uid, @type, @start, @end, @note)";
+                using var cmd = new MySqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@id", record.Id);
+                cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@type", (int)record.Type);
+                cmd.Parameters.AddWithValue("@start", record.StartDate.Date);
+                cmd.Parameters.AddWithValue("@end", record.EndDate.Date);
+                cmd.Parameters.AddWithValue("@note", (object?)record.Note ?? DBNull.Value);
+                return await cmd.ExecuteNonQueryAsync() > 0;
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"SaveLeaveRecord failed: {ex.Message}"); return false; }
+        }
+
+        public async Task<bool> UpdateLeaveRecordAsync(LeaveRecord record)
+        {
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                var sql = @"UPDATE leave_records SET leave_type = @type, start_date = @start,
+                            end_date = @end, note = @note WHERE id = @id";
+                using var cmd = new MySqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@id", record.Id);
+                cmd.Parameters.AddWithValue("@type", (int)record.Type);
+                cmd.Parameters.AddWithValue("@start", record.StartDate.Date);
+                cmd.Parameters.AddWithValue("@end", record.EndDate.Date);
+                cmd.Parameters.AddWithValue("@note", (object?)record.Note ?? DBNull.Value);
+                return await cmd.ExecuteNonQueryAsync() > 0;
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"UpdateLeaveRecord failed: {ex.Message}"); return false; }
+        }
+
+        public async Task<bool> DeleteLeaveRecordAsync(string recordId)
+        {
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                using var cmd = new MySqlCommand("DELETE FROM leave_records WHERE id = @id", connection);
+                cmd.Parameters.AddWithValue("@id", recordId);
+                return await cmd.ExecuteNonQueryAsync() > 0;
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"DeleteLeaveRecord failed: {ex.Message}"); return false; }
         }
 
         public async Task<bool> DeleteCheckInRecordAsync(string recordId)

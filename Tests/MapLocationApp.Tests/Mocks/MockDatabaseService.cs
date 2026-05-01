@@ -268,6 +268,37 @@ public class MockDatabaseService : IDatabaseService
         return Task.FromResult(_checkInRecords.Remove(recordId));
     }
 
+    private readonly Dictionary<int, List<WorkSchedule>> _schedules = new();
+    private readonly Dictionary<string, LeaveRecord> _leaveRecords = new();
+
+    public Task<List<WorkSchedule>> GetWorkScheduleAsync(int userId)
+        => Task.FromResult(_schedules.TryGetValue(userId, out var s) ? s.ToList() : new List<WorkSchedule>());
+
+    public Task<bool> SaveWorkScheduleAsync(int userId, IEnumerable<WorkSchedule> schedules)
+    {
+        _schedules[userId] = schedules.ToList();
+        return Task.FromResult(true);
+    }
+
+    public Task<List<LeaveRecord>> GetLeaveRecordsAsync(int userId, DateTime? from = null, DateTime? to = null)
+    {
+        var q = _leaveRecords.Values.Where(r => r.UserId == userId.ToString());
+        if (from.HasValue) q = q.Where(r => r.EndDate.Date >= from.Value.Date);
+        if (to.HasValue) q = q.Where(r => r.StartDate.Date <= to.Value.Date);
+        return Task.FromResult(q.OrderByDescending(r => r.StartDate).ToList());
+    }
+
+    public Task<bool> SaveLeaveRecordAsync(LeaveRecord record)
+    { _leaveRecords[record.Id] = record; return Task.FromResult(true); }
+
+    public Task<bool> UpdateLeaveRecordAsync(LeaveRecord record)
+    {
+        if (!_leaveRecords.ContainsKey(record.Id)) return Task.FromResult(false);
+        _leaveRecords[record.Id] = record; return Task.FromResult(true);
+    }
+
+    public Task<bool> DeleteLeaveRecordAsync(string recordId) => Task.FromResult(_leaveRecords.Remove(recordId));
+
     /// <summary>
     /// Test helper: Get all users (for verification in tests)
     /// </summary>

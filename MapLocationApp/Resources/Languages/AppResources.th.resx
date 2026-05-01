@@ -724,4 +724,30 @@
   <data name="SelectWifi" xml:space="preserve">
     <value>เลือก Wi-Fi</value>
   </data>
+  <!-- M3 -->
+  <data name="ScheduleTitle" xml:space="preserve"><value>ตารางงานรายสัปดาห์</value></data>
+  <data name="MyShift" xml:space="preserve"><value>กะของฉัน</value></data>
+  <data name="LeaveTitle" xml:space="preserve"><value>บันทึกการลา</value></data>
+  <data name="MyLeaves" xml:space="preserve"><value>การลาของฉัน</value></data>
+  <data name="WeekDay0" xml:space="preserve"><value>อา</value></data>
+  <data name="WeekDay1" xml:space="preserve"><value>จ</value></data>
+  <data name="WeekDay2" xml:space="preserve"><value>อ</value></data>
+  <data name="WeekDay3" xml:space="preserve"><value>พ</value></data>
+  <data name="WeekDay4" xml:space="preserve"><value>พฤ</value></data>
+  <data name="WeekDay5" xml:space="preserve"><value>ศ</value></data>
+  <data name="WeekDay6" xml:space="preserve"><value>ส</value></data>
+  <data name="RestDay" xml:space="preserve"><value>วันหยุด</value></data>
+  <data name="ApplyDefaultHours" xml:space="preserve"><value>ใช้เวลามาตรฐานกับวันทำงานทั้งหมด</value></data>
+  <data name="LeaveType" xml:space="preserve"><value>ประเภทการลา</value></data>
+  <data name="LeaveAnnual" xml:space="preserve"><value>ลาพักร้อน</value></data>
+  <data name="LeavePersonal" xml:space="preserve"><value>ลากิจ</value></data>
+  <data name="LeaveSick" xml:space="preserve"><value>ลาป่วย</value></data>
+  <data name="LeaveFamily" xml:space="preserve"><value>ลาดูแลครอบครัว</value></data>
+  <data name="LeaveOfficial" xml:space="preserve"><value>ลาราชการ</value></data>
+  <data name="LeaveOther" xml:space="preserve"><value>อื่น ๆ</value></data>
+  <data name="StartDate" xml:space="preserve"><value>วันที่เริ่ม</value></data>
+  <data name="EndDate" xml:space="preserve"><value>วันที่สิ้นสุด</value></data>
+  <data name="LeaveDays" xml:space="preserve"><value>จำนวนวัน</value></data>
+  <data name="NoLeaveRecords" xml:space="preserve"><value>ยังไม่มีบันทึกการลา</value></data>
+  <data name="EndDateBeforeStart" xml:space="preserve"><value>วันที่สิ้นสุดต้องไม่อยู่ก่อนวันที่เริ่ม</value></data>
 </root>

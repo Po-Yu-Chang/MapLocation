@@ -295,7 +295,7 @@
                         Clicked="OnManageGeofencesClicked" />
             </Grid>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Button Grid.Column="0"
                         Text="{Binding [ManageCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
                         Style="{StaticResource ModernButtonSecondary}"
@@ -304,6 +304,17 @@
                         Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
                         Style="{StaticResource ModernButtonSecondary}"
                         Clicked="OnProfileClicked" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+                <Button Grid.Column="0"
+                        Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnScheduleClicked" />
+                <Button Grid.Column="1"
+                        Text="{Binding [MyLeaves], Source={x:Static svc:LocalizationManager.Instance}}"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnLeaveClicked" />
             </Grid>
 
         </VerticalStackLayout>

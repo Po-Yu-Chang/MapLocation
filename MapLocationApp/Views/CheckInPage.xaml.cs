@@ -683,6 +683,18 @@ public partial class CheckInPage : ContentPage
         try { await Shell.Current.GoToAsync("ProfilePage"); }
         catch (Exception ex) { await DisplayAlert("錯誤", ex.Message, "確定"); }
     }
+
+    private async void OnScheduleClicked(object sender, EventArgs e)
+    {
+        try { await Shell.Current.GoToAsync("SchedulePage"); }
+        catch (Exception ex) { await DisplayAlert("錯誤", ex.Message, "確定"); }
+    }
+
+    private async void OnLeaveClicked(object sender, EventArgs e)
+    {
+        try { await Shell.Current.GoToAsync("LeavePage"); }
+        catch (Exception ex) { await DisplayAlert("錯誤", ex.Message, "確定"); }
+    }
 }
 
 // 輔助類別

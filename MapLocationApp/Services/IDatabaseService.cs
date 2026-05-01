@@ -17,6 +17,14 @@ namespace MapLocationApp.Services
         Task<bool> UpdateCheckInRecordAsync(CheckInRecord record);
         Task<bool> DeleteCheckInRecordAsync(string recordId);
 
+        // M3: WorkSchedule + LeaveRecord
+        Task<List<WorkSchedule>> GetWorkScheduleAsync(int userId);
+        Task<bool> SaveWorkScheduleAsync(int userId, IEnumerable<WorkSchedule> schedules);
+        Task<List<LeaveRecord>> GetLeaveRecordsAsync(int userId, DateTime? from = null, DateTime? to = null);
+        Task<bool> SaveLeaveRecordAsync(LeaveRecord record);
+        Task<bool> UpdateLeaveRecordAsync(LeaveRecord record);
+        Task<bool> DeleteLeaveRecordAsync(string recordId);
+
         // Geofence persistence
         Task<List<GeofenceRegion>> GetAllGeofencesAsync();
         Task<bool> SaveGeofenceAsync(GeofenceRegion geofence);

@@ -724,4 +724,30 @@
   <data name="SelectWifi" xml:space="preserve">
     <value>选择 Wi-Fi</value>
   </data>
+  <!-- M3 -->
+  <data name="ScheduleTitle" xml:space="preserve"><value>周排班</value></data>
+  <data name="MyShift" xml:space="preserve"><value>我的排班</value></data>
+  <data name="LeaveTitle" xml:space="preserve"><value>请假记录</value></data>
+  <data name="MyLeaves" xml:space="preserve"><value>我的假单</value></data>
+  <data name="WeekDay0" xml:space="preserve"><value>周日</value></data>
+  <data name="WeekDay1" xml:space="preserve"><value>周一</value></data>
+  <data name="WeekDay2" xml:space="preserve"><value>周二</value></data>
+  <data name="WeekDay3" xml:space="preserve"><value>周三</value></data>
+  <data name="WeekDay4" xml:space="preserve"><value>周四</value></data>
+  <data name="WeekDay5" xml:space="preserve"><value>周五</value></data>
+  <data name="WeekDay6" xml:space="preserve"><value>周六</value></data>
+  <data name="RestDay" xml:space="preserve"><value>休假</value></data>
+  <data name="ApplyDefaultHours" xml:space="preserve"><value>套用默认工时到所有工作日</value></data>
+  <data name="LeaveType" xml:space="preserve"><value>假别</value></data>
+  <data name="LeaveAnnual" xml:space="preserve"><value>年休</value></data>
+  <data name="LeavePersonal" xml:space="preserve"><value>事假</value></data>
+  <data name="LeaveSick" xml:space="preserve"><value>病假</value></data>
+  <data name="LeaveFamily" xml:space="preserve"><value>家事假</value></data>
+  <data name="LeaveOfficial" xml:space="preserve"><value>公假</value></data>
+  <data name="LeaveOther" xml:space="preserve"><value>其他</value></data>
+  <data name="StartDate" xml:space="preserve"><value>起始日期</value></data>
+  <data name="EndDate" xml:space="preserve"><value>结束日期</value></data>
+  <data name="LeaveDays" xml:space="preserve"><value>请假天数</value></data>
+  <data name="NoLeaveRecords" xml:space="preserve"><value>尚无请假记录</value></data>
+  <data name="EndDateBeforeStart" xml:space="preserve"><value>结束日期不可早于起始日期</value></data>
 </root>

@@ -740,4 +740,30 @@
   <data name="SelectWifi" xml:space="preserve">
     <value>Select Wi-Fi</value>
   </data>
+  <!-- M3: Schedule / Leave -->
+  <data name="ScheduleTitle" xml:space="preserve"><value>Weekly Schedule</value></data>
+  <data name="MyShift" xml:space="preserve"><value>My Shift</value></data>
+  <data name="LeaveTitle" xml:space="preserve"><value>Leave Records</value></data>
+  <data name="MyLeaves" xml:space="preserve"><value>My Leaves</value></data>
+  <data name="WeekDay0" xml:space="preserve"><value>Sun</value></data>
+  <data name="WeekDay1" xml:space="preserve"><value>Mon</value></data>
+  <data name="WeekDay2" xml:space="preserve"><value>Tue</value></data>
+  <data name="WeekDay3" xml:space="preserve"><value>Wed</value></data>
+  <data name="WeekDay4" xml:space="preserve"><value>Thu</value></data>
+  <data name="WeekDay5" xml:space="preserve"><value>Fri</value></data>
+  <data name="WeekDay6" xml:space="preserve"><value>Sat</value></data>
+  <data name="RestDay" xml:space="preserve"><value>Rest day</value></data>
+  <data name="ApplyDefaultHours" xml:space="preserve"><value>Apply default hours to all working days</value></data>
+  <data name="LeaveType" xml:space="preserve"><value>Leave type</value></data>
+  <data name="LeaveAnnual" xml:space="preserve"><value>Annual</value></data>
+  <data name="LeavePersonal" xml:space="preserve"><value>Personal</value></data>
+  <data name="LeaveSick" xml:space="preserve"><value>Sick</value></data>
+  <data name="LeaveFamily" xml:space="preserve"><value>Family</value></data>
+  <data name="LeaveOfficial" xml:space="preserve"><value>Official</value></data>
+  <data name="LeaveOther" xml:space="preserve"><value>Other</value></data>
+  <data name="StartDate" xml:space="preserve"><value>Start date</value></data>
+  <data name="EndDate" xml:space="preserve"><value>End date</value></data>
+  <data name="LeaveDays" xml:space="preserve"><value>Days</value></data>
+  <data name="NoLeaveRecords" xml:space="preserve"><value>No leave records</value></data>
+  <data name="EndDateBeforeStart" xml:space="preserve"><value>End date cannot be before start date</value></data>
 </root>

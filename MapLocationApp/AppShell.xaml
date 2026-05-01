@@ -67,5 +67,17 @@
         Route="EditCheckInPage"
         FlyoutItemIsVisible="False" />
 
+    <ShellContent
+        Title="{Binding [ScheduleTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:SchedulePage}"
+        Route="SchedulePage"
+        FlyoutItemIsVisible="False" />
+
+    <ShellContent
+        Title="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:LeavePage}"
+        Route="LeavePage"
+        FlyoutItemIsVisible="False" />
+
 </Shell>
 

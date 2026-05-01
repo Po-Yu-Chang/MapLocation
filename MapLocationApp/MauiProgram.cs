@@ -103,6 +103,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<GeofenceManagementPage>();
 		builder.Services.AddTransient<ProfilePage>();
 		builder.Services.AddTransient<EditCheckInPage>();
+		builder.Services.AddTransient<SchedulePage>();
+		builder.Services.AddTransient<LeavePage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

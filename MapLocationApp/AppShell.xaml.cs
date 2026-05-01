@@ -11,5 +11,7 @@ public partial class AppShell : Shell
 		Routing.RegisterRoute(nameof(GeofenceManagementPage), typeof(GeofenceManagementPage));
 		Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
 		Routing.RegisterRoute(nameof(EditCheckInPage), typeof(EditCheckInPage));
+		Routing.RegisterRoute(nameof(SchedulePage), typeof(SchedulePage));
+		Routing.RegisterRoute(nameof(LeavePage), typeof(LeavePage));
 	}
 }
