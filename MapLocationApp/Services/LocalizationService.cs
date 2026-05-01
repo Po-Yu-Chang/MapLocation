@@ -74,8 +74,7 @@ namespace MapLocationApp.Services
                 "zh-TW",
                 "zh-CN",
                 "en-US",
-                "ja-JP",
-                "ko-KR"
+                "th-TH"
             };
             return Task.FromResult(languages);
         }

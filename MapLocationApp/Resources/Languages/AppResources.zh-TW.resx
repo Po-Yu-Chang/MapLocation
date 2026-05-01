@@ -220,6 +220,9 @@
   <data name="PrivacyTitle" xml:space="preserve">
     <value>隱私政策</value>
   </data>
+  <data name="PrivacyCommitment" xml:space="preserve">
+    <value>保護您的隱私是我們的承諾</value>
+  </data>
   <data name="DataCollection" xml:space="preserve">
     <value>資料收集</value>
   </data>
@@ -235,13 +238,354 @@
   <data name="ContactUs" xml:space="preserve">
     <value>聯絡我們</value>
   </data>
+  <data name="PolicyUpdate" xml:space="preserve">
+    <value>政策更新</value>
+  </data>
   <data name="AcceptPolicy" xml:space="preserve">
-    <value>我已閱讀並同意</value>
+    <value>✅ 我已閱讀並同意</value>
   </data>
   <data name="ExportData" xml:space="preserve">
-    <value>匯出我的資料</value>
+    <value>📤 匯出我的資料</value>
   </data>
   <data name="DeleteData" xml:space="preserve">
-    <value>刪除我的資料</value>
+    <value>🗑️ 刪除我的資料</value>
+  </data>
+  <data name="MapNavigation" xml:space="preserve">
+    <value>地圖導航</value>
+  </data>
+
+  <!-- Login -->
+  <data name="SmartLocationSystem" xml:space="preserve">
+    <value>智慧位置管理系統</value>
+  </data>
+  <data name="WelcomeBack" xml:space="preserve">
+    <value>歡迎回來</value>
+  </data>
+  <data name="PleaseLoginToContinue" xml:space="preserve">
+    <value>請登入您的帳號以繼續使用</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>使用者名稱</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>記住我</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>忘記密碼？</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>還沒有帳號？</value>
+  </data>
+  <data name="RegisterNow" xml:space="preserve">
+    <value>立即註冊</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>版本 1.0.0</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+    <value>未登入</value>
+  </data>
+  <data name="PleaseLoginToUse" xml:space="preserve">
+    <value>請先登入以使用打卡功能</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+
+  <!-- CheckIn Page -->
+  <data name="SmartAttendance" xml:space="preserve">
+    <value>智慧考勤系統</value>
+  </data>
+  <data name="NearbyAreas" xml:space="preserve">
+    <value>附近區域</value>
+  </data>
+  <data name="NoNearbyLocations" xml:space="preserve">
+    <value>附近沒有已啟用的打卡地點</value>
+  </data>
+  <data name="CheckInOperation" xml:space="preserve">
+    <value>打卡操作</value>
+  </data>
+  <data name="SelectCheckInLocation" xml:space="preserve">
+    <value>選擇打卡地點</value>
+  </data>
+  <data name="ClockIn" xml:space="preserve">
+    <value>📍 打卡上班</value>
+  </data>
+  <data name="ClockOut" xml:space="preserve">
+    <value>🏠 打卡下班</value>
+  </data>
+  <data name="PleaseLoginFirst" xml:space="preserve">
+    <value>⚠️ 請先登入才能使用打卡功能</value>
+  </data>
+  <data name="GettingLocation" xml:space="preserve">
+    <value>⏳ 正在獲取位置...</value>
+  </data>
+  <data name="WaitingLocation" xml:space="preserve">
+    <value>📍 等待位置中...</value>
+  </data>
+  <data name="LoadingCheckInLocations" xml:space="preserve">
+    <value>⏳ 載入打卡地點中...</value>
+  </data>
+
+  <!-- Geofence Management -->
+  <data name="GeofenceManagementTitle" xml:space="preserve">
+    <value>打卡地點 / 圍欄管理</value>
+  </data>
+  <data name="AddLocation" xml:space="preserve">
+    <value>新增地點</value>
+  </data>
+  <data name="EnableThisLocation" xml:space="preserve">
+    <value>啟用此地點</value>
+  </data>
+  <data name="UseCurrentLocation" xml:space="preserve">
+    <value>📍 使用目前位置</value>
+  </data>
+  <data name="ClearForm" xml:space="preserve">
+    <value>🗑️ 清空</value>
+  </data>
+  <data name="AddBtn" xml:space="preserve">
+    <value>➕ 新增</value>
+  </data>
+  <data name="CancelEdit" xml:space="preserve">
+    <value>取消編輯</value>
+  </data>
+  <data name="ExistingLocations" xml:space="preserve">
+    <value>現有地點</value>
+  </data>
+  <data name="NoLocationsYet" xml:space="preserve">
+    <value>尚無打卡地點，請於上方新增</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>切換</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>🔄 重新整理</value>
+  </data>
+  <data name="BackToCheckIn" xml:space="preserve">
+    <value>← 返回打卡頁</value>
+  </data>
+
+  <!-- Settings Page -->
+  <data name="AppSettings" xml:space="preserve">
+    <value>應用程式設定</value>
+  </data>
+  <data name="LanguageSettings" xml:space="preserve">
+    <value>語言設定</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>選擇應用程式語言</value>
+  </data>
+  <data name="ThemeSettings" xml:space="preserve">
+    <value>主題設定</value>
+  </data>
+  <data name="SelectTheme" xml:space="preserve">
+    <value>選擇外觀主題</value>
+  </data>
+  <data name="LocationServices" xml:space="preserve">
+    <value>位置服務</value>
+  </data>
+  <data name="EnableHighAccuracy" xml:space="preserve">
+    <value>啟用高精度定位</value>
+  </data>
+  <data name="BackgroundLocationUpdates" xml:space="preserve">
+    <value>背景位置更新</value>
+  </data>
+  <data name="AutoGeofenceDetection" xml:space="preserve">
+    <value>自動地理圍欄檢測</value>
+  </data>
+  <data name="NotificationSettings" xml:space="preserve">
+    <value>通知設定</value>
+  </data>
+  <data name="CheckInReminder" xml:space="preserve">
+    <value>打卡提醒</value>
+  </data>
+  <data name="GeofenceNotifications" xml:space="preserve">
+    <value>地理圍欄進出通知</value>
+  </data>
+  <data name="TeamLocationNotification" xml:space="preserve">
+    <value>團隊位置分享通知</value>
+  </data>
+  <data name="TelegramPush" xml:space="preserve">
+    <value>Telegram 推播通知</value>
+  </data>
+  <data name="EnableTelegram" xml:space="preserve">
+    <value>啟用 Telegram 通知</value>
+  </data>
+  <data name="DatabaseSettings" xml:space="preserve">
+    <value>資料庫設定</value>
+  </data>
+  <data name="DataManagement" xml:space="preserve">
+    <value>資料管理</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="PrivacyPolicyBtn" xml:space="preserve">
+    <value>隱私政策</value>
+  </data>
+  <data name="ExportDataBtn" xml:space="preserve">
+    <value>📤 匯出資料</value>
+  </data>
+  <data name="ImportDataBtn" xml:space="preserve">
+    <value>📥 匯入資料</value>
+  </data>
+  <data name="ClearCache" xml:space="preserve">
+    <value>🗑️ 清除快取</value>
+  </data>
+
+  <!-- Face Recognition -->
+  <data name="FaceRecognitionTitle" xml:space="preserve">
+    <value>AI 人臉辨識系統</value>
+  </data>
+  <data name="SmartFacePlatform" xml:space="preserve">
+    <value>智慧人臉訓練與識別平台</value>
+  </data>
+  <data name="TrainingMode" xml:space="preserve">
+    <value>訓練模式</value>
+  </data>
+  <data name="AddFaceData" xml:space="preserve">
+    <value>新增人臉資料到系統</value>
+  </data>
+  <data name="StartTraining" xml:space="preserve">
+    <value>開始訓練</value>
+  </data>
+  <data name="TestMode" xml:space="preserve">
+    <value>測試模式</value>
+  </data>
+  <data name="RecognizeTrainedFaces" xml:space="preserve">
+    <value>辨識已訓練的人臉</value>
+  </data>
+  <data name="StartTest" xml:space="preserve">
+    <value>開始測試</value>
+  </data>
+  <data name="ViewManageFaceData" xml:space="preserve">
+    <value>查看和管理人臉資料</value>
+  </data>
+  <data name="ManageData" xml:space="preserve">
+    <value>管理資料</value>
+  </data>
+  <data name="SystemSettings" xml:space="preserve">
+    <value>系統設定</value>
+  </data>
+  <data name="AdjustRecognitionParams" xml:space="preserve">
+    <value>調整識別參數設定</value>
+  </data>
+
+  <!-- Map Page -->
+  <data name="MapReady" xml:space="preserve">
+    <value>準備就緒</value>
+  </data>
+  <data name="LocationLabel" xml:space="preserve">
+    <value>定位</value>
+  </data>
+  <data name="GeofenceLabel" xml:space="preserve">
+    <value>圍欄</value>
+  </data>
+
+  <!-- Route Planning -->
+  <data name="RouteFastest" xml:space="preserve">
+    <value>🚀 最快</value>
+  </data>
+  <data name="RouteShortest" xml:space="preserve">
+    <value>📏 最短</value>
+  </data>
+  <data name="RouteEcoFriendly" xml:space="preserve">
+    <value>🌿 節能</value>
+  </data>
+  <data name="StartNavigation" xml:space="preserve">
+    <value>開始導航</value>
+  </data>
+  <data name="RouteTestMode" xml:space="preserve">
+    <value>🧪 測試模式</value>
+  </data>
+  <data name="SelectLabel" xml:space="preserve">
+    <value>選擇</value>
+  </data>
+  <data name="StartPoint" xml:space="preserve">
+    <value>起點</value>
+  </data>
+  <data name="EndPoint" xml:space="preserve">
+    <value>終點</value>
+  </data>
+  <data name="HomeTab" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="RoutePlanningTitle" xml:space="preserve">
+    <value>路線規劃</value>
+  </data>
+  <data name="SelectMapType" xml:space="preserve">
+    <value>選擇地圖類型</value>
+  </data>
+  <data name="StopTracking" xml:space="preserve">
+    <value>停止追蹤</value>
+  </data>
+  <data name="TrackingStopped" xml:space="preserve">
+    <value>位置追蹤已停止</value>
+  </data>
+  <data name="LocationPermissionChecking" xml:space="preserve">
+    <value>正在檢查位置權限...</value>
+  </data>
+  <data name="LocationPermissionDenied" xml:space="preserve">
+    <value>位置權限未授予</value>
+  </data>
+  <data name="ResolvingAddress" xml:space="preserve">
+    <value>正在解析地址...</value>
+  </data>
+  <data name="UnableToGetLocation" xml:space="preserve">
+    <value>無法獲取位置</value>
+  </data>
+  <data name="CheckGpsSettings" xml:space="preserve">
+    <value>請檢查 GPS 設定</value>
+  </data>
+  <data name="LocationFailed" xml:space="preserve">
+    <value>位置取得失敗</value>
+  </data>
+  <data name="Refreshing" xml:space="preserve">
+    <value>重新整理中...</value>
+  </data>
+  <data name="ConfirmLogout" xml:space="preserve">
+    <value>確認登出</value>
+  </data>
+  <data name="LogoutConfirmMessage" xml:space="preserve">
+    <value>您確定要登出嗎？</value>
+  </data>
+  <data name="UpdateBtn" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="LocationUpdated" xml:space="preserve">
+    <value>位置已更新</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>確定</value>
+  </data>
+  <data name="ZoomInMap" xml:space="preserve">
+    <value>放大地圖</value>
+  </data>
+  <data name="ZoomOutMap" xml:space="preserve">
+    <value>縮小地圖</value>
+  </data>
+  <data name="ZoomFailed" xml:space="preserve">
+    <value>縮放失敗</value>
+  </data>
+  <data name="Radius" xml:space="preserve">
+    <value>半徑</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>分類</value>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>未分類</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>停用</value>
   </data>
 </root>

@@ -64,528 +64,512 @@
     <value>MapLocation</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Smart Location Check-In App</value>
+    <value>智能位置打卡应用</value>
   </data>
-
-  <!-- Navigation -->
   <data name="MainPage" xml:space="preserve">
-    <value>Home</value>
+    <value>首页</value>
   </data>
   <data name="MapPage" xml:space="preserve">
-    <value>Map</value>
+    <value>地图</value>
   </data>
   <data name="CheckInPage" xml:space="preserve">
-    <value>Check In</value>
+    <value>打卡</value>
   </data>
   <data name="PrivacyPage" xml:space="preserve">
-    <value>Privacy</value>
+    <value>隐私</value>
   </data>
   <data name="ReportsPage" xml:space="preserve">
-    <value>Reports</value>
+    <value>报表</value>
   </data>
   <data name="SettingsPage" xml:space="preserve">
-    <value>Settings</value>
+    <value>设置</value>
   </data>
-
-  <!-- Common -->
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>保存</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>取消</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>删除</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>编辑</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>返回</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>下一步</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>加载中...</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Error</value>
+    <value>错误</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Success</value>
+    <value>成功</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Warning</value>
+    <value>警告</value>
   </data>
-
-  <!-- Check In -->
   <data name="CheckInTitle" xml:space="preserve">
-    <value>Location Check In</value>
+    <value>位置打卡</value>
   </data>
   <data name="CheckInButton" xml:space="preserve">
-    <value>Check In Now</value>
+    <value>立即打卡</value>
   </data>
   <data name="CheckInSuccess" xml:space="preserve">
-    <value>Check-in successful!</value>
+    <value>打卡成功！</value>
   </data>
   <data name="CheckInError" xml:space="preserve">
-    <value>Check-in failed. Please try again.</value>
+    <value>打卡失败，请重试。</value>
   </data>
   <data name="CurrentLocation" xml:space="preserve">
-    <value>Current Location</value>
+    <value>当前位置</value>
   </data>
   <data name="LocationAccuracy" xml:space="preserve">
-    <value>Accuracy</value>
+    <value>精确度</value>
   </data>
   <data name="CheckInHistory" xml:space="preserve">
-    <value>Check-In History</value>
+    <value>打卡记录</value>
   </data>
-
-  <!-- Map -->
   <data name="MapTitle" xml:space="preserve">
-    <value>Location Map</value>
+    <value>位置地图</value>
   </data>
   <data name="MyLocation" xml:space="preserve">
-    <value>My Location</value>
+    <value>我的位置</value>
   </data>
   <data name="FindRoute" xml:space="preserve">
-    <value>Find Route</value>
+    <value>查找路线</value>
   </data>
   <data name="OfflineMode" xml:space="preserve">
-    <value>Offline Mode</value>
+    <value>离线模式</value>
   </data>
   <data name="DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>下载地图</value>
   </data>
-
-  <!-- Reports -->
   <data name="ReportsTitle" xml:space="preserve">
-    <value>Check-In Reports</value>
+    <value>打卡报表</value>
   </data>
   <data name="DailyReport" xml:space="preserve">
-    <value>Daily Report</value>
+    <value>日报表</value>
   </data>
   <data name="WeeklyReport" xml:space="preserve">
-    <value>Weekly Report</value>
+    <value>周报表</value>
   </data>
   <data name="MonthlyReport" xml:space="preserve">
-    <value>Monthly Report</value>
+    <value>月报表</value>
   </data>
   <data name="ExportReport" xml:space="preserve">
-    <value>Export Report</value>
+    <value>导出报表</value>
   </data>
-
-  <!-- Settings -->
   <data name="SettingsTitle" xml:space="preserve">
-    <value>Settings</value>
+    <value>设置</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Language</value>
+    <value>语言</value>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
+    <value>主题</value>
   </data>
   <data name="LightTheme" xml:space="preserve">
-    <value>Light</value>
+    <value>浅色</value>
   </data>
   <data name="DarkTheme" xml:space="preserve">
-    <value>Dark</value>
+    <value>深色</value>
   </data>
   <data name="SystemTheme" xml:space="preserve">
-    <value>System</value>
+    <value>系统</value>
   </data>
   <data name="LocationPermission" xml:space="preserve">
-    <value>Location Permission</value>
+    <value>位置权限</value>
   </data>
   <data name="Notifications" xml:space="preserve">
-    <value>Notifications</value>
+    <value>通知</value>
   </data>
-
-  <!-- Team -->
   <data name="TeamTitle" xml:space="preserve">
-    <value>Team Members</value>
+    <value>团队成员</value>
   </data>
   <data name="ShareLocation" xml:space="preserve">
-    <value>Share Location</value>
+    <value>分享位置</value>
   </data>
   <data name="TeamMembers" xml:space="preserve">
-    <value>Team Members</value>
+    <value>团队成员</value>
   </data>
   <data name="InviteMembers" xml:space="preserve">
-    <value>Invite Members</value>
+    <value>邀请成员</value>
   </data>
-
-  <!-- Privacy -->
   <data name="PrivacyTitle" xml:space="preserve">
-    <value>Privacy Policy</value>
-  </data>
-  <data name="PrivacyCommitment" xml:space="preserve">
-    <value>Protecting your privacy is our commitment</value>
+    <value>隐私政策</value>
   </data>
   <data name="DataCollection" xml:space="preserve">
-    <value>Data Collection</value>
+    <value>数据收集</value>
   </data>
   <data name="DataUsage" xml:space="preserve">
-    <value>Data Usage</value>
+    <value>数据使用</value>
   </data>
   <data name="DataProtection" xml:space="preserve">
-    <value>Data Protection</value>
+    <value>数据保护</value>
   </data>
   <data name="UserRights" xml:space="preserve">
-    <value>Your Rights</value>
+    <value>您的权利</value>
   </data>
   <data name="ContactUs" xml:space="preserve">
-    <value>Contact Us</value>
-  </data>
-  <data name="PolicyUpdate" xml:space="preserve">
-    <value>Policy Update</value>
+    <value>联系我们</value>
   </data>
   <data name="AcceptPolicy" xml:space="preserve">
-    <value>✅ I Have Read and Agree</value>
+    <value>我已阅读并同意</value>
   </data>
   <data name="ExportData" xml:space="preserve">
-    <value>📤 Export My Data</value>
+    <value>📤 导出我的数据</value>
   </data>
   <data name="DeleteData" xml:space="preserve">
-    <value>🗑️ Delete My Data</value>
+    <value>🗑️ 删除我的数据</value>
   </data>
   <data name="MapNavigation" xml:space="preserve">
-    <value>Map Navigation</value>
+    <value>地图导航</value>
   </data>
 
   <!-- Login -->
   <data name="SmartLocationSystem" xml:space="preserve">
-    <value>Smart Location Management System</value>
+    <value>智慧位置管理系统</value>
   </data>
   <data name="WelcomeBack" xml:space="preserve">
-    <value>Welcome Back</value>
+    <value>欢迎回来</value>
   </data>
   <data name="PleaseLoginToContinue" xml:space="preserve">
-    <value>Please login to your account to continue</value>
+    <value>请登录您的账号以继续使用</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>用户名</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>密码</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
-    <value>Remember Me</value>
+    <value>记住我</value>
   </data>
   <data name="ForgotPassword" xml:space="preserve">
-    <value>Forgot Password?</value>
+    <value>忘记密码？</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>登录</value>
   </data>
   <data name="NoAccount" xml:space="preserve">
-    <value>Don't have an account?</value>
+    <value>还没有账号？</value>
   </data>
   <data name="RegisterNow" xml:space="preserve">
-    <value>Register Now</value>
+    <value>立即注册</value>
   </data>
   <data name="AppVersion" xml:space="preserve">
-    <value>Version 1.0.0</value>
+    <value>版本 1.0.0</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Not Logged In</value>
+    <value>未登录</value>
   </data>
   <data name="PleaseLoginToUse" xml:space="preserve">
-    <value>Please login to use this feature</value>
+    <value>请先登录以使用打卡功能</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+    <value>登出</value>
   </data>
 
   <!-- CheckIn Page -->
   <data name="SmartAttendance" xml:space="preserve">
-    <value>Smart Attendance System</value>
+    <value>智慧考勤系统</value>
   </data>
   <data name="NearbyAreas" xml:space="preserve">
-    <value>Nearby Areas</value>
+    <value>附近区域</value>
   </data>
   <data name="NoNearbyLocations" xml:space="preserve">
-    <value>No enabled check-in locations nearby</value>
+    <value>附近没有已启用的打卡地点</value>
   </data>
   <data name="CheckInOperation" xml:space="preserve">
-    <value>Check-In Operation</value>
+    <value>打卡操作</value>
   </data>
   <data name="SelectCheckInLocation" xml:space="preserve">
-    <value>Select Check-In Location</value>
+    <value>选择打卡地点</value>
   </data>
   <data name="ClockIn" xml:space="preserve">
-    <value>📍 Clock In</value>
+    <value>📍 打卡上班</value>
   </data>
   <data name="ClockOut" xml:space="preserve">
-    <value>🏠 Clock Out</value>
+    <value>🏠 打卡下班</value>
   </data>
   <data name="PleaseLoginFirst" xml:space="preserve">
-    <value>⚠️ Please login to use check-in</value>
+    <value>⚠️ 请先登录才能使用打卡功能</value>
   </data>
   <data name="GettingLocation" xml:space="preserve">
-    <value>⏳ Getting location...</value>
+    <value>⏳ 正在获取位置...</value>
   </data>
   <data name="WaitingLocation" xml:space="preserve">
-    <value>📍 Waiting for location...</value>
+    <value>📍 等待位置中...</value>
   </data>
   <data name="LoadingCheckInLocations" xml:space="preserve">
-    <value>⏳ Loading check-in locations...</value>
+    <value>⏳ 载入打卡地点中...</value>
   </data>
 
   <!-- Geofence Management -->
   <data name="GeofenceManagementTitle" xml:space="preserve">
-    <value>Check-In Locations / Geofence Management</value>
+    <value>打卡地点 / 围栏管理</value>
   </data>
   <data name="AddLocation" xml:space="preserve">
-    <value>Add Location</value>
+    <value>新增地点</value>
   </data>
   <data name="EnableThisLocation" xml:space="preserve">
-    <value>Enable This Location</value>
+    <value>启用此地点</value>
   </data>
   <data name="UseCurrentLocation" xml:space="preserve">
-    <value>📍 Use Current Location</value>
+    <value>📍 使用目前位置</value>
   </data>
   <data name="ClearForm" xml:space="preserve">
-    <value>🗑️ Clear</value>
+    <value>🗑️ 清空</value>
   </data>
   <data name="AddBtn" xml:space="preserve">
-    <value>➕ Add</value>
+    <value>➕ 新增</value>
   </data>
   <data name="CancelEdit" xml:space="preserve">
-    <value>Cancel Edit</value>
+    <value>取消编辑</value>
   </data>
   <data name="ExistingLocations" xml:space="preserve">
-    <value>Existing Locations</value>
+    <value>现有地点</value>
   </data>
   <data name="NoLocationsYet" xml:space="preserve">
-    <value>No locations yet, please add above</value>
+    <value>尚无打卡地点，请于上方新增</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>Toggle</value>
+    <value>切换</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>🔄 Refresh</value>
+    <value>🔄 重新整理</value>
   </data>
   <data name="BackToCheckIn" xml:space="preserve">
-    <value>← Back to Check-In</value>
+    <value>← 返回打卡页</value>
   </data>
 
   <!-- Settings Page -->
   <data name="AppSettings" xml:space="preserve">
-    <value>App Settings</value>
+    <value>应用程序设定</value>
   </data>
   <data name="LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>语言设定</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Select App Language</value>
+    <value>选择应用程序语言</value>
   </data>
   <data name="ThemeSettings" xml:space="preserve">
-    <value>Theme Settings</value>
+    <value>主题设定</value>
   </data>
   <data name="SelectTheme" xml:space="preserve">
-    <value>Select Appearance Theme</value>
+    <value>选择外观主题</value>
   </data>
   <data name="LocationServices" xml:space="preserve">
-    <value>Location Services</value>
+    <value>位置服务</value>
   </data>
   <data name="EnableHighAccuracy" xml:space="preserve">
-    <value>Enable High Accuracy</value>
+    <value>启用高精度定位</value>
   </data>
   <data name="BackgroundLocationUpdates" xml:space="preserve">
-    <value>Background Location Updates</value>
+    <value>背景位置更新</value>
   </data>
   <data name="AutoGeofenceDetection" xml:space="preserve">
-    <value>Auto Geofence Detection</value>
+    <value>自动地理围栏检测</value>
   </data>
   <data name="NotificationSettings" xml:space="preserve">
-    <value>Notification Settings</value>
+    <value>通知设定</value>
   </data>
   <data name="CheckInReminder" xml:space="preserve">
-    <value>Check-In Reminder</value>
+    <value>打卡提醒</value>
   </data>
   <data name="GeofenceNotifications" xml:space="preserve">
-    <value>Geofence Entry/Exit Notification</value>
+    <value>地理围栏进出通知</value>
   </data>
   <data name="TeamLocationNotification" xml:space="preserve">
-    <value>Team Location Notification</value>
+    <value>团队位置分享通知</value>
   </data>
   <data name="TelegramPush" xml:space="preserve">
-    <value>Telegram Push Notification</value>
+    <value>Telegram 推播通知</value>
   </data>
   <data name="EnableTelegram" xml:space="preserve">
-    <value>Enable Telegram Notification</value>
+    <value>启用 Telegram 通知</value>
   </data>
   <data name="DatabaseSettings" xml:space="preserve">
-    <value>Database Settings</value>
+    <value>数据库设定</value>
   </data>
   <data name="DataManagement" xml:space="preserve">
-    <value>Data Management</value>
+    <value>数据管理</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>About</value>
+    <value>关于</value>
   </data>
   <data name="PrivacyPolicyBtn" xml:space="preserve">
-    <value>Privacy Policy</value>
+    <value>隐私政策</value>
   </data>
   <data name="ExportDataBtn" xml:space="preserve">
-    <value>📤 Export Data</value>
+    <value>📤 导出数据</value>
   </data>
   <data name="ImportDataBtn" xml:space="preserve">
-    <value>📥 Import Data</value>
+    <value>📥 导入数据</value>
   </data>
   <data name="ClearCache" xml:space="preserve">
-    <value>🗑️ Clear Cache</value>
+    <value>🗑️ 清除缓存</value>
   </data>
 
   <!-- Face Recognition -->
   <data name="FaceRecognitionTitle" xml:space="preserve">
-    <value>AI Face Recognition System</value>
+    <value>AI 人脸识别系统</value>
   </data>
   <data name="SmartFacePlatform" xml:space="preserve">
-    <value>Smart Face Training &amp; Recognition Platform</value>
+    <value>智慧人脸训练与识别平台</value>
   </data>
   <data name="TrainingMode" xml:space="preserve">
-    <value>Training Mode</value>
+    <value>训练模式</value>
   </data>
   <data name="AddFaceData" xml:space="preserve">
-    <value>Add face data to the system</value>
+    <value>新增人脸数据到系统</value>
   </data>
   <data name="StartTraining" xml:space="preserve">
-    <value>Start Training</value>
+    <value>开始训练</value>
   </data>
   <data name="TestMode" xml:space="preserve">
-    <value>Test Mode</value>
+    <value>测试模式</value>
   </data>
   <data name="RecognizeTrainedFaces" xml:space="preserve">
-    <value>Recognize trained faces</value>
+    <value>识别已训练的人脸</value>
   </data>
   <data name="StartTest" xml:space="preserve">
-    <value>Start Test</value>
+    <value>开始测试</value>
   </data>
   <data name="ViewManageFaceData" xml:space="preserve">
-    <value>View and manage face data</value>
+    <value>查看和管理人脸数据</value>
   </data>
   <data name="ManageData" xml:space="preserve">
-    <value>Manage Data</value>
+    <value>管理数据</value>
   </data>
   <data name="SystemSettings" xml:space="preserve">
-    <value>System Settings</value>
+    <value>系统设定</value>
   </data>
   <data name="AdjustRecognitionParams" xml:space="preserve">
-    <value>Adjust recognition parameters</value>
+    <value>调整识别参数设定</value>
+  </data>
+  <data name="PrivacyCommitment" xml:space="preserve">
+    <value>保护您的隐私是我们的承诺</value>
+  </data>
+  <data name="PolicyUpdate" xml:space="preserve">
+    <value>政策更新</value>
   </data>
 
   <!-- Map Page -->
   <data name="MapReady" xml:space="preserve">
-    <value>Ready</value>
+    <value>准备就绪</value>
   </data>
   <data name="LocationLabel" xml:space="preserve">
-    <value>Location</value>
+    <value>定位</value>
   </data>
   <data name="GeofenceLabel" xml:space="preserve">
-    <value>Geofence</value>
+    <value>围栏</value>
   </data>
 
   <!-- Route Planning -->
   <data name="RouteFastest" xml:space="preserve">
-    <value>🚀 Fastest</value>
+    <value>🚀 最快</value>
   </data>
   <data name="RouteShortest" xml:space="preserve">
-    <value>📏 Shortest</value>
+    <value>📏 最短</value>
   </data>
   <data name="RouteEcoFriendly" xml:space="preserve">
-    <value>🌿 Eco-Friendly</value>
+    <value>🌿 节能</value>
   </data>
   <data name="StartNavigation" xml:space="preserve">
-    <value>Start Navigation</value>
+    <value>开始导航</value>
   </data>
   <data name="RouteTestMode" xml:space="preserve">
-    <value>🧪 Test Mode</value>
+    <value>🧪 测试模式</value>
   </data>
   <data name="SelectLabel" xml:space="preserve">
-    <value>Select</value>
+    <value>选择</value>
   </data>
   <data name="StartPoint" xml:space="preserve">
-    <value>Start</value>
+    <value>起点</value>
   </data>
   <data name="EndPoint" xml:space="preserve">
-    <value>End</value>
+    <value>终点</value>
   </data>
   <data name="HomeTab" xml:space="preserve">
-    <value>Home</value>
+    <value>首页</value>
   </data>
   <data name="RoutePlanningTitle" xml:space="preserve">
-    <value>Route Planning</value>
+    <value>路线规划</value>
   </data>
   <data name="SelectMapType" xml:space="preserve">
-    <value>Select Map Type</value>
+    <value>选择地图类型</value>
   </data>
   <data name="StopTracking" xml:space="preserve">
-    <value>Stop Tracking</value>
+    <value>停止追踪</value>
   </data>
   <data name="TrackingStopped" xml:space="preserve">
-    <value>Tracking Stopped</value>
+    <value>位置追踪已停止</value>
   </data>
   <data name="LocationPermissionChecking" xml:space="preserve">
-    <value>Checking location permission...</value>
+    <value>正在检查位置权限...</value>
   </data>
   <data name="LocationPermissionDenied" xml:space="preserve">
-    <value>Location permission denied</value>
+    <value>位置权限未授予</value>
   </data>
   <data name="ResolvingAddress" xml:space="preserve">
-    <value>Resolving address...</value>
+    <value>正在解析地址...</value>
   </data>
   <data name="UnableToGetLocation" xml:space="preserve">
-    <value>Unable to get location</value>
+    <value>无法获取位置</value>
   </data>
   <data name="CheckGpsSettings" xml:space="preserve">
-    <value>Check GPS settings</value>
+    <value>请检查 GPS 设置</value>
   </data>
   <data name="LocationFailed" xml:space="preserve">
-    <value>Location lookup failed</value>
+    <value>位置获取失败</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
-    <value>Refreshing...</value>
+    <value>刷新中...</value>
   </data>
   <data name="ConfirmLogout" xml:space="preserve">
-    <value>Confirm Logout</value>
+    <value>确认登出</value>
   </data>
   <data name="LogoutConfirmMessage" xml:space="preserve">
-    <value>Are you sure you want to log out?</value>
+    <value>您确定要登出吗？</value>
   </data>
   <data name="UpdateBtn" xml:space="preserve">
-    <value>Update</value>
+    <value>更新</value>
   </data>
   <data name="LocationUpdated" xml:space="preserve">
-    <value>Location Updated</value>
+    <value>位置已更新</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>确定</value>
   </data>
   <data name="ZoomInMap" xml:space="preserve">
-    <value>Zooming In</value>
+    <value>放大地图</value>
   </data>
   <data name="ZoomOutMap" xml:space="preserve">
-    <value>Zooming Out</value>
+    <value>缩小地图</value>
   </data>
   <data name="ZoomFailed" xml:space="preserve">
-    <value>Zoom Failed</value>
+    <value>缩放失败</value>
   </data>
   <data name="Radius" xml:space="preserve">
-    <value>Radius</value>
+    <value>半径</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Category</value>
+    <value>分类</value>
   </data>
   <data name="Uncategorized" xml:space="preserve">
-    <value>Uncategorized</value>
+    <value>未分类</value>
   </data>
   <data name="Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>启用</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>停用</value>
   </data>
 </root>

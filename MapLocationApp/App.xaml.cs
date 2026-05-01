@@ -7,9 +7,28 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
-		
+
+		// 載入並套用儲存的語言設定
+		LoadLanguageSettings();
+
 		// 載入並套用儲存的主題設定
 		LoadThemeSettings();
+	}
+
+	private void LoadLanguageSettings()
+	{
+		try
+		{
+			var savedLang = Preferences.Get("AppLanguage", string.Empty);
+			if (!string.IsNullOrWhiteSpace(savedLang))
+			{
+				LocalizationService.Instance.SetCulture(savedLang);
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"載入語言設定失敗: {ex.Message}");
+		}
 	}
 
 	private void LoadThemeSettings()
