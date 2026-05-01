@@ -41,12 +41,13 @@ namespace MapLocationApp.Services
                     _chatId = _configuration["Telegram:ChatId"] ?? "";
                 }
 
-                // 如果 appsettings.json 沒有設定，則從 Preferences 載入
+                // 如果 appsettings.json 沒有設定，則從安全儲存載入 token，從 Preferences 載入 chatId
                 if (string.IsNullOrEmpty(_botToken))
                 {
+                    // SecureStorage is async-only; fall back to Preferences key migration on first run
                     _botToken = Microsoft.Maui.Storage.Preferences.Get("TelegramBotToken", "");
                 }
-                
+
                 if (string.IsNullOrEmpty(_chatId))
                 {
                     _chatId = Microsoft.Maui.Storage.Preferences.Get("TelegramChatId", "");
@@ -69,8 +70,17 @@ namespace MapLocationApp.Services
                 _botToken = botToken?.Trim() ?? "";
                 _chatId = chatId?.Trim() ?? "";
 
-                // 儲存設定到 Preferences
-                Microsoft.Maui.Storage.Preferences.Set("TelegramBotToken", _botToken);
+                // Bot token 存 SecureStorage（加密），ChatId 存 Preferences（非敏感）
+                try
+                {
+                    await SecureStorage.Default.SetAsync("TelegramBotToken", _botToken);
+                    Microsoft.Maui.Storage.Preferences.Remove("TelegramBotToken"); // 清除舊的明文儲存
+                }
+                catch
+                {
+                    // SecureStorage 不可用時降級到 Preferences
+                    Microsoft.Maui.Storage.Preferences.Set("TelegramBotToken", _botToken);
+                }
                 Microsoft.Maui.Storage.Preferences.Set("TelegramChatId", _chatId);
 
                 if (string.IsNullOrEmpty(_botToken))
@@ -340,10 +350,18 @@ namespace MapLocationApp.Services
         {
             try
             {
-                Microsoft.Maui.Storage.Preferences.Set("TelegramBotToken", _botToken);
+                // Bot token 存 SecureStorage，ChatId 存 Preferences
+                try
+                {
+                    await SecureStorage.Default.SetAsync("TelegramBotToken", _botToken);
+                    Microsoft.Maui.Storage.Preferences.Remove("TelegramBotToken");
+                }
+                catch
+                {
+                    Microsoft.Maui.Storage.Preferences.Set("TelegramBotToken", _botToken);
+                }
                 Microsoft.Maui.Storage.Preferences.Set("TelegramChatId", _chatId);
                 _logger?.LogInformation("Telegram 設定已儲存");
-                await Task.CompletedTask;
             }
             catch (Exception ex)
             {

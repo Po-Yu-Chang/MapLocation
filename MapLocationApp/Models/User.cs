@@ -13,6 +13,7 @@ namespace MapLocationApp.Models
         private string? _department;
         private string? _position;
         private bool _isActive = true;
+        private bool _mustChangePassword = false;
         private DateTime _createdAt;
         private DateTime? _lastLoginAt;
 
@@ -62,6 +63,12 @@ namespace MapLocationApp.Models
         {
             get => _isActive;
             set => SetProperty(ref _isActive, value);
+        }
+
+        public bool MustChangePassword
+        {
+            get => _mustChangePassword;
+            set => SetProperty(ref _mustChangePassword, value);
         }
 
         public DateTime CreatedAt

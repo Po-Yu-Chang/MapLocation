@@ -27,10 +27,10 @@ namespace MapLocationApp.Services
         public UserSessionService(IConfigService configService)
         {
             _configService = configService;
-            InitializeAsync();
+            _ = InitializeAsync(); // fire-and-forget: GetCurrentUserAsync already falls back to config if needed
         }
 
-        private async void InitializeAsync()
+        private async Task InitializeAsync()
         {
             try
             {

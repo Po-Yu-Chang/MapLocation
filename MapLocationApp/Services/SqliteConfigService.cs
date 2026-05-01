@@ -46,7 +46,7 @@ namespace MapLocationApp.Services
                     Port = 3306,
                     DatabaseName = "MapLocation",
                     Username = "root",
-                    Password = "CINPHOWN"
+                    Password = ""
                 };
             }
             catch (Exception ex)
@@ -54,8 +54,8 @@ namespace MapLocationApp.Services
                 System.Diagnostics.Debug.WriteLine($"取得資料庫設定失敗: {ex.Message}");
                 return new DatabaseConfig
                 {
-                    Host = "221.22.103.220",
-                    Port = 3307,
+                    Host = "127.0.0.1",
+                    Port = 3306,
                     DatabaseName = "MapLocation",
                     Username = "root",
                     Password = ""

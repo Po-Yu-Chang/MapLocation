@@ -6,12 +6,14 @@ namespace MapLocationApp.Services
     {
         public static T GetService<T>() where T : class
         {
+            if (MauiProgram.Services is null)
+                throw new InvalidOperationException("ServiceHelper used before DI container was built.");
             return MauiProgram.Services.GetRequiredService<T>();
         }
 
         public static T? GetOptionalService<T>() where T : class
         {
-            return MauiProgram.Services.GetService<T>();
+            return MauiProgram.Services?.GetService<T>();
         }
     }
 }
