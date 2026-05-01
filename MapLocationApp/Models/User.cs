@@ -16,6 +16,10 @@ namespace MapLocationApp.Models
         private bool _mustChangePassword = false;
         private DateTime _createdAt;
         private DateTime? _lastLoginAt;
+        private string? _avatarPath;
+        private string? _phoneNumber;
+        private TimeSpan? _workHoursStart;
+        private TimeSpan? _workHoursEnd;
 
         public int Id
         {
@@ -81,6 +85,33 @@ namespace MapLocationApp.Models
         {
             get => _lastLoginAt;
             set => SetProperty(ref _lastLoginAt, value);
+        }
+
+        /// <summary>頭像檔案路徑（相對於 FileSystem.AppDataDirectory）。</summary>
+        public string? AvatarPath
+        {
+            get => _avatarPath;
+            set => SetProperty(ref _avatarPath, value);
+        }
+
+        public string? PhoneNumber
+        {
+            get => _phoneNumber;
+            set => SetProperty(ref _phoneNumber, value);
+        }
+
+        /// <summary>預設上班時間（用於上下班提醒與排班預設值）。</summary>
+        public TimeSpan? WorkHoursStart
+        {
+            get => _workHoursStart;
+            set => SetProperty(ref _workHoursStart, value);
+        }
+
+        /// <summary>預設下班時間。</summary>
+        public TimeSpan? WorkHoursEnd
+        {
+            get => _workHoursEnd;
+            set => SetProperty(ref _workHoursEnd, value);
         }
 
         public string DisplayName => !string.IsNullOrEmpty(FullName) ? FullName : Username;

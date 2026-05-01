@@ -15,6 +15,7 @@ namespace MapLocationApp.Services
         Task<List<CheckInRecord>> GetCheckInRecordsAsync(int userId, DateTime? date = null);
         Task<CheckInRecord?> GetLatestCheckInAsync(int userId);
         Task<bool> UpdateCheckInRecordAsync(CheckInRecord record);
+        Task<bool> DeleteCheckInRecordAsync(string recordId);
 
         // Geofence persistence
         Task<List<GeofenceRegion>> GetAllGeofencesAsync();

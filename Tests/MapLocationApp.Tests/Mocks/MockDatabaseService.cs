@@ -53,6 +53,16 @@ public class MockDatabaseService : IDatabaseService
         return Task.FromResult(_isConnected);
     }
 
+    public Task<bool> TestConnectionAsync(DatabaseConfig config, string password)
+    {
+        return Task.FromResult(_isConnected);
+    }
+
+    public void ResetConnection()
+    {
+        // No-op for mock; in-memory state always considered connected.
+    }
+
     public Task<bool> InitializeDatabaseAsync()
     {
         // Already initialized with admin user in constructor
@@ -248,6 +258,14 @@ public class MockDatabaseService : IDatabaseService
 
         _checkInRecords[record.Id] = record;
         return Task.FromResult(true);
+    }
+
+    public Task<bool> DeleteCheckInRecordAsync(string recordId)
+    {
+        if (!_isConnected)
+            return Task.FromResult(false);
+
+        return Task.FromResult(_checkInRecords.Remove(recordId));
     }
 
     /// <summary>

@@ -73,6 +73,33 @@ public class CheckInRecord
     /// </summary>
     public bool IsSynced { get; set; }
 
+    /// <summary>定位方式（GPS/Wifi/Manual），與 Type 的觸發語意分開。</summary>
+    public CheckInMethod Method { get; set; } = CheckInMethod.GPS;
+
+    /// <summary>內勤/外勤分類，由所屬 Geofence 帶入；手動打卡時可由使用者選擇。</summary>
+    public WorkType WorkType { get; set; } = WorkType.Office;
+
+    /// <summary>最後編輯時間；null 表示未被編輯過。</summary>
+    public DateTime? EditedAt { get; set; }
+
+    /// <summary>編輯/補打卡原因（user-supplied，套用相同 Notes XSS 過濾）。</summary>
+    public string? EditReason
+    {
+        get => _editReason;
+        set => _editReason = string.IsNullOrEmpty(value) ? null : SanitizeShortText(value);
+    }
+    private string? _editReason;
+
+    private static string SanitizeShortText(string input)
+    {
+        var s = System.Text.RegularExpressions.Regex.Replace(input,
+            @"<script[^>]*>.*?</script>|<[^>]+>", string.Empty,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline);
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"[<>""'`]", string.Empty);
+        if (s.Length > 200) s = s.Substring(0, 200);
+        return s.Trim();
+    }
+
     /// <summary>
     /// Sanitizes user input to prevent XSS attacks
     /// T013: Removes HTML/script tags, limits length, encodes special characters

@@ -14,6 +14,9 @@ public class GeofenceRegion
     // 用於識別這是什麼類型的地點（辦公室、客戶、等等）
     public string Category { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+
+    /// <summary>內勤/外勤分類；打卡時帶入 CheckInRecord 用於報表分流。</summary>
+    public WorkType WorkType { get; set; } = WorkType.Office;
 }
 
 public enum GeofenceTransitionType
