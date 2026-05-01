@@ -1,5 +1,6 @@
 using MapLocationApp.Models;
 using MapLocationApp.Services;
+using MapLocationApp.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -10,16 +11,19 @@ public partial class GeofenceManagementPage : ContentPage
     private readonly IGeofenceService _geofenceService;
     private readonly ILocationService _locationService;
     private readonly ICheckInStorageService _checkInStorage;
+    private readonly IWifiService _wifiService;
     private readonly ObservableCollection<GeofenceDisplay> _items = new();
     private string? _editingId;
 
-    public GeofenceManagementPage(IGeofenceService geofenceService, ILocationService locationService, ICheckInStorageService checkInStorage)
+    public GeofenceManagementPage(IGeofenceService geofenceService, ILocationService locationService, ICheckInStorageService checkInStorage, IWifiService wifiService)
     {
         InitializeComponent();
         _geofenceService = geofenceService;
         _locationService = locationService;
         _checkInStorage = checkInStorage;
+        _wifiService = wifiService;
         GeofencesCollectionView.ItemsSource = _items;
+        ScanWifiButton.IsEnabled = _wifiService.ScanSupported;
         ApplyLocalizedUi();
     }
 
@@ -77,11 +81,14 @@ public partial class GeofenceManagementPage : ContentPage
     private GeofenceDisplay ToDisplay(GeofenceRegion g)
     {
         var workType = g.WorkType == WorkType.Field ? L("Field") : L("Office");
+        var detail = g.IsWifiBased
+            ? $"📶 {g.Ssid}{(string.IsNullOrEmpty(g.Bssid) ? string.Empty : $"  •  {g.Bssid}")}"
+            : $"📍 {g.Latitude:F6}, {g.Longitude:F6}  •  {L("Radius")} {g.RadiusMeters:F0}m";
         return new GeofenceDisplay
         {
             Id = g.Id,
             Name = g.Name,
-            DetailText = $"📍 {g.Latitude:F6}, {g.Longitude:F6}  •  {L("Radius")} {g.RadiusMeters:F0}m",
+            DetailText = detail,
             StatusText = $"{workType}  •  {L("Category")}: {(string.IsNullOrEmpty(g.Category) ? L("Uncategorized") : g.Category)}  •  {(g.IsActive ? $"✅ {L("Enabled")}" : $"⛔ {L("Disabled")}")}",
         };
     }
@@ -130,20 +137,37 @@ public partial class GeofenceManagementPage : ContentPage
                 await DisplayAlert("錯誤", $"打卡地點「{NameEntry.Text.Trim()}」名稱已存在，請使用不同名稱。", "確定");
                 return;
             }
-            if (!TryParseDouble(LatitudeEntry.Text, out var lat) || lat < -90 || lat > 90)
+            var isWifi = WifiTypeRadio.IsChecked;
+            double lat = 0, lng = 0, radius = 0;
+            string? ssid = null, bssid = null;
+
+            if (isWifi)
             {
-                await DisplayAlert("錯誤", "緯度格式錯誤（-90 ~ 90）", "確定");
-                return;
+                ssid = SsidEntry.Text?.Trim();
+                if (string.IsNullOrEmpty(ssid))
+                {
+                    await DisplayAlert("錯誤", L("WifiSsid"), "確定");
+                    return;
+                }
+                bssid = string.IsNullOrWhiteSpace(BssidEntry.Text) ? null : BssidEntry.Text.Trim();
             }
-            if (!TryParseDouble(LongitudeEntry.Text, out var lng) || lng < -180 || lng > 180)
+            else
             {
-                await DisplayAlert("錯誤", "經度格式錯誤（-180 ~ 180）", "確定");
-                return;
-            }
-            if (!TryParseDouble(RadiusEntry.Text, out var radius) || radius <= 0)
-            {
-                await DisplayAlert("錯誤", "半徑必須為大於 0 的數字（公尺）", "確定");
-                return;
+                if (!TryParseDouble(LatitudeEntry.Text, out lat) || lat < -90 || lat > 90)
+                {
+                    await DisplayAlert("錯誤", "緯度格式錯誤（-90 ~ 90）", "確定");
+                    return;
+                }
+                if (!TryParseDouble(LongitudeEntry.Text, out lng) || lng < -180 || lng > 180)
+                {
+                    await DisplayAlert("錯誤", "經度格式錯誤（-180 ~ 180）", "確定");
+                    return;
+                }
+                if (!TryParseDouble(RadiusEntry.Text, out radius) || radius <= 0)
+                {
+                    await DisplayAlert("錯誤", "半徑必須為大於 0 的數字（公尺）", "確定");
+                    return;
+                }
             }
 
             var region = new GeofenceRegion
@@ -158,6 +182,8 @@ public partial class GeofenceManagementPage : ContentPage
                 IsActive = IsActiveCheckBox.IsChecked,
                 TransitionType = GeofenceTransitionType.Both,
                 WorkType = WorkTypeFieldRadio.IsChecked ? WorkType.Field : WorkType.Office,
+                Ssid = ssid,
+                Bssid = bssid,
             };
 
             bool ok;
@@ -208,6 +234,24 @@ public partial class GeofenceManagementPage : ContentPage
             IsActiveCheckBox.IsChecked = g.IsActive;
             WorkTypeOfficeRadio.IsChecked = g.WorkType == WorkType.Office;
             WorkTypeFieldRadio.IsChecked = g.WorkType == WorkType.Field;
+
+            // Wi-Fi 欄位
+            SsidEntry.Text = g.Ssid ?? string.Empty;
+            BssidEntry.Text = g.Bssid ?? string.Empty;
+            if (g.IsWifiBased)
+            {
+                WifiTypeRadio.IsChecked = true;
+                GpsTypeRadio.IsChecked = false;
+                GpsFieldsPanel.IsVisible = false;
+                WifiFieldsPanel.IsVisible = true;
+            }
+            else
+            {
+                GpsTypeRadio.IsChecked = true;
+                WifiTypeRadio.IsChecked = false;
+                GpsFieldsPanel.IsVisible = true;
+                WifiFieldsPanel.IsVisible = false;
+            }
 
             FormTitleLabel.Text = $"{L("Edit")}: {g.Name}";
             SaveButton.Text = $"💾 {L("UpdateBtn")}";
@@ -261,6 +305,86 @@ public partial class GeofenceManagementPage : ContentPage
         }
     }
 
+    private void OnLocationTypeChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        // CheckedChanged fires for both radios in the group; only react to the activating one.
+        if (sender is RadioButton rb && rb.IsChecked)
+        {
+            var isWifi = ReferenceEquals(rb, WifiTypeRadio);
+            GpsFieldsPanel.IsVisible = !isWifi;
+            WifiFieldsPanel.IsVisible = isWifi;
+        }
+    }
+
+    private async void OnUseCurrentWifiClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var hasPerm = await _locationService.RequestLocationPermissionAsync();
+            if (!hasPerm)
+            {
+                await DisplayAlert(L("Error"), L("WifiPermissionRequired"), L("OK"));
+                return;
+            }
+
+            var current = await _wifiService.GetCurrentAsync();
+            if (current == null)
+            {
+                await DisplayAlert(L("Error"), L("WifiNotConnected"), L("OK"));
+                return;
+            }
+
+            SsidEntry.Text = current.Ssid;
+            BssidEntry.Text = current.Bssid ?? string.Empty;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert(L("Error"), ex.Message, L("OK"));
+        }
+    }
+
+    private async void OnScanWifiClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (!_wifiService.ScanSupported)
+            {
+                await DisplayAlert(L("Error"), L("WifiScanNotSupported"), L("OK"));
+                return;
+            }
+
+            var hasPerm = await _locationService.RequestLocationPermissionAsync();
+            if (!hasPerm)
+            {
+                await DisplayAlert(L("Error"), L("WifiPermissionRequired"), L("OK"));
+                return;
+            }
+
+            var scan = await _wifiService.ScanAsync();
+            if (scan == null || scan.Count == 0)
+            {
+                await DisplayAlert(L("Error"), L("WifiNotConnected"), L("OK"));
+                return;
+            }
+
+            // Strongest signal first; ScanResult.Level / Rssi is dBm (more negative = weaker).
+            var sorted = scan.OrderByDescending(w => w.SignalDbm ?? int.MinValue).ToList();
+            var labels = sorted.Select(w => string.IsNullOrEmpty(w.Bssid) ? w.Ssid : $"{w.Ssid}  ({w.Bssid})").ToArray();
+            var picked = await DisplayActionSheet(L("SelectWifi"), L("Cancel"), null, labels);
+            if (string.IsNullOrEmpty(picked) || picked == L("Cancel")) return;
+
+            var idx = Array.IndexOf(labels, picked);
+            if (idx < 0) return;
+            var w = sorted[idx];
+            SsidEntry.Text = w.Ssid;
+            BssidEntry.Text = w.Bssid ?? string.Empty;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert(L("Error"), ex.Message, L("OK"));
+        }
+    }
+
     private void OnClearFormClicked(object sender, EventArgs e) => ResetForm();
 
     private void OnCancelEditClicked(object sender, EventArgs e) => ResetForm();
@@ -276,9 +400,15 @@ public partial class GeofenceManagementPage : ContentPage
         LatitudeEntry.Text = string.Empty;
         LongitudeEntry.Text = string.Empty;
         RadiusEntry.Text = string.Empty;
+        SsidEntry.Text = string.Empty;
+        BssidEntry.Text = string.Empty;
         IsActiveCheckBox.IsChecked = true;
         WorkTypeOfficeRadio.IsChecked = true;
         WorkTypeFieldRadio.IsChecked = false;
+        GpsTypeRadio.IsChecked = true;
+        WifiTypeRadio.IsChecked = false;
+        GpsFieldsPanel.IsVisible = true;
+        WifiFieldsPanel.IsVisible = false;
         ApplyLocalizedUi();
         CancelEditButton.IsVisible = false;
     }

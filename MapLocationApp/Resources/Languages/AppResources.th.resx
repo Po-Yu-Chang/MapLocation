@@ -690,4 +690,38 @@
   <data name="Notes" xml:space="preserve">
     <value>หมายเหตุ</value>
   </data>
+  <!-- M2: Wi-Fi check-in points -->
+  <data name="LocationType" xml:space="preserve">
+    <value>ประเภทสถานที่</value>
+  </data>
+  <data name="GpsLocation" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="WifiLocation" xml:space="preserve">
+    <value>Wi-Fi</value>
+  </data>
+  <data name="ScanWifi" xml:space="preserve">
+    <value>สแกน Wi-Fi รอบ ๆ</value>
+  </data>
+  <data name="UseCurrentWifi" xml:space="preserve">
+    <value>ใช้การเชื่อมต่อปัจจุบัน</value>
+  </data>
+  <data name="WifiSsid" xml:space="preserve">
+    <value>SSID</value>
+  </data>
+  <data name="WifiBssid" xml:space="preserve">
+    <value>BSSID (ไม่บังคับ)</value>
+  </data>
+  <data name="WifiNotConnected" xml:space="preserve">
+    <value>ขณะนี้ยังไม่ได้เชื่อมต่อ Wi-Fi</value>
+  </data>
+  <data name="WifiScanNotSupported" xml:space="preserve">
+    <value>แพลตฟอร์มนี้ไม่รองรับการสแกน กรุณากรอก SSID เอง หรือใช้การเชื่อมต่อปัจจุบัน</value>
+  </data>
+  <data name="WifiPermissionRequired" xml:space="preserve">
+    <value>ต้องการสิทธิ์ตำแหน่งเพื่ออ่านข้อมูล Wi-Fi</value>
+  </data>
+  <data name="SelectWifi" xml:space="preserve">
+    <value>เลือก Wi-Fi</value>
+  </data>
 </root>

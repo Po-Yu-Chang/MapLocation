@@ -706,4 +706,38 @@
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
+  <!-- M2: Wi-Fi check-in points -->
+  <data name="LocationType" xml:space="preserve">
+    <value>Location type</value>
+  </data>
+  <data name="GpsLocation" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="WifiLocation" xml:space="preserve">
+    <value>Wi-Fi</value>
+  </data>
+  <data name="ScanWifi" xml:space="preserve">
+    <value>Scan nearby Wi-Fi</value>
+  </data>
+  <data name="UseCurrentWifi" xml:space="preserve">
+    <value>Use current connection</value>
+  </data>
+  <data name="WifiSsid" xml:space="preserve">
+    <value>SSID</value>
+  </data>
+  <data name="WifiBssid" xml:space="preserve">
+    <value>BSSID (optional, lock to specific AP)</value>
+  </data>
+  <data name="WifiNotConnected" xml:space="preserve">
+    <value>Not currently connected to Wi-Fi</value>
+  </data>
+  <data name="WifiScanNotSupported" xml:space="preserve">
+    <value>Scanning is not supported on this platform; enter SSID manually or use current connection</value>
+  </data>
+  <data name="WifiPermissionRequired" xml:space="preserve">
+    <value>Location permission is required to read Wi-Fi information</value>
+  </data>
+  <data name="SelectWifi" xml:space="preserve">
+    <value>Select Wi-Fi</value>
+  </data>
 </root>

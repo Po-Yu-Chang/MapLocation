@@ -706,4 +706,38 @@
   <data name="Notes" xml:space="preserve">
     <value>備註</value>
   </data>
+  <!-- M2: Wi-Fi 打卡點 -->
+  <data name="LocationType" xml:space="preserve">
+    <value>打卡點類型</value>
+  </data>
+  <data name="GpsLocation" xml:space="preserve">
+    <value>GPS 定位</value>
+  </data>
+  <data name="WifiLocation" xml:space="preserve">
+    <value>Wi-Fi 定位</value>
+  </data>
+  <data name="ScanWifi" xml:space="preserve">
+    <value>掃描周遭 Wi-Fi</value>
+  </data>
+  <data name="UseCurrentWifi" xml:space="preserve">
+    <value>使用當前連線</value>
+  </data>
+  <data name="WifiSsid" xml:space="preserve">
+    <value>SSID</value>
+  </data>
+  <data name="WifiBssid" xml:space="preserve">
+    <value>BSSID（選填，鎖定特定熱點）</value>
+  </data>
+  <data name="WifiNotConnected" xml:space="preserve">
+    <value>目前未連線到 Wi-Fi</value>
+  </data>
+  <data name="WifiScanNotSupported" xml:space="preserve">
+    <value>此平台不支援掃描，請手動輸入 SSID 或使用當前連線</value>
+  </data>
+  <data name="WifiPermissionRequired" xml:space="preserve">
+    <value>需要位置權限才能讀取 Wi-Fi 資訊</value>
+  </data>
+  <data name="SelectWifi" xml:space="preserve">
+    <value>選擇 Wi-Fi</value>
+  </data>
 </root>

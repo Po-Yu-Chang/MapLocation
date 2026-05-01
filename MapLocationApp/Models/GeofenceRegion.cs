@@ -17,6 +17,15 @@ public class GeofenceRegion
 
     /// <summary>內勤/外勤分類；打卡時帶入 CheckInRecord 用於報表分流。</summary>
     public WorkType WorkType { get; set; } = WorkType.Office;
+
+    /// <summary>Wi-Fi 打卡點識別（SSID）；空值代表純 GPS 打卡點。</summary>
+    public string? Ssid { get; set; }
+
+    /// <summary>選填：限定特定 BSSID（同一 SSID 多熱點時用 BSSID 鎖定）。</summary>
+    public string? Bssid { get; set; }
+
+    /// <summary>是否為 Wi-Fi 打卡點（依 Ssid 是否有值判定，不另存欄位避免不一致）。</summary>
+    public bool IsWifiBased => !string.IsNullOrWhiteSpace(Ssid);
 }
 
 public enum GeofenceTransitionType

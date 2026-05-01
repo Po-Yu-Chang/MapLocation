@@ -224,6 +224,25 @@ public class GeofenceService : IGeofenceService
         _geofenceStates.Clear();
     }
 
+    public bool MatchesWifi(GeofenceRegion geofence, string? ssid, string? bssid)
+    {
+        if (!geofence.IsWifiBased || string.IsNullOrEmpty(ssid)) return false;
+        if (!string.Equals(geofence.Ssid, ssid, StringComparison.Ordinal)) return false;
+        // BSSID is optional: if the geofence specifies one, the connection must match it; otherwise SSID alone is enough.
+        if (!string.IsNullOrEmpty(geofence.Bssid))
+        {
+            return string.Equals(geofence.Bssid, bssid, StringComparison.OrdinalIgnoreCase);
+        }
+        return true;
+    }
+
+    public async Task<List<GeofenceRegion>> GetGeofencesMatchingWifiAsync(string? ssid, string? bssid)
+    {
+        await EnsureLoadedAsync();
+        if (string.IsNullOrEmpty(ssid)) return new List<GeofenceRegion>();
+        return _geofences.Where(g => g.IsActive && MatchesWifi(g, ssid, bssid)).ToList();
+    }
+
     public async Task<List<GeofenceRegion>> GetGeofencesAsync()
     {
         await EnsureLoadedAsync();

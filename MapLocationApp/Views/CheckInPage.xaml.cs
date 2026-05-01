@@ -1,5 +1,6 @@
 using MapLocationApp.Models;
 using MapLocationApp.Services;
+using MapLocationApp.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -12,6 +13,7 @@ public partial class CheckInPage : ContentPage
     private readonly IGeocodingService _geocodingService;
     private readonly ICheckInStorageService _checkInStorageService;
     private readonly IMapService _mapService;
+    private readonly IWifiService _wifiService;
     
     private AppLocation? _currentLocation;
     private List<GeofenceRegion> _allGeofences = new();
@@ -25,10 +27,10 @@ public partial class CheckInPage : ContentPage
     private readonly IUserSessionService _userSessionService;
     private User? _currentUser;
 
-    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService, IGeocodingService geocodingService, ICheckInStorageService checkInStorageService, IDatabaseService databaseService, IConfigService configService, IMapService mapService)
+    public CheckInPage(ILocationService locationService, IGeofenceService geofenceService, IGeocodingService geocodingService, ICheckInStorageService checkInStorageService, IDatabaseService databaseService, IConfigService configService, IMapService mapService, IWifiService wifiService)
     {
         InitializeComponent();
-        
+
         _locationService = locationService;
         _geofenceService = geofenceService;
         _geocodingService = geocodingService;
@@ -36,6 +38,7 @@ public partial class CheckInPage : ContentPage
         _databaseService = databaseService;
         _configService = configService;
         _mapService = mapService;
+        _wifiService = wifiService;
         _userSessionService = ServiceHelper.GetService<IUserSessionService>();
         
         NearbyGeofencesCollectionView.ItemsSource = _nearbyGeofences;
@@ -425,29 +428,6 @@ public partial class CheckInPage : ContentPage
                 return;
             }
 
-            if (_currentLocation == null)
-            {
-                await DisplayAlert("錯誤", "無法獲取目前位置", "確定");
-                return;
-            }
-
-            // 位置超過 5 分鐘則強制重新取得
-            if ((DateTime.UtcNow - _currentLocation.Timestamp).TotalMinutes > 5)
-            {
-                var reload = await DisplayAlert("位置已過時",
-                    "目前位置資料超過 5 分鐘，建議重新取得後再打卡。要繼續使用舊位置打卡嗎？",
-                    "重新取得位置", "繼續打卡");
-                if (!reload)
-                {
-                    await LoadCurrentLocation();
-                    if (_currentLocation == null)
-                    {
-                        await DisplayAlert("錯誤", "重新取得位置失敗", "確定");
-                        return;
-                    }
-                }
-            }
-
             if (GeofencePicker.SelectedIndex <= 0)
             {
                 await DisplayAlert("錯誤", "請選擇打卡地點", "確定");
@@ -455,22 +435,80 @@ public partial class CheckInPage : ContentPage
             }
 
             var selectedGeofence = _allGeofences[GeofencePicker.SelectedIndex - 1];
-            
-            // 檢查是否在地理圍欄範圍內
-            var isInside = await _geofenceService.IsInsideGeofenceAsync(
-                _currentLocation.Latitude, _currentLocation.Longitude, selectedGeofence);
 
-            if (!isInside)
+            // GPS 打卡點需要當前位置 + 圍欄判定；Wi-Fi 打卡點改用 SSID/BSSID 比對。
+            CheckInMethod method;
+            double recLat = 0, recLng = 0;
+
+            if (selectedGeofence.IsWifiBased)
             {
-                var distance = _geofenceService.CalculateDistance(
-                    _currentLocation.Latitude, _currentLocation.Longitude,
-                    selectedGeofence.Latitude, selectedGeofence.Longitude);
-                
-                var result = await DisplayAlert("位置確認", 
-                    $"您距離 {selectedGeofence.Name} 還有 {distance:F0} 公尺，確定要打卡嗎？", 
-                    "確定", "取消");
-                
-                if (!result) return;
+                var wifi = await _wifiService.GetCurrentAsync();
+                if (wifi == null)
+                {
+                    await DisplayAlert("錯誤", L("WifiNotConnected"), "確定");
+                    return;
+                }
+
+                if (!_geofenceService.MatchesWifi(selectedGeofence, wifi.Ssid, wifi.Bssid))
+                {
+                    var msg = string.IsNullOrEmpty(selectedGeofence.Bssid)
+                        ? $"目前連線到 {wifi.Ssid}，與打卡點「{selectedGeofence.Name}」(SSID: {selectedGeofence.Ssid}) 不符。確定要打卡嗎？"
+                        : $"目前連線到 {wifi.Ssid} ({wifi.Bssid})，與打卡點「{selectedGeofence.Name}」綁定的熱點不符。確定要打卡嗎？";
+                    var ok = await DisplayAlert("Wi-Fi 不符", msg, "確定", "取消");
+                    if (!ok) return;
+                }
+
+                method = CheckInMethod.Wifi;
+                if (_currentLocation != null)
+                {
+                    recLat = _currentLocation.Latitude;
+                    recLng = _currentLocation.Longitude;
+                }
+            }
+            else
+            {
+                if (_currentLocation == null)
+                {
+                    await DisplayAlert("錯誤", "無法獲取目前位置", "確定");
+                    return;
+                }
+
+                // 位置超過 5 分鐘則強制重新取得
+                if ((DateTime.UtcNow - _currentLocation.Timestamp).TotalMinutes > 5)
+                {
+                    var reload = await DisplayAlert("位置已過時",
+                        "目前位置資料超過 5 分鐘，建議重新取得後再打卡。要繼續使用舊位置打卡嗎？",
+                        "重新取得位置", "繼續打卡");
+                    if (!reload)
+                    {
+                        await LoadCurrentLocation();
+                        if (_currentLocation == null)
+                        {
+                            await DisplayAlert("錯誤", "重新取得位置失敗", "確定");
+                            return;
+                        }
+                    }
+                }
+
+                var isInside = await _geofenceService.IsInsideGeofenceAsync(
+                    _currentLocation.Latitude, _currentLocation.Longitude, selectedGeofence);
+
+                if (!isInside)
+                {
+                    var distance = _geofenceService.CalculateDistance(
+                        _currentLocation.Latitude, _currentLocation.Longitude,
+                        selectedGeofence.Latitude, selectedGeofence.Longitude);
+
+                    var result = await DisplayAlert("位置確認",
+                        $"您距離 {selectedGeofence.Name} 還有 {distance:F0} 公尺，確定要打卡嗎？",
+                        "確定", "取消");
+
+                    if (!result) return;
+                }
+
+                method = CheckInMethod.GPS;
+                recLat = _currentLocation.Latitude;
+                recLng = _currentLocation.Longitude;
             }
 
             // 建立打卡記錄
@@ -481,13 +519,13 @@ public partial class CheckInPage : ContentPage
                 GeofenceId = selectedGeofence.Id,
                 GeofenceName = selectedGeofence.Name,
                 CheckInTime = DateTime.Now,
-                Latitude = _currentLocation.Latitude,
-                Longitude = _currentLocation.Longitude,
+                Latitude = recLat,
+                Longitude = recLng,
                 Notes = (NotesEntry.Text ?? string.Empty).Trim().Length > 500
                     ? (NotesEntry.Text ?? string.Empty).Trim()[..500]
                     : (NotesEntry.Text ?? string.Empty).Trim(),
                 Type = CheckInType.Manual,
-                Method = CheckInMethod.GPS,
+                Method = method,
                 WorkType = selectedGeofence.WorkType
             };
 

@@ -51,23 +51,64 @@
                            Style="{StaticResource ModernEntry}"
                            MaxLength="200"/>
 
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                        <Entry Grid.Column="0"
-                               x:Name="LatitudeEntry"
-                               Placeholder="緯度 Latitude"
-                               Keyboard="Numeric"
-                               Style="{StaticResource ModernEntry}"/>
-                        <Entry Grid.Column="1"
-                               x:Name="LongitudeEntry"
-                               Placeholder="經度 Longitude"
-                               Keyboard="Numeric"
-                               Style="{StaticResource ModernEntry}"/>
-                    </Grid>
+                    <!-- M2: 打卡點類型切換 -->
+                    <Label Text="{Binding [LocationType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
+                    <HorizontalStackLayout Spacing="16">
+                        <RadioButton x:Name="GpsTypeRadio"
+                                     GroupName="LocationType"
+                                     IsChecked="True"
+                                     Content="{Binding [GpsLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnLocationTypeChanged"/>
+                        <RadioButton x:Name="WifiTypeRadio"
+                                     GroupName="LocationType"
+                                     Content="{Binding [WifiLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                     CheckedChanged="OnLocationTypeChanged"/>
+                    </HorizontalStackLayout>
 
-                    <Entry x:Name="RadiusEntry"
-                           Placeholder="半徑（公尺，建議 30~500）"
-                           Keyboard="Numeric"
-                           Style="{StaticResource ModernEntry}"/>
+                    <!-- GPS 欄位 -->
+                    <VerticalStackLayout x:Name="GpsFieldsPanel" Spacing="12">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Entry Grid.Column="0"
+                                   x:Name="LatitudeEntry"
+                                   Placeholder="緯度 Latitude"
+                                   Keyboard="Numeric"
+                                   Style="{StaticResource ModernEntry}"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="LongitudeEntry"
+                                   Placeholder="經度 Longitude"
+                                   Keyboard="Numeric"
+                                   Style="{StaticResource ModernEntry}"/>
+                        </Grid>
+
+                        <Entry x:Name="RadiusEntry"
+                               Placeholder="半徑（公尺，建議 30~500）"
+                               Keyboard="Numeric"
+                               Style="{StaticResource ModernEntry}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Wi-Fi 欄位 -->
+                    <VerticalStackLayout x:Name="WifiFieldsPanel" Spacing="12" IsVisible="False">
+                        <Entry x:Name="SsidEntry"
+                               Placeholder="{Binding [WifiSsid], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernEntry}"
+                               MaxLength="64"/>
+                        <Entry x:Name="BssidEntry"
+                               Placeholder="{Binding [WifiBssid], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernEntry}"
+                               MaxLength="32"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Button Grid.Column="0"
+                                    x:Name="UseCurrentWifiButton"
+                                    Text="{Binding [UseCurrentWifi], Source={x:Static svc:LocalizationManager.Instance}}"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnUseCurrentWifiClicked"/>
+                            <Button Grid.Column="1"
+                                    x:Name="ScanWifiButton"
+                                    Text="{Binding [ScanWifi], Source={x:Static svc:LocalizationManager.Instance}}"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnScanWifiClicked"/>
+                        </Grid>
+                    </VerticalStackLayout>
 
                     <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}"/>
                     <HorizontalStackLayout Spacing="16">

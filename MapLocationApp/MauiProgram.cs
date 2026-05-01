@@ -52,6 +52,17 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
 		// T149: Removed INotificationIntegrationService - unnecessary abstraction layer
 
+		// 註冊 Wi-Fi 服務 (M2 — 各平台特化)
+#if ANDROID
+		builder.Services.AddSingleton<MapLocationApp.Services.Interfaces.IWifiService, Platforms.Android.Services.WifiService>();
+#elif IOS
+		builder.Services.AddSingleton<MapLocationApp.Services.Interfaces.IWifiService, Platforms.iOS.Services.WifiService>();
+#elif WINDOWS
+		builder.Services.AddSingleton<MapLocationApp.Services.Interfaces.IWifiService, Platforms.Windows.Services.WifiService>();
+#else
+		builder.Services.AddSingleton<MapLocationApp.Services.Interfaces.IWifiService, NullWifiService>();
+#endif
+
 		// 註冊認證和資料庫服務
 		builder.Services.AddSingleton<IConfigService, SqliteConfigService>();
 		builder.Services.AddSingleton<ISecureConfigService, SecureConfigService>(); // T011: SecureConfigService for credential management

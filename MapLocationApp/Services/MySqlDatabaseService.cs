@@ -303,6 +303,8 @@ namespace MapLocationApp.Services
                 "ALTER TABLE CheckInRecords ADD COLUMN EditedAt DATETIME NULL",
                 "ALTER TABLE CheckInRecords ADD COLUMN EditReason VARCHAR(255) NULL",
                 "ALTER TABLE geofence_regions ADD COLUMN work_type TINYINT DEFAULT 0",
+                "ALTER TABLE geofence_regions ADD COLUMN ssid VARCHAR(64) NULL",
+                "ALTER TABLE geofence_regions ADD COLUMN bssid VARCHAR(32) NULL",
             };
 
             foreach (var sql in migrations)
@@ -838,13 +840,15 @@ namespace MapLocationApp.Services
                     transition_type TINYINT DEFAULT 3,
                     category VARCHAR(50) DEFAULT '',
                     description TEXT,
-                    work_type TINYINT DEFAULT 0
+                    work_type TINYINT DEFAULT 0,
+                    ssid VARCHAR(64) NULL,
+                    bssid VARCHAR(32) NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
                 using var createCmd = new MySqlCommand(createTable, connection);
                 await createCmd.ExecuteNonQueryAsync();
 
                 var query = @"SELECT id, name, latitude, longitude, radius_meters, is_active,
-                                     created_at, transition_type, category, description, work_type
+                                     created_at, transition_type, category, description, work_type, ssid, bssid
                               FROM geofence_regions";
                 using var command = new MySqlCommand(query, connection);
                 using var reader = await command.ExecuteReaderAsync();
@@ -864,6 +868,8 @@ namespace MapLocationApp.Services
                         Description = reader["description"] as string ?? string.Empty,
                         WorkType = HasColumn(reader, "work_type") && reader["work_type"] != DBNull.Value
                             ? (WorkType)Convert.ToInt32(reader["work_type"]) : WorkType.Office,
+                        Ssid = HasColumn(reader, "ssid") ? reader["ssid"] as string : null,
+                        Bssid = HasColumn(reader, "bssid") ? reader["bssid"] as string : null,
                     });
                 }
             }
@@ -897,23 +903,25 @@ namespace MapLocationApp.Services
                     transition_type TINYINT DEFAULT 3,
                     category VARCHAR(50) DEFAULT '',
                     description TEXT,
-                    work_type TINYINT DEFAULT 0
+                    work_type TINYINT DEFAULT 0,
+                    ssid VARCHAR(64) NULL,
+                    bssid VARCHAR(32) NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
                 using var createCmd = new MySqlCommand(createTable, connection);
                 await createCmd.ExecuteNonQueryAsync();
 
                 var query = @"INSERT INTO geofence_regions
                                 (id, name, latitude, longitude, radius_meters, is_active,
-                                 created_at, transition_type, category, description, work_type)
+                                 created_at, transition_type, category, description, work_type, ssid, bssid)
                               VALUES
                                 (@id, @name, @lat, @lng, @radius, @active,
-                                 @createdAt, @transition, @category, @description, @workType)
+                                 @createdAt, @transition, @category, @description, @workType, @ssid, @bssid)
                               ON DUPLICATE KEY UPDATE
                                 name = VALUES(name), latitude = VALUES(latitude),
                                 longitude = VALUES(longitude), radius_meters = VALUES(radius_meters),
                                 is_active = VALUES(is_active), transition_type = VALUES(transition_type),
                                 category = VALUES(category), description = VALUES(description),
-                                work_type = VALUES(work_type)";
+                                work_type = VALUES(work_type), ssid = VALUES(ssid), bssid = VALUES(bssid)";
 
                 using var command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", geofence.Id);
@@ -927,6 +935,8 @@ namespace MapLocationApp.Services
                 command.Parameters.AddWithValue("@category", geofence.Category ?? string.Empty);
                 command.Parameters.AddWithValue("@description", geofence.Description ?? string.Empty);
                 command.Parameters.AddWithValue("@workType", (int)geofence.WorkType);
+                command.Parameters.AddWithValue("@ssid", (object?)geofence.Ssid ?? DBNull.Value);
+                command.Parameters.AddWithValue("@bssid", (object?)geofence.Bssid ?? DBNull.Value);
 
                 await command.ExecuteNonQueryAsync();
                 // ON DUPLICATE KEY UPDATE returns 0 when row exists with identical values;

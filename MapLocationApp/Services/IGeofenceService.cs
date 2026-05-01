@@ -44,4 +44,10 @@ public interface IGeofenceService
 
     /// <summary>Clears in-memory cache and forces reload from database on next access.</summary>
     void ResetCache();
+
+    /// <summary>True if the geofence is Wi-Fi based and matches the supplied SSID/BSSID.</summary>
+    bool MatchesWifi(GeofenceRegion geofence, string? ssid, string? bssid);
+
+    /// <summary>Returns Wi-Fi geofences that match the supplied SSID/BSSID (active only).</summary>
+    Task<List<GeofenceRegion>> GetGeofencesMatchingWifiAsync(string? ssid, string? bssid);
 }
