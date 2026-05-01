@@ -16,11 +16,21 @@ namespace MapLocationApp.Services
         Task<CheckInRecord?> GetLatestCheckInAsync(int userId);
         Task<bool> UpdateCheckInRecordAsync(CheckInRecord record);
 
+        // Geofence persistence
+        Task<List<GeofenceRegion>> GetAllGeofencesAsync();
+        Task<bool> SaveGeofenceAsync(GeofenceRegion geofence);
+        Task<bool> UpdateGeofenceAsync(GeofenceRegion geofence);
+        Task<bool> DeleteGeofenceAsync(string geofenceId);
+
         // Aliases for test compatibility
         Task<bool> SaveCheckInAsync(CheckInRecord record) => SaveCheckInRecordAsync(record);
         Task<bool> UpdateCheckInAsync(CheckInRecord record) => UpdateCheckInRecordAsync(record);
         
+        /// <summary>Forces the service to re-read connection settings on next operation.</summary>
+        void ResetConnection();
         Task<bool> TestConnectionAsync();
+        /// <summary>Tests a connection using the provided credentials without changing saved state.</summary>
+        Task<bool> TestConnectionAsync(DatabaseConfig config, string password);
         Task<bool> InitializeDatabaseAsync();
     }
 

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.GeofenceManagementPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [GeofenceManagementTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+             Style="{StaticResource ModernPage}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding [Back], Source={x:Static svc:LocalizationManager.Instance}}" Clicked="OnBackClicked" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+
+            <!-- 返回按鈕 -->
+            <Button Text="{Binding [BackToCheckIn], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonSecondary}"
+                    HorizontalOptions="Start"
+                    Clicked="OnBackClicked"/>
+
+            <!-- 標題 -->
+            <Label Text="{Binding [GeofenceManagementTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                   Style="{StaticResource ModernH2}"
+                   HorizontalOptions="Center"/>
+
+            <!-- 編輯表單 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="✏️" FontSize="24"/>
+                        <Label x:Name="FormTitleLabel" Text="{Binding [AddLocation], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
+                    </HorizontalStackLayout>
+
+                    <Entry x:Name="NameEntry"
+                           Placeholder="名稱（必填）"
+                           Style="{StaticResource ModernEntry}"
+                           MaxLength="100"/>
+
+                    <Entry x:Name="CategoryEntry"
+                           Placeholder="分類（如：辦公室、客戶、倉庫）"
+                           Style="{StaticResource ModernEntry}"
+                           MaxLength="50"/>
+
+                    <Entry x:Name="DescriptionEntry"
+                           Placeholder="描述（選填）"
+                           Style="{StaticResource ModernEntry}"
+                           MaxLength="200"/>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Entry Grid.Column="0"
+                               x:Name="LatitudeEntry"
+                               Placeholder="緯度 Latitude"
+                               Keyboard="Numeric"
+                               Style="{StaticResource ModernEntry}"/>
+                        <Entry Grid.Column="1"
+                               x:Name="LongitudeEntry"
+                               Placeholder="經度 Longitude"
+                               Keyboard="Numeric"
+                               Style="{StaticResource ModernEntry}"/>
+                    </Grid>
+
+                    <Entry x:Name="RadiusEntry"
+                           Placeholder="半徑（公尺，建議 30~500）"
+                           Keyboard="Numeric"
+                           Style="{StaticResource ModernEntry}"/>
+
+                    <HorizontalStackLayout Spacing="8">
+                        <CheckBox x:Name="IsActiveCheckBox" IsChecked="True"/>
+                        <Label Text="{Binding [EnableThisLocation], Source={x:Static svc:LocalizationManager.Instance}}" VerticalOptions="Center" Style="{StaticResource ModernBody}"/>
+                    </HorizontalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Button Grid.Column="0"
+                                x:Name="UseCurrentLocationButton"
+                                Text="{Binding [UseCurrentLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnUseCurrentLocationClicked"/>
+                        <Button Grid.Column="1"
+                                x:Name="ClearFormButton"
+                                Text="{Binding [ClearForm], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnClearFormClicked"/>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Button Grid.Column="0"
+                                x:Name="SaveButton"
+                                Text="{Binding [AddBtn], Source={x:Static svc:LocalizationManager.Instance}}"
+                                Style="{StaticResource ModernButtonPrimary}"
+                                Clicked="OnSaveClicked"/>
+                        <Button Grid.Column="1"
+                                x:Name="CancelEditButton"
+                                Text="{Binding [CancelEdit], Source={x:Static svc:LocalizationManager.Instance}}"
+                                IsVisible="False"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnCancelEditClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 列表 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="📋" FontSize="24"/>
+                        <Label Text="{Binding [ExistingLocations], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
+                    </HorizontalStackLayout>
+
+                    <CollectionView x:Name="GeofencesCollectionView">
+                        <CollectionView.EmptyView>
+                            <Label Text="{Binding [NoLocationsYet], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   HorizontalTextAlignment="Center"/>
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource ModernListItem}">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               Style="{StaticResource ModernBody}"
+                                               FontAttributes="Bold"/>
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Text="{Binding DetailText}"
+                                               Style="{StaticResource ModernBodySmall}"/>
+                                        <Label Grid.Row="2" Grid.Column="0"
+                                               Text="{Binding StatusText}"
+                                               Style="{StaticResource ModernCaption}"/>
+
+                                        <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Spacing="6" VerticalOptions="Center">
+                                            <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Edit]}"
+                                                    FontSize="12"
+                                                    HeightRequest="36"
+                                                    Padding="10,4"
+                                                    Style="{StaticResource ModernButtonSecondary}"
+                                                    Clicked="OnEditClicked"
+                                                    CommandParameter="{Binding Id}"/>
+                                            <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Toggle]}"
+                                                    FontSize="12"
+                                                    HeightRequest="36"
+                                                    Padding="10,4"
+                                                    Style="{StaticResource ModernButtonSecondary}"
+                                                    Clicked="OnToggleActiveClicked"
+                                                    CommandParameter="{Binding Id}"/>
+                                            <Button Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[Delete]}"
+                                                    FontSize="12"
+                                                    HeightRequest="36"
+                                                    Padding="10,4"
+                                                    Style="{StaticResource ModernButtonWarning}"
+                                                    Clicked="OnDeleteClicked"
+                                                    CommandParameter="{Binding Id}"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonSecondary}"
+                    Clicked="OnRefreshClicked"
+                    Margin="0,0,0,20"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -7,42 +7,62 @@ public class GeofenceService : IGeofenceService
     private readonly List<GeofenceRegion> _geofences = new();
     private readonly Dictionary<string, bool> _geofenceStates = new(); // true = inside, false = outside
     private readonly ILocationService _locationService;
+    private readonly IDatabaseService? _databaseService;
+    private readonly SemaphoreSlim _loadLock = new(1, 1);
+    private bool _isLoaded = false;
     private bool _isMonitoring = false;
 
     public event EventHandler<GeofenceEvent>? GeofenceEntered;
     public event EventHandler<GeofenceEvent>? GeofenceExited;
 
-    public GeofenceService(ILocationService locationService)
+    public GeofenceService(ILocationService locationService, IDatabaseService? databaseService = null)
     {
         _locationService = locationService;
+        _databaseService = databaseService;
         _locationService.LocationChanged += OnLocationChanged;
-        
-        // 加入一些預設的地理圍欄作為範例
-        InitializeDefaultGeofences();
+    }
+
+    private async Task EnsureLoadedAsync()
+    {
+        if (_isLoaded) return;
+        await _loadLock.WaitAsync();
+        try
+        {
+            if (_isLoaded) return;
+
+            if (_databaseService != null)
+            {
+                try
+                {
+                    var dbGeofences = await _databaseService.GetAllGeofencesAsync();
+                    _geofences.Clear();
+                    _geofenceStates.Clear();
+                    if (dbGeofences != null)
+                    {
+                        foreach (var g in dbGeofences)
+                        {
+                            _geofences.Add(g);
+                            _geofenceStates[g.Id] = false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"從資料庫載入地理圍欄失敗: {ex.Message}");
+                }
+            }
+            _isLoaded = true;
+        }
+        finally
+        {
+            _loadLock.Release();
+        }
     }
 
     private void InitializeDefaultGeofences()
     {
-        // 保留一些基本的地理圍欄作為範例
-        // 但不要只限於台北地區
-        
-        // 工作場所範例（用戶可以自己新增）
-        _geofences.Add(new GeofenceRegion
-        {
-            Id = "workplace-1",
-            Name = "我的工作場所",
-            Latitude = 25.0339,
-            Longitude = 121.5645,
-            RadiusMeters = 100,
-            Category = "Office",
-            Description = "主要工作地點"
-        });
-
-        // 初始化狀態
-        foreach (var geofence in _geofences)
-        {
-            _geofenceStates[geofence.Id] = false;
-        }
+        // 不再預先建立 hard-coded 工作場所
+        // 使用者請透過「打卡地點管理」頁面自行新增
     }
     
     // 新增：為當前位置建立地理圍欄
@@ -74,8 +94,9 @@ public class GeofenceService : IGeofenceService
         }
     }
 
-    public Task<bool> AddGeofenceAsync(GeofenceRegion geofence)
+    public async Task<bool> AddGeofenceAsync(GeofenceRegion geofence)
     {
+        await EnsureLoadedAsync();
         try
         {
             // T025: Validate radius
@@ -87,25 +108,35 @@ public class GeofenceService : IGeofenceService
             // T025: Check for duplicate ID
             if (_geofences.Any(g => g.Id == geofence.Id))
             {
-                return Task.FromResult(false);
+                return false;
+            }
+
+            // Save to DB first; only add to memory if persist succeeds (or no DB configured)
+            if (_databaseService != null)
+            {
+                var saved = await _databaseService.SaveGeofenceAsync(geofence);
+                if (!saved)
+                    return false;
             }
 
             _geofences.Add(geofence);
             _geofenceStates[geofence.Id] = false;
-            return Task.FromResult(true);
+            return true;
         }
         catch (ArgumentException)
         {
-            throw; // Re-throw validation exceptions
+            throw;
         }
-        catch
+        catch (Exception ex)
         {
-            return Task.FromResult(false);
+            System.Diagnostics.Debug.WriteLine($"AddGeofenceAsync 失敗: {ex.Message}");
+            throw;
         }
     }
 
-    public Task<bool> RemoveGeofenceAsync(string geofenceId)
+    public async Task<bool> RemoveGeofenceAsync(string geofenceId)
     {
+        await EnsureLoadedAsync();
         try
         {
             var geofence = _geofences.FirstOrDefault(g => g.Id == geofenceId);
@@ -113,60 +144,90 @@ public class GeofenceService : IGeofenceService
             {
                 _geofences.Remove(geofence);
                 _geofenceStates.Remove(geofenceId);
-                return Task.FromResult(true);
+
+                if (_databaseService != null)
+                {
+                    try { await _databaseService.DeleteGeofenceAsync(geofenceId); }
+                    catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"從資料庫刪除地理圍欄失敗: {ex.Message}"); }
+                }
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
-    public Task<bool> UpdateGeofenceAsync(string id, GeofenceRegion updatedGeofence)
+    public async Task<bool> UpdateGeofenceAsync(string id, GeofenceRegion updatedGeofence)
     {
+        await EnsureLoadedAsync();
         try
         {
             var index = _geofences.FindIndex(g => g.Id == id);
             if (index >= 0)
             {
-                // Keep the same ID
                 updatedGeofence.Id = id;
+                var original = _geofences[index];
+
+                if (_databaseService != null)
+                {
+                    var updated = await _databaseService.UpdateGeofenceAsync(updatedGeofence);
+                    if (!updated)
+                        return false;
+                }
+
                 _geofences[index] = updatedGeofence;
-                return Task.FromResult(true);
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
-        catch
+        catch (Exception ex)
         {
-            return Task.FromResult(false);
+            System.Diagnostics.Debug.WriteLine($"UpdateGeofenceAsync 失敗: {ex.Message}");
+            throw;
         }
     }
 
-    public Task<bool> ToggleGeofenceActiveAsync(string id)
+    public async Task<bool> ToggleGeofenceActiveAsync(string id)
     {
+        await EnsureLoadedAsync();
         try
         {
             var geofence = _geofences.FirstOrDefault(g => g.Id == id);
             if (geofence != null)
             {
                 geofence.IsActive = !geofence.IsActive;
-                return Task.FromResult(true);
+                if (_databaseService != null)
+                {
+                    try { await _databaseService.UpdateGeofenceAsync(geofence); }
+                    catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"切換啟用狀態到資料庫失敗: {ex.Message}"); }
+                }
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
     // T150: Removed SaveGeofenceToDatabaseAsync and LoadGeofencesFromDatabaseAsync
     // Geofences are managed in-memory. Use AddGeofenceAsync for adding new geofences.
 
-    public Task<List<GeofenceRegion>> GetGeofencesAsync()
+    public void ResetCache()
     {
-        return Task.FromResult(_geofences.Where(g => g.IsActive).ToList());
+        _isLoaded = false;
+        _geofences.Clear();
+        _geofenceStates.Clear();
+    }
+
+    public async Task<List<GeofenceRegion>> GetGeofencesAsync()
+    {
+        await EnsureLoadedAsync();
+        return _geofences.Where(g => g.IsActive).ToList();
     }
 
     public Task<bool> IsInsideGeofenceAsync(double latitude, double longitude, GeofenceRegion geofence)

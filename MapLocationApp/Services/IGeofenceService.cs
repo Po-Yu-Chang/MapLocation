@@ -41,4 +41,7 @@ public interface IGeofenceService
     // T150: Removed SaveGeofenceToDatabaseAsync and LoadGeofencesFromDatabaseAsync
     // Geofences are stored in-memory only. For persistent storage, use AddGeofenceAsync
     // and maintain geofences through application lifecycle or external persistence layer.
+
+    /// <summary>Clears in-memory cache and forces reload from database on next access.</summary>
+    void ResetCache();
 }

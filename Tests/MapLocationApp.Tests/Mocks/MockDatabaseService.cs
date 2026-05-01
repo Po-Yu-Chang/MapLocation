@@ -282,4 +282,25 @@ public class MockDatabaseService : IDatabaseService
         };
         _users[adminUser.Id] = adminUser;
     }
+
+    // Geofence stubs (not used in current tests, but required by IDatabaseService)
+    private readonly Dictionary<string, GeofenceRegion> _geofences = new();
+
+    public Task<List<GeofenceRegion>> GetAllGeofencesAsync()
+        => Task.FromResult(_geofences.Values.ToList());
+
+    public Task<bool> SaveGeofenceAsync(GeofenceRegion geofence)
+    {
+        _geofences[geofence.Id] = geofence;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> UpdateGeofenceAsync(GeofenceRegion geofence)
+    {
+        _geofences[geofence.Id] = geofence;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> DeleteGeofenceAsync(string geofenceId)
+        => Task.FromResult(_geofences.Remove(geofenceId));
 }

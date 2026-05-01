@@ -80,15 +80,27 @@ public class MapService : IMapService
         if (existingLayer != null)
             map.Layers.Remove(existingLayer);
 
-        if (!geofences.Any()) return;
+        var geofenceList = geofences.ToList();
+        if (!geofenceList.Any()) return;
 
         var features = new List<Mapsui.IFeature>();
+        var factory = new NetTopologySuite.Geometries.GeometryFactory();
 
-        foreach (var geofence in geofences)
+        foreach (var geofence in geofenceList)
         {
-            // 建立點特徵
             var center = SphericalMercator.FromLonLat(geofence.Longitude, geofence.Latitude);
-            var feature = new PointFeature(new MPoint(center.x, center.y));
+
+            // Convert radius from metres to Mercator units (Mercator stretches N/S by 1/cos(lat))
+            var latRad = geofence.Latitude * Math.PI / 180.0;
+            var mercatorRadius = geofence.RadiusMeters / Math.Cos(latRad);
+
+            // Create a smooth circle polygon (64 segments)
+            var centerPoint = factory.CreatePoint(
+                new NetTopologySuite.Geometries.Coordinate(center.x, center.y));
+            var circlePolygon = (NetTopologySuite.Geometries.Polygon)centerPoint.Buffer(mercatorRadius, 64);
+
+            var feature = new GeometryFeature(circlePolygon);
+            feature["Name"] = geofence.Name;
             features.Add(feature);
         }
 
@@ -98,8 +110,8 @@ public class MapService : IMapService
             DataSource = memoryProvider,
             Style = new VectorStyle
             {
-                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(50, 0, 123, 255) },
-                Outline = new Pen { Color = Mapsui.Styles.Color.Blue, Width = 2 }
+                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(50, 33, 150, 243) },
+                Outline = new Pen { Color = Mapsui.Styles.Color.FromArgb(200, 33, 150, 243), Width = 2 }
             }
         };
 
