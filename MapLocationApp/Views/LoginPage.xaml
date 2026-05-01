@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage x:Class="MapLocationApp.Views.LoginPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="登入"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [Login], Source={x:Static svc:LocalizationManager.Instance}}"
              Shell.NavBarIsVisible="False"
              Style="{StaticResource ModernPage}">
 
@@ -63,7 +64,7 @@
                         <Label Text="MapLocation"
                                Style="{StaticResource ModernH1}"
                                HorizontalOptions="Center"/>
-                        <Label Text="智慧位置管理系統"
+                        <Label Text="{Binding [SmartLocationSystem], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernBodySmall}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
@@ -80,10 +81,10 @@
 
                         <!-- Welcome Text -->
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="歡迎回來"
+                            <Label Text="{Binding [WelcomeBack], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernH3}"
                                    HorizontalOptions="Center"/>
-                            <Label Text="請登入您的帳號以繼續使用"
+                            <Label Text="{Binding [PleaseLoginToContinue], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBodySmall}"
                                    HorizontalOptions="Center"
                                    HorizontalTextAlignment="Center"/>
@@ -94,7 +95,7 @@
 
                             <!-- Username Field -->
                             <VerticalStackLayout Spacing="8">
-                                <Label Text="使用者名稱"
+                                <Label Text="{Binding [Username], Source={x:Static svc:LocalizationManager.Instance}}"
                                        Style="{StaticResource ModernBodySmall}"
                                        FontAttributes="Bold"/>
                                 <Border BackgroundColor="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}"
@@ -119,7 +120,7 @@
 
                             <!-- Password Field -->
                             <VerticalStackLayout Spacing="8">
-                                <Label Text="密碼"
+                                <Label Text="{Binding [Password], Source={x:Static svc:LocalizationManager.Instance}}"
                                        Style="{StaticResource ModernBodySmall}"
                                        FontAttributes="Bold"/>
                                 <Border BackgroundColor="{AppThemeBinding Light={StaticResource ModernBgTertiary}, Dark={StaticResource ModernBgTertiaryDark}}"
@@ -149,13 +150,13 @@
                                     <CheckBox x:Name="RememberMeCheckbox"
                                              Style="{StaticResource ModernCheckBox}"
                                              VerticalOptions="Center"/>
-                                    <Label Text="記住我"
+                                    <Label Text="{Binding [RememberMe], Source={x:Static svc:LocalizationManager.Instance}}"
                                            Style="{StaticResource ModernBodySmall}"
                                            VerticalOptions="Center"/>
                                 </HorizontalStackLayout>
 
                                 <Label Grid.Column="1"
-                                       Text="忘記密碼？"
+                                       Text="{Binding [ForgotPassword], Source={x:Static svc:LocalizationManager.Instance}}"
                                        Style="{StaticResource ModernBodySmall}"
                                        TextColor="{StaticResource ModernPrimary}"
                                        FontAttributes="Bold"
@@ -171,7 +172,7 @@
 
                         <!-- Login Button -->
                         <Button x:Name="LoginButton"
-                                Text="登入"
+                                Text="{Binding [Login], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnLoginClicked"/>
 
@@ -186,9 +187,9 @@
                     <!-- Register Link -->
                     <HorizontalStackLayout HorizontalOptions="Center"
                                           Spacing="6">
-                        <Label Text="還沒有帳號？"
+                        <Label Text="{Binding [NoAccount], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernBodySmall}"/>
-                        <Label Text="立即註冊"
+                        <Label Text="{Binding [RegisterNow], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernBodySmall}"
                                TextColor="{StaticResource ModernPrimary}"
                                FontAttributes="Bold">
@@ -199,7 +200,7 @@
                     </HorizontalStackLayout>
 
                     <!-- Version Info -->
-                    <Label Text="版本 1.0.0"
+                    <Label Text="{Binding [AppVersion], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernCaption}"
                            HorizontalOptions="Center"/>
 

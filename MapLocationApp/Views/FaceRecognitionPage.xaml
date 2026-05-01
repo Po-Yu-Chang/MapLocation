@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
              x:Class="MapLocationApp.Views.FaceRecognitionPage"
-             Title="人臉辨識"
+             Title="{Binding [FaceRecognitionTitle], Source={x:Static svc:LocalizationManager.Instance}}"
              Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
@@ -18,7 +19,7 @@
                 <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
                     <Label Text="👤" FontSize="56" HorizontalOptions="Center"/>
                     <Label Text="AI 人臉辨識系統" Style="{StaticResource ModernH2}" HorizontalOptions="Center"/>
-                    <Label Text="智慧人臉訓練與識別平台" Style="{StaticResource ModernBody}" HorizontalOptions="Center"/>
+                    <Label Text="{Binding [SmartFacePlatform], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Border>
 
@@ -31,9 +32,9 @@
                         <Border Style="{StaticResource ModernIconContainer}">
                             <Label Text="🎓" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
-                        <Label Text="訓練模式" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
-                        <Label Text="新增人臉資料到系統" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開始訓練"
+                        <Label Text="{Binding [TrainingMode], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding [AddFaceData], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="{Binding [StartTraining], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnTrainingModeClicked"
                                 WidthRequest="140"/>
@@ -47,9 +48,9 @@
                                 BackgroundColor="{StaticResource ModernSuccessLight}">
                             <Label Text="🔍" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernSuccess}"/>
                         </Border>
-                        <Label Text="測試模式" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
-                        <Label Text="辨識已訓練的人臉" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="開始測試"
+                        <Label Text="{Binding [TestMode], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding [RecognizeTrainedFaces], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="{Binding [StartTest], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonSuccess}"
                                 Clicked="OnTestModeClicked"
                                 WidthRequest="140"/>
@@ -63,9 +64,9 @@
                                 BackgroundColor="{StaticResource ModernSecondaryLight}">
                             <Label Text="📊" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernSecondary}"/>
                         </Border>
-                        <Label Text="資料管理" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
-                        <Label Text="查看和管理人臉資料" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="管理資料"
+                        <Label Text="{Binding [ManageData], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding [ViewManageFaceData], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="{Binding [ManageData], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnManagementModeClicked"
                                 WidthRequest="140"/>
@@ -79,9 +80,9 @@
                                 BackgroundColor="{StaticResource ModernAccentLight}">
                             <Label Text="⚙️" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource ModernAccent}"/>
                         </Border>
-                        <Label Text="系統設定" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
-                        <Label Text="調整識別參數設定" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                        <Button Text="系統設定"
+                        <Label Text="{Binding [SystemSettings], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}" HorizontalOptions="Center"/>
+                        <Label Text="{Binding [AdjustRecognitionParams], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBodySmall}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Button Text="{Binding [SystemSettings], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonSecondary}"
                                 Clicked="OnSystemSettingsClicked"
                                 WidthRequest="140"/>

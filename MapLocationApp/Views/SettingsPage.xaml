@@ -2,7 +2,8 @@
 <ContentPage x:Class="MapLocationApp.Views.SettingsPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="設定"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [AppSettings], Source={x:Static svc:LocalizationManager.Instance}}"
              Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
@@ -13,7 +14,7 @@
         <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
 
             <!-- 頁面標題 -->
-            <Label Text="應用程式設定"
+            <Label Text="{Binding [AppSettings], Source={x:Static svc:LocalizationManager.Instance}}"
                    Style="{StaticResource ModernH2}"
                    HorizontalOptions="Center"
                    Margin="0,0,0,8"/>
@@ -23,11 +24,11 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🌍" FontSize="24"/>
-                        <Label Text="語言設定" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [LanguageSettings], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="選擇應用程式語言" Style="{StaticResource ModernBody}"/>
+                        <Label Text="{Binding [SelectLanguage], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}"/>
                         <Picker x:Name="LanguagePicker"
                                 Style="{StaticResource ModernPicker}"
                                 SelectedIndexChanged="OnLanguageChanged">
@@ -35,8 +36,7 @@
                                 <x:String>繁體中文 (Traditional Chinese)</x:String>
                                 <x:String>简体中文 (Simplified Chinese)</x:String>
                                 <x:String>English</x:String>
-                                <x:String>日本語 (Japanese)</x:String>
-                                <x:String>한국어 (Korean)</x:String>
+                                <x:String>ภาษาไทย (Thai)</x:String>
                             </Picker.Items>
                         </Picker>
                     </VerticalStackLayout>
@@ -48,11 +48,11 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🎨" FontSize="24"/>
-                        <Label Text="主題設定" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [ThemeSettings], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="選擇外觀主題" Style="{StaticResource ModernBody}"/>
+                        <Label Text="{Binding [SelectTheme], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}"/>
                         <Picker x:Name="ThemePicker"
                                 Style="{StaticResource ModernPicker}"
                                 SelectedIndexChanged="OnThemeChanged">
@@ -71,13 +71,13 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📍" FontSize="24"/>
-                        <Label Text="位置服務" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [LocationServices], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="16">
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="啟用高精度定位"
+                                   Text="{Binding [EnableHighAccuracy], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -90,7 +90,7 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="背景位置更新"
+                                   Text="{Binding [BackgroundLocationUpdates], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -103,7 +103,7 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="自動地理圍欄檢測"
+                                   Text="{Binding [AutoGeofenceDetection], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -120,13 +120,13 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🔔" FontSize="24"/>
-                        <Label Text="通知設定" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [NotificationSettings], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="16">
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="打卡提醒"
+                                   Text="{Binding [CheckInReminder], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -139,7 +139,7 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="地理圍欄進出通知"
+                                   Text="{Binding [GeofenceNotifications], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -152,7 +152,7 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="團隊位置分享通知"
+                                   Text="{Binding [TeamLocationNotification], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -169,13 +169,13 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📱" FontSize="24"/>
-                        <Label Text="Telegram 推播通知" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [TelegramPush], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="12">
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="啟用 Telegram 通知"
+                                   Text="{Binding [EnableTelegram], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    VerticalOptions="Center"/>
                             <Switch Grid.Column="1"
@@ -239,12 +239,73 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- 資料庫設定卡片 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🗄️" FontSize="24"/>
+                        <Label Text="MySQL 資料庫設定" Style="{StaticResource ModernH4}"/>
+                    </HorizontalStackLayout>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="打卡記錄儲存至以下 MySQL 資料庫。"
+                               Style="{StaticResource ModernBodySmall}"
+                               TextColor="{StaticResource ModernTextSecondary}"/>
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Entry Grid.Column="0"
+                                   x:Name="DbHostEntry"
+                                   Placeholder="主機位址 (Host)"
+                                   Style="{StaticResource ModernEntry}"
+                                   Keyboard="Url"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="DbPortEntry"
+                                   Placeholder="Port"
+                                   Style="{StaticResource ModernEntry}"
+                                   Keyboard="Numeric"
+                                   WidthRequest="90"/>
+                        </Grid>
+
+                        <Entry x:Name="DbNameEntry"
+                               Placeholder="資料庫名稱 (Database Name)"
+                               Style="{StaticResource ModernEntry}"/>
+
+                        <Entry x:Name="DbUsernameEntry"
+                               Placeholder="使用者名稱 (Username)"
+                               Style="{StaticResource ModernEntry}"/>
+
+                        <Entry x:Name="DbPasswordEntry"
+                               Placeholder="密碼 (Password)"
+                               IsPassword="True"
+                               Style="{StaticResource ModernEntry}"/>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,4,0,0">
+                            <Button Grid.Column="0"
+                                    x:Name="DbTestButton"
+                                    Text="🔌 測試連線"
+                                    Style="{StaticResource ModernButtonSecondary}"
+                                    Clicked="OnDbTestClicked"/>
+                            <Button Grid.Column="1"
+                                    x:Name="DbSaveButton"
+                                    Text="💾 儲存設定"
+                                    Style="{StaticResource ModernButtonPrimary}"
+                                    Clicked="OnDbSaveClicked"/>
+                        </Grid>
+
+                        <Label x:Name="DbStatusLabel"
+                               Text="📡 狀態: 未驗證"
+                               Style="{StaticResource ModernCaption}"
+                               Margin="0,4,0,0"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- 資料管理卡片 -->
             <Border Style="{StaticResource ModernCard}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="💾" FontSize="24"/>
-                        <Label Text="資料管理" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [DataManagement], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="12">
@@ -272,7 +333,7 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="ℹ️" FontSize="24"/>
-                        <Label Text="應用程式資訊" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [About], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="12">

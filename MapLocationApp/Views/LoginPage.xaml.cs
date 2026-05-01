@@ -134,10 +134,28 @@ public partial class LoginPage : ContentPage
                 await Task.Delay(500);
                 
                 await Shell.Current.GoToAsync("//CheckInPage");
+
+                // Warn if password must be changed (e.g., default admin account)
+                if (loginResult.User?.MustChangePassword == true)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                        DisplayAlert("⚠️ 請修改密碼",
+                            "您使用的是系統預設密碼（admin123），為了帳戶安全，請盡快到設定頁面修改密碼。",
+                            "我知道了"));
+                }
             }
             else
             {
-                await ShowErrorMessage(loginResult.ErrorMessage ?? "登入失敗，請檢查帳號密碼");
+                // Categorize the error for better UX
+                var errorMsg = loginResult.ErrorMessage ?? string.Empty;
+                string displayMsg;
+                if (errorMsg.Contains("資料庫連線未設定") || errorMsg.Contains("連線") || errorMsg.Contains("connection", StringComparison.OrdinalIgnoreCase))
+                    displayMsg = "⚠️ 無法連線到資料庫，請先在設定中配置 MySQL 連線，或檢查網路狀態。";
+                else if (errorMsg.Contains("帳號或密碼錯誤"))
+                    displayMsg = "❌ 帳號或密碼錯誤，請再試一次。";
+                else
+                    displayMsg = string.IsNullOrEmpty(errorMsg) ? "登入失敗，請檢查帳號密碼" : errorMsg;
+                await ShowErrorMessage(displayMsg);
             }
         }
         catch (Exception ex)

@@ -2,7 +2,10 @@
 <ContentPage x:Class="MapLocationApp.Views.CheckInPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="⏰ 位置打卡"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [CheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+             Shell.NavBarIsVisible="False"
              Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
@@ -10,7 +13,7 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="20,40,20,24" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
 
             <!-- 用戶資訊區域 -->
             <Border Style="{StaticResource ModernCard}">
@@ -32,17 +35,17 @@
                     <!-- 用戶資訊 -->
                     <Label Grid.Row="0" Grid.Column="1"
                            x:Name="UserNameLabel"
-                           Text="未登入"
+                           Text="{Binding [NotLoggedIn], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernH4}"/>
                     <Label Grid.Row="1" Grid.Column="1"
                            x:Name="UserDepartmentLabel"
-                           Text="請先登入以使用打卡功能"
+                           Text="{Binding [PleaseLoginToUse], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernBodySmall}"/>
 
                     <!-- 登出按鈕 -->
                     <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
                             x:Name="LogoutButton"
-                            Text="登出"
+                            Text="{Binding [Logout], Source={x:Static svc:LocalizationManager.Instance}}"
                             Style="{StaticResource ModernButtonSecondary}"
                             FontSize="14"
                             HeightRequest="40"
@@ -54,7 +57,7 @@
             </Border>
 
             <!-- 頁面標題 -->
-            <Label Text="智慧考勤系統"
+            <Label Text="{Binding [SmartAttendance], Source={x:Static svc:LocalizationManager.Instance}}"
                    Style="{StaticResource ModernH2}"
                    HorizontalOptions="Center"
                    Margin="0,8,0,0"/>
@@ -64,17 +67,37 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📍" FontSize="24"/>
-                        <Label Text="目前位置" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [CurrentLocation], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
                         <Label x:Name="CurrentLocationLabel"
-                               Text="🔄 正在獲取位置..."
+                               Text="{Binding [GettingLocation], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernBody}"/>
                         <Label x:Name="AccuracyLabel"
                                Text=""
                                Style="{StaticResource ModernCaption}"/>
                     </VerticalStackLayout>
+
+                    <!-- 位置地圖 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeThickness="1"
+                            Padding="0"
+                            HeightRequest="220"
+                            HorizontalOptions="Fill">
+                        <Grid>
+                            <mapsui:MapControl x:Name="LocationMapControl"
+                                               HorizontalOptions="Fill"
+                                               VerticalOptions="Fill"/>
+                            <Label x:Name="MapPlaceholderLabel"
+                                   Text="{Binding [WaitingLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   IsVisible="True"/>
+                        </Grid>
+                    </Border>
                 </VerticalStackLayout>
             </Border>
 
@@ -83,11 +106,17 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🎯" FontSize="24"/>
-                        <Label Text="附近區域" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [NearbyAreas], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <CollectionView x:Name="NearbyGeofencesCollectionView"
-                                    MaximumHeightRequest="300">
+                                    MaximumHeightRequest="240">
+                        <CollectionView.EmptyView>
+                            <Label Text="{Binding [NoNearbyLocations], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   HorizontalTextAlignment="Center"
+                                   Padding="0,8"/>
+                        </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource ModernListItem}">
@@ -120,13 +149,33 @@
                 <VerticalStackLayout Spacing="20">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="⚡" FontSize="24"/>
-                        <Label Text="打卡操作" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [CheckInOperation], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Spacing="16" x:Name="CheckInOperationsPanel" IsEnabled="False">
+                        <!-- 地理圍欄載入指示器 -->
+                        <ActivityIndicator x:Name="GeofenceLoadingIndicator"
+                                           IsRunning="False"
+                                           IsVisible="False"
+                                           Color="{StaticResource Primary}"
+                                           HeightRequest="32"/>
+                        <Label x:Name="GeofenceLoadingLabel"
+                               Text="{Binding [LoadingCheckInLocations], Source={x:Static svc:LocalizationManager.Instance}}"
+                               IsVisible="False"
+                               Style="{StaticResource ModernBodySmall}"
+                               TextColor="{StaticResource ModernTextSecondary}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding [SelectCheckInLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernBodySmall}"
+                               TextColor="{StaticResource ModernTextSecondary}"
+                               Margin="4,0,0,-8"/>
                         <Picker x:Name="GeofencePicker"
-                                Title="選擇打卡地點"
+                                Title="{Binding [SelectCheckInLocation], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernPicker}"
+                                HeightRequest="60"
+                                MinimumHeightRequest="60"
+                                FontSize="15"
+                                VerticalTextAlignment="Center"
                                 SelectedIndexChanged="OnGeofenceSelected" />
 
                         <Entry x:Name="NotesEntry"
@@ -162,7 +211,7 @@
                                    HorizontalTextAlignment="Center"
                                    FontAttributes="Bold"/>
                         </Border>
-                        <Button Text="前往登入"
+                        <Button Text="{Binding [PleaseLoginFirst], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnGoToLoginClicked"/>
                     </VerticalStackLayout>
@@ -178,7 +227,13 @@
                     </HorizontalStackLayout>
 
                     <CollectionView x:Name="TodayRecordsCollectionView"
-                                    MaximumHeightRequest="400">
+                                    MaximumHeightRequest="320">
+                        <CollectionView.EmptyView>
+                            <Label Text="今日尚無打卡記錄"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   HorizontalTextAlignment="Center"
+                                   Padding="0,8"/>
+                        </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource ModernListItem}">
@@ -228,11 +283,17 @@
             </Border>
 
             <!-- 重新整理按鈕 -->
-            <Button x:Name="RefreshButton"
-                    Text="🔄 重新整理"
-                    Style="{StaticResource ModernButtonSecondary}"
-                    Clicked="OnRefreshClicked"
-                    Margin="0,0,0,20" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,20">
+                <Button Grid.Column="0"
+                        x:Name="RefreshButton"
+                        Text="🔄 重新整理"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnRefreshClicked" />
+                <Button Grid.Column="1"
+                        Text="⚙️ 管理打卡地點"
+                        Style="{StaticResource ModernButtonSecondary}"
+                        Clicked="OnManageGeofencesClicked" />
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>

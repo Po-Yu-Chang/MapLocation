@@ -3,7 +3,8 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             Title="地圖導航"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [MapNavigation], Source={x:Static svc:LocalizationManager.Instance}}"
              Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
@@ -75,7 +76,7 @@
                             HeightRequest="8"
                             VerticalOptions="Center"/>
                     <Label x:Name="StatusLabel"
-                           Text="準備就緒"
+                           Text="{Binding [MapReady], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernBodySmall}"
                            FontAttributes="Bold" />
                 </HorizontalStackLayout>
@@ -90,18 +91,18 @@
 
                 <!-- Location Information -->
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="當前位置"
+                    <Label Text="{Binding [CurrentLocation], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernBodySmall}"
                            FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="6" ColumnSpacing="12">
                         <Label Grid.Row="0" Grid.Column="0" Text="📍" FontSize="16" VerticalOptions="Center"/>
                         <Label Grid.Row="0" Grid.Column="1" x:Name="LocationLabel"
-                               Text="位置: 準備獲取..."
+                               Text="{Binding [LocationLabel], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernBodySmall}"/>
 
                         <Label Grid.Row="1" Grid.Column="0" Text="🎯" FontSize="16" VerticalOptions="Center"/>
                         <Label Grid.Row="1" Grid.Column="1" x:Name="AccuracyLabel"
-                               Text="精確度: 未知"
+                               Text="{Binding [LocationAccuracy], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernCaption}"/>
                     </Grid>
                 </VerticalStackLayout>
@@ -109,14 +110,15 @@
                 <!-- Control Buttons -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
                     <Button Grid.Column="0" Grid.Row="0"
-                            Text="定位"
+                            x:Name="LocateActionButton"
+                            Text="{Binding [MyLocation], Source={x:Static svc:LocalizationManager.Instance}}"
                             Style="{StaticResource ModernButtonPrimary}"
                             HeightRequest="44"
                             Clicked="OnLocationButtonClicked" />
 
                     <Button Grid.Column="1" Grid.Row="0"
                             x:Name="GeofenceButton"
-                            Text="圍欄"
+                            Text="{Binding [GeofenceLabel], Source={x:Static svc:LocalizationManager.Instance}}"
                             Style="{StaticResource ModernButtonSecondary}"
                             HeightRequest="44"
                             Clicked="OnGeofenceButtonClicked" />
@@ -128,7 +130,7 @@
                             StrokeThickness="1"
                             Padding="12">
                         <Picker x:Name="TileProviderPicker"
-                                Title="選擇地圖類型"
+                                Title="{Binding [SelectMapType], Source={x:Static svc:LocalizationManager.Instance}}"
                                 Style="{StaticResource ModernPicker}"
                                 BackgroundColor="Transparent"
                                 Margin="0"

@@ -1,4 +1,6 @@
+using MapLocationApp.Models;
 using MapLocationApp.Services;
+using MapLocationApp.Services.Interfaces;
 using System.Globalization;
 
 namespace MapLocationApp.Views;
@@ -7,39 +9,49 @@ public partial class SettingsPage : ContentPage
 {
     private readonly LocalizationService _localizationService;
     private readonly ITelegramNotificationService _telegramService;
+    private readonly IConfigService _configService;
+    private readonly IDatabaseService _databaseService;
+    private readonly ISecureConfigService _secureConfig;
 
     public SettingsPage()
     {
         InitializeComponent();
         _localizationService = LocalizationService.Instance;
         _telegramService = ServiceHelper.GetService<ITelegramNotificationService>();
+        _configService = ServiceHelper.GetService<IConfigService>();
+        _databaseService = ServiceHelper.GetService<IDatabaseService>();
+        _secureConfig = ServiceHelper.GetService<ISecureConfigService>();
         LoadCurrentSettings();
+        _ = LoadDatabaseSettingsAsync();
     }
 
     private void LoadCurrentSettings()
     {
-        // 載入當前語言設定
         var currentCulture = CultureInfo.CurrentUICulture.Name;
+
+        // Unsubscribe before setting index to avoid spurious alerts on init
+        LanguagePicker.SelectedIndexChanged -= OnLanguageChanged;
         LanguagePicker.SelectedIndex = currentCulture switch
         {
             "zh-TW" => 0,
             "zh-CN" => 1,
             "en-US" => 2,
-            "ja-JP" => 3,
-            "ko-KR" => 4,
+            "th-TH" => 3,
+            "th" => 3,
             _ => 0
         };
+        LanguagePicker.SelectedIndexChanged += OnLanguageChanged;
 
-        // 載入當前主題設定（從 Preferences 讀取，而不是直接從 Application）
         var savedTheme = Preferences.Get("AppTheme", (int)AppTheme.Unspecified);
+        ThemePicker.SelectedIndexChanged -= OnThemeChanged;
         ThemePicker.SelectedIndex = savedTheme switch
         {
             (int)AppTheme.Light => 0,
             (int)AppTheme.Dark => 1,
             _ => 2
         };
+        ThemePicker.SelectedIndexChanged += OnThemeChanged;
 
-        // 載入其他設定 (從 Preferences 讀取)
         HighAccuracySwitch.IsToggled = Preferences.Get("HighAccuracy", true);
         BackgroundLocationSwitch.IsToggled = Preferences.Get("BackgroundLocation", false);
         GeofenceDetectionSwitch.IsToggled = Preferences.Get("GeofenceDetection", true);
@@ -47,21 +59,31 @@ public partial class SettingsPage : ContentPage
         GeofenceNotificationSwitch.IsToggled = Preferences.Get("GeofenceNotification", true);
         TeamNotificationSwitch.IsToggled = Preferences.Get("TeamNotification", true);
 
-        // 載入 Telegram 設定
-        LoadTelegramSettings();
+        _ = LoadTelegramSettingsAsync();
     }
 
-    private async void LoadTelegramSettings()
+    private async Task LoadTelegramSettingsAsync()
     {
         try
         {
             var isConfigured = await _telegramService.IsConfiguredAsync();
+
+            // Unsubscribe to avoid triggering OnTelegramEnabledToggled (which clears storage) during init
+            TelegramEnabledSwitch.Toggled -= OnTelegramEnabledToggled;
             TelegramEnabledSwitch.IsToggled = isConfigured;
+            TelegramEnabledSwitch.Toggled += OnTelegramEnabledToggled;
+
             TelegramConfigLayout.IsVisible = isConfigured;
 
             if (isConfigured)
             {
-                TelegramBotTokenEntry.Text = Preferences.Get("TelegramBotToken", string.Empty);
+                string token;
+                try { token = await SecureStorage.Default.GetAsync("TelegramBotToken") ?? string.Empty; }
+                catch { token = Preferences.Get("TelegramBotToken", string.Empty); }
+                if (string.IsNullOrEmpty(token))
+                    token = Preferences.Get("TelegramBotToken", string.Empty);
+
+                TelegramBotTokenEntry.Text = token;
                 TelegramChatIdEntry.Text = Preferences.Get("TelegramChatId", string.Empty);
                 TelegramStatusLabel.Text = "📡 狀態: 已設定並啟用";
                 TelegramStatusLabel.TextColor = Colors.Green;
@@ -87,8 +109,7 @@ public partial class SettingsPage : ContentPage
             0 => "zh-TW",
             1 => "zh-CN",
             2 => "en-US",
-            3 => "ja-JP",
-            4 => "ko-KR",
+            3 => "th-TH",
             _ => "zh-TW"
         };
 
@@ -96,12 +117,16 @@ public partial class SettingsPage : ContentPage
         {
             _localizationService.SetCulture(selectedCulture);
             Preferences.Set("AppLanguage", selectedCulture);
-            
-            await DisplayAlert("語言設定", "語言已更改，請重新啟動應用程式以完全生效。", "確定");
+
+            if (Application.Current?.Windows.FirstOrDefault() is Window window)
+            {
+                window.Page = new AppShell();
+                await Shell.Current.GoToAsync("//SettingsPage");
+            }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("錯誤", $"無法更改語言: {ex.Message}", "確定");
+            System.Diagnostics.Debug.WriteLine($"語言切換錯誤: {ex.Message}");
         }
     }
 
@@ -180,9 +205,10 @@ public partial class SettingsPage : ContentPage
         
         if (!e.Value)
         {
-            // 停用 Telegram 通知
+            // 停用 Telegram 通知，清除所有儲存的 token
             TelegramBotTokenEntry.Text = string.Empty;
             TelegramChatIdEntry.Text = string.Empty;
+            try { SecureStorage.Default.Remove("TelegramBotToken"); } catch { }
             Preferences.Remove("TelegramBotToken");
             Preferences.Remove("TelegramChatId");
             TelegramStatusLabel.Text = "📡 狀態: 已停用";
@@ -331,6 +357,164 @@ public partial class SettingsPage : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("錯誤", $"清除失敗: {ex.Message}", "確定");
+        }
+    }
+
+    private async Task LoadDatabaseSettingsAsync()
+    {
+        try
+        {
+            var config = await _configService.GetDatabaseConfigAsync();
+            DbHostEntry.Text = config.Host;
+            DbPortEntry.Text = config.Port.ToString();
+            DbNameEntry.Text = config.DatabaseName;
+            DbUsernameEntry.Text = config.Username;
+            // Load password from SecureStorage; fall back to DatabaseConfig.Password for migration
+            try
+            {
+                var securePassword = await _secureConfig.GetDatabasePasswordAsync();
+                DbPasswordEntry.Text = securePassword ?? config.Password;
+            }
+            catch
+            {
+                DbPasswordEntry.Text = config.Password;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"載入資料庫設定失敗: {ex.Message}");
+        }
+    }
+
+    private async void OnDbTestClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(DbHostEntry.Text) ||
+                string.IsNullOrWhiteSpace(DbNameEntry.Text) ||
+                string.IsNullOrWhiteSpace(DbUsernameEntry.Text))
+            {
+                await DisplayAlert("❌ 輸入錯誤", "請填寫主機、資料庫名稱與使用者名稱。", "確定");
+                return;
+            }
+
+            if (!int.TryParse(DbPortEntry.Text, out var port) || port < 1 || port > 65535)
+            {
+                await DisplayAlert("❌ 輸入錯誤", "Port 必須介於 1 到 65535 之間。", "確定");
+                return;
+            }
+
+            DbTestButton.IsEnabled = false;
+            DbTestButton.Text = "🔄 測試中...";
+            DbStatusLabel.Text = "📡 狀態: 測試連線中...";
+            DbStatusLabel.TextColor = Colors.Gray;
+
+            var testConfig = new DatabaseConfig
+            {
+                Host = DbHostEntry.Text.Trim(),
+                Port = port,
+                DatabaseName = DbNameEntry.Text.Trim(),
+                Username = DbUsernameEntry.Text.Trim()
+            };
+            var testPassword = DbPasswordEntry.Text ?? string.Empty;
+
+            var success = await _databaseService.TestConnectionAsync(testConfig, testPassword);
+            if (success)
+            {
+                DbStatusLabel.Text = "📡 狀態: 連線成功 ✅";
+                DbStatusLabel.TextColor = Colors.Green;
+                await DisplayAlert("✅ 成功", "資料庫連線測試成功！", "確定");
+            }
+            else
+            {
+                DbStatusLabel.Text = "📡 狀態: 連線失敗 ❌";
+                DbStatusLabel.TextColor = Colors.Red;
+                await DisplayAlert("❌ 失敗", "無法連線至資料庫，請確認設定是否正確。", "確定");
+            }
+        }
+        catch (Exception ex)
+        {
+            DbStatusLabel.Text = "📡 狀態: 錯誤 ❌";
+            DbStatusLabel.TextColor = Colors.Red;
+            await DisplayAlert("❌ 錯誤", $"測試失敗: {ex.Message}", "確定");
+        }
+        finally
+        {
+            DbTestButton.IsEnabled = true;
+            DbTestButton.Text = "🔌 測試連線";
+        }
+    }
+
+    private async void OnDbSaveClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(DbHostEntry.Text) ||
+                string.IsNullOrWhiteSpace(DbNameEntry.Text) ||
+                string.IsNullOrWhiteSpace(DbUsernameEntry.Text))
+            {
+                await DisplayAlert("❌ 輸入錯誤", "請填寫主機、資料庫名稱與使用者名稱。", "確定");
+                return;
+            }
+
+            if (!int.TryParse(DbPortEntry.Text, out var port) || port < 1 || port > 65535)
+            {
+                await DisplayAlert("❌ 輸入錯誤", "Port 必須介於 1 到 65535 之間。", "確定");
+                return;
+            }
+
+            DbSaveButton.IsEnabled = false;
+            DbSaveButton.Text = "💾 儲存中...";
+
+            // Save password to SecureStorage (not plaintext in SQLite)
+            var password = DbPasswordEntry.Text ?? string.Empty;
+            try
+            {
+                await _secureConfig.SetDatabasePasswordAsync(password);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SecureStorage 儲存失敗，回退至 DatabaseConfig: {ex.Message}");
+            }
+
+            // Save config without password (password is in SecureStorage)
+            var config = new DatabaseConfig
+            {
+                Host = DbHostEntry.Text.Trim(),
+                Port = port,
+                DatabaseName = DbNameEntry.Text.Trim(),
+                Username = DbUsernameEntry.Text.Trim(),
+                Password = string.Empty
+            };
+
+            var saved = await _configService.SaveDatabaseConfigAsync(config);
+            if (saved)
+            {
+                // Reset cached connection so next DB operation uses the new settings immediately
+                _databaseService.ResetConnection();
+                // Reset geofence cache so it reloads from new DB connection
+                ServiceHelper.GetService<IGeofenceService>()?.ResetCache();
+                DbStatusLabel.Text = "📡 狀態: 設定已儲存並套用 ✅";
+                DbStatusLabel.TextColor = Colors.Green;
+                await DisplayAlert("✅ 成功", "資料庫設定已儲存，下次操作即生效。", "確定");
+            }
+            else
+            {
+                DbStatusLabel.Text = "📡 狀態: 儲存失敗 ❌";
+                DbStatusLabel.TextColor = Colors.Red;
+                await DisplayAlert("❌ 失敗", "儲存資料庫設定失敗。", "確定");
+            }
+        }
+        catch (Exception ex)
+        {
+            DbStatusLabel.Text = "📡 狀態: 錯誤 ❌";
+            DbStatusLabel.TextColor = Colors.Red;
+            await DisplayAlert("❌ 錯誤", $"儲存失敗: {ex.Message}", "確定");
+        }
+        finally
+        {
+            DbSaveButton.IsEnabled = true;
+            DbSaveButton.Text = "💾 儲存設定";
         }
     }
 

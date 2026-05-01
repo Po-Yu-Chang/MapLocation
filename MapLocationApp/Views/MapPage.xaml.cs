@@ -1,6 +1,7 @@
 using MapLocationApp.Models;
 using MapLocationApp.Services;
 using Microsoft.Maui.Controls;
+using System.Globalization;
 
 namespace MapLocationApp.Views;
 
@@ -22,7 +23,16 @@ public partial class MapPage : ContentPage
         _geofenceService = geofenceService;
         
         InitializeMap();
+        ApplyLocalizedUi();
         InitializeServices();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        LocalizationService.Instance.CultureChanged -= OnCultureChanged;
+        LocalizationService.Instance.CultureChanged += OnCultureChanged;
+        ApplyLocalizedUi();
     }
 
     private void InitializeMap()
@@ -55,7 +65,7 @@ public partial class MapPage : ContentPage
         var hasPermission = await _locationService.RequestLocationPermissionAsync();
         if (!hasPermission)
         {
-            await DisplayAlert("權限需求", "此應用程式需要位置權限才能正常運作", "確定");
+            await DisplayAlert(L("LocationPermission"), L("LocationPermissionDenied"), L("OK"));
         }
     }
 
@@ -71,13 +81,13 @@ public partial class MapPage : ContentPage
         if (!_isLocationTracking)
         {
             // 開始位置追蹤
-            StatusLabel.Text = "正在檢查位置權限...";
+            StatusLabel.Text = L("LocationPermissionChecking");
             
             // 先檢查權限
             var hasPermission = await _locationService.RequestLocationPermissionAsync();
             if (!hasPermission)
             {
-                StatusLabel.Text = "位置權限被拒絕";
+                StatusLabel.Text = L("LocationPermissionDenied");
                 await DisplayAlert("權限需求", 
                     "無法取得位置權限。請在系統設定中允許此應用程式存取位置資訊。\n\n" +
                     "Windows 設定路徑：設定 > 隱私權與安全性 > 位置", 
@@ -85,27 +95,27 @@ public partial class MapPage : ContentPage
                 return;
             }
             
-            StatusLabel.Text = "正在獲取位置...";
+            StatusLabel.Text = L("GettingLocation");
             
             var location = await _locationService.GetCurrentLocationAsync();
             if (location != null)
             {
                 _currentLocation = location;
-                _mapService.AddLocationMarker(MapControl.Map, location.Latitude, location.Longitude, "我的位置");
+                _mapService.AddLocationMarker(MapControl.Map, location.Latitude, location.Longitude, L("MyLocation"));
                 _mapService.CenterMap(MapControl, location.Latitude, location.Longitude, 15);
                 
-                LocationLabel.Text = $"位置: {location.Latitude:F6}, {location.Longitude:F6} (精確度: {location.Accuracy:F0}m)";
-                StatusLabel.Text = $"位置已更新 - {location.Timestamp:HH:mm:ss}";
+                LocationLabel.Text = $"{L("LocationLabel")}: {location.Latitude:F6}, {location.Longitude:F6} ({L("LocationAccuracy")}: {location.Accuracy:F0}m)";
+                StatusLabel.Text = $"{L("LocationUpdated")} - {location.Timestamp:HH:mm:ss}";
                 
                 await _locationService.StartLocationUpdatesAsync();
                 await _geofenceService.StartMonitoringAsync();
                 
-                LocationButton.Text = "停止追蹤";
+                LocateActionButton.Text = L("StopTracking");
                 _isLocationTracking = true;
             }
             else
             {
-                StatusLabel.Text = "無法獲取位置";
+                StatusLabel.Text = L("UnableToGetLocation");
                 
                 // 提供更詳細的錯誤資訊和解決建議
                 var errorMessage = "無法獲取您的位置。可能的原因：\n\n" +
@@ -124,9 +134,9 @@ public partial class MapPage : ContentPage
             await _locationService.StopLocationUpdatesAsync();
             await _geofenceService.StopMonitoringAsync();
             
-            LocationButton.Text = "我的位置";
+            LocateActionButton.Text = L("MyLocation");
             _isLocationTracking = false;
-            StatusLabel.Text = "位置追蹤已停止";
+            StatusLabel.Text = L("TrackingStopped");
         }
     }
 
@@ -159,9 +169,9 @@ public partial class MapPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             _currentLocation = location;
-            _mapService.AddLocationMarker(MapControl.Map, location.Latitude, location.Longitude, "我的位置");
-            LocationLabel.Text = $"位置: {location.Latitude:F6}, {location.Longitude:F6}";
-            StatusLabel.Text = $"位置已更新 ({location.Accuracy:F0}m)";
+            _mapService.AddLocationMarker(MapControl.Map, location.Latitude, location.Longitude, L("MyLocation"));
+            LocationLabel.Text = $"{L("LocationLabel")}: {location.Latitude:F6}, {location.Longitude:F6}";
+            StatusLabel.Text = $"{L("LocationUpdated")} ({location.Accuracy:F0}m)";
             MapControl.Refresh();
         });
     }
@@ -195,6 +205,7 @@ public partial class MapPage : ContentPage
     protected override async void OnDisappearing()
     {
         base.OnDisappearing();
+        LocalizationService.Instance.CultureChanged -= OnCultureChanged;
         
         // 停止位置追蹤以節省電池
         if (_isLocationTracking)
@@ -211,11 +222,11 @@ public partial class MapPage : ContentPage
         {
             var currentZoom = MapControl.Map.Navigator.Viewport.Resolution;
             MapControl.Map.Navigator.ZoomIn();
-            StatusLabel.Text = "🔍 放大地圖";
+            StatusLabel.Text = L("ZoomInMap");
         }
         catch (Exception ex)
         {
-            StatusLabel.Text = $"❌ 縮放失敗: {ex.Message}";
+            StatusLabel.Text = $"{L("ZoomFailed")}: {ex.Message}";
         }
     }
 
@@ -225,11 +236,37 @@ public partial class MapPage : ContentPage
         {
             var currentZoom = MapControl.Map.Navigator.Viewport.Resolution;
             MapControl.Map.Navigator.ZoomOut();
-            StatusLabel.Text = "🔍 縮小地圖";
+            StatusLabel.Text = L("ZoomOutMap");
         }
         catch (Exception ex)
         {
-            StatusLabel.Text = $"❌ 縮放失敗: {ex.Message}";
+            StatusLabel.Text = $"{L("ZoomFailed")}: {ex.Message}";
         }
+    }
+
+    private static string L(string key) => LocalizationService.Instance.GetLocalizedString(key);
+
+    private void OnCultureChanged(CultureInfo _)
+    {
+        MainThread.BeginInvokeOnMainThread(ApplyLocalizedUi);
+    }
+
+    private void ApplyLocalizedUi()
+    {
+        LocateActionButton.Text = _isLocationTracking ? L("StopTracking") : L("MyLocation");
+        GeofenceButton.Text = L("GeofenceLabel");
+        TileProviderPicker.Title = L("SelectMapType");
+
+        if (_currentLocation == null)
+        {
+            LocationLabel.Text = L("LocationLabel");
+            AccuracyLabel.Text = L("LocationAccuracy");
+            StatusLabel.Text = L("MapReady");
+            return;
+        }
+
+        LocationLabel.Text = $"{L("LocationLabel")}: {_currentLocation.Latitude:F6}, {_currentLocation.Longitude:F6}";
+        AccuracyLabel.Text = $"{L("LocationAccuracy")}: {_currentLocation.Accuracy:F0}m";
+        StatusLabel.Text = _isLocationTracking ? L("LocationUpdated") : L("TrackingStopped");
     }
 }

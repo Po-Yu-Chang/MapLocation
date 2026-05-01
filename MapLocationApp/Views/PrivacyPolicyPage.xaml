@@ -2,7 +2,8 @@
 <ContentPage x:Class="MapLocationApp.Views.PrivacyPolicyPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="🔒 隱私政策"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [PrivacyTitle], Source={x:Static svc:LocalizationManager.Instance}}"
              Style="{StaticResource ModernPage}">
 
     <ContentPage.Resources>
