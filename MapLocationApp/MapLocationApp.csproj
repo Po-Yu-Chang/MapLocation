@@ -83,6 +83,9 @@
 		<PackageReference Include="ClosedXML" Version="0.105.0" />
 		<PackageReference Include="QuestPDF" Version="2024.12.3" />
 
+		<!-- M5: 跨平台本地通知 -->
+		<PackageReference Include="Plugin.LocalNotification" Version="11.1.4" />
+
 
 		<!-- Windows GPU / DirectML (可選，加上條件避免非必要平台體積) -->
 		<PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />

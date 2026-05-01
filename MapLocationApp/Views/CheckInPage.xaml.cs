@@ -134,6 +134,13 @@ public partial class CheckInPage : ContentPage
         UpdateUserDisplay();
         UpdateUI();
         _ = LoadTodayRecords(); // 重新載入記錄
+
+        // M5: 若 Reminder 已開啟則重新排定（依使用者最新工時）
+        var reminder = ServiceHelper.GetService<IReminderService>();
+        if (reminder != null && reminder.RemindersEnabled)
+        {
+            _ = reminder.ScheduleClockReminderAsync(user);
+        }
     }
     
     private void OnUserLoggedOut(object? sender, EventArgs e)
@@ -498,6 +505,15 @@ public partial class CheckInPage : ContentPage
                     var distance = _geofenceService.CalculateDistance(
                         _currentLocation.Latitude, _currentLocation.Longitude,
                         selectedGeofence.Latitude, selectedGeofence.Longitude);
+
+                    var strict = Preferences.Default.Get("CheckIn.StrictGeofence", false);
+                    if (strict)
+                    {
+                        await DisplayAlert("打卡失敗",
+                            $"您距離 {selectedGeofence.Name} {distance:F0} 公尺，已啟用「需在打卡點才能打卡」設定，請進入範圍後再試。",
+                            "確定");
+                        return;
+                    }
 
                     var result = await DisplayAlert("位置確認",
                         $"您距離 {selectedGeofence.Name} 還有 {distance:F0} 公尺，確定要打卡嗎？",

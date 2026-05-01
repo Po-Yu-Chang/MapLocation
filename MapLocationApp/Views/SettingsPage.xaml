@@ -371,6 +371,34 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- M5: 打卡規則 / 上下班提醒 -->
+            <Border Style="{StaticResource ModernCard}">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="⏰" FontSize="24"/>
+                        <Label Text="打卡規則與提醒" Style="{StaticResource ModernH4}"/>
+                    </HorizontalStackLayout>
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="需在打卡點才能打卡"
+                               Style="{StaticResource ModernBody}"
+                               VerticalOptions="Center"/>
+                        <Switch Grid.Row="0" Grid.Column="1"
+                                x:Name="StrictGeofenceSwitch"
+                                Toggled="OnStrictGeofenceToggled"/>
+
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="上下班時間提醒"
+                               Style="{StaticResource ModernBody}"
+                               VerticalOptions="Center"/>
+                        <Switch Grid.Row="1" Grid.Column="1"
+                                x:Name="ClockReminderSwitch"
+                                Toggled="OnClockReminderToggled"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 

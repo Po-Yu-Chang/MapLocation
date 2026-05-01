@@ -7,6 +7,7 @@ using MapLocationApp.Views;
 using System.Reflection;
 using CommunityToolkit.Maui;
 using Microsoft.Maui.LifecycleEvents;
+using Plugin.LocalNotification;
 
 namespace MapLocationApp;
 
@@ -20,6 +21,7 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
+			.UseLocalNotification()
 			.UseSkiaSharp(true)
 			.ConfigureFonts(fonts =>
 			{
@@ -51,6 +53,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<LocalizationService>();
 		builder.Services.AddSingleton<ITelegramNotificationService, TelegramNotificationService>();
 		// T149: Removed INotificationIntegrationService - unnecessary abstraction layer
+
+		// 註冊 Reminder 服務 (M5)
+		builder.Services.AddSingleton<IReminderService, ReminderService>();
 
 		// 註冊 Wi-Fi 服務 (M2 — 各平台特化)
 #if ANDROID

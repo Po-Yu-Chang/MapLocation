@@ -22,7 +22,62 @@ public partial class SettingsPage : ContentPage
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _secureConfig = ServiceHelper.GetService<ISecureConfigService>();
         LoadCurrentSettings();
+        LoadM5Settings();
         _ = LoadDatabaseSettingsAsync();
+    }
+
+    private const string StrictGeofenceKey = "CheckIn.StrictGeofence";
+
+    private void LoadM5Settings()
+    {
+        StrictGeofenceSwitch.Toggled -= OnStrictGeofenceToggled;
+        StrictGeofenceSwitch.IsToggled = Preferences.Default.Get(StrictGeofenceKey, false);
+        StrictGeofenceSwitch.Toggled += OnStrictGeofenceToggled;
+
+        var reminder = ServiceHelper.GetService<IReminderService>();
+        ClockReminderSwitch.Toggled -= OnClockReminderToggled;
+        ClockReminderSwitch.IsToggled = reminder?.RemindersEnabled ?? false;
+        ClockReminderSwitch.Toggled += OnClockReminderToggled;
+    }
+
+    private void OnStrictGeofenceToggled(object? sender, ToggledEventArgs e)
+    {
+        Preferences.Default.Set(StrictGeofenceKey, e.Value);
+    }
+
+    private async void OnClockReminderToggled(object? sender, ToggledEventArgs e)
+    {
+        try
+        {
+            var reminder = ServiceHelper.GetService<IReminderService>();
+            if (reminder == null) return;
+
+            if (e.Value)
+            {
+                var granted = await reminder.RequestPermissionAsync();
+                if (!granted)
+                {
+                    ClockReminderSwitch.Toggled -= OnClockReminderToggled;
+                    ClockReminderSwitch.IsToggled = false;
+                    ClockReminderSwitch.Toggled += OnClockReminderToggled;
+                    return;
+                }
+                reminder.RemindersEnabled = true;
+                var session = ServiceHelper.GetService<IUserSessionService>();
+                var user = session?.CurrentUser ?? await (session?.GetCurrentUserAsync() ?? Task.FromResult<User?>(null));
+                if (user != null)
+                    await reminder.ScheduleClockReminderAsync(user);
+            }
+            else
+            {
+                reminder.RemindersEnabled = false;
+                await reminder.CancelAllRemindersAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"OnClockReminderToggled failed: {ex.Message}");
+        }
     }
 
     private void LoadCurrentSettings()
