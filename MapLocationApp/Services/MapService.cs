@@ -73,49 +73,71 @@ public class MapService : IMapService
         return _currentProvider;
     }
 
-    public void AddGeofenceLayer(Mapsui.Map map, IEnumerable<GeofenceRegion> geofences)
+    public void AddGeofenceLayer(Mapsui.Map map, IEnumerable<GeofenceRegion> geofences, string? selectedGeofenceId = null)
     {
-        // 移除現有的地理圍欄層
-        var existingLayer = map.Layers.FirstOrDefault(l => l.Name == "Geofences");
-        if (existingLayer != null)
-            map.Layers.Remove(existingLayer);
+        // Wipe both geofence layers (selected + others) before redrawing.
+        foreach (var name in new[] { "Geofences", "GeofenceSelected" })
+        {
+            var existing = map.Layers.FirstOrDefault(l => l.Name == name);
+            if (existing != null) map.Layers.Remove(existing);
+        }
 
-        var geofenceList = geofences.ToList();
-        if (!geofenceList.Any()) return;
+        // Wi-Fi geofences have no lat/lng (default 0,0); skip them so we don't draw spurious
+        // circles in the Atlantic. Inactive geofences are also skipped — UI shouldn't promise
+        // a check-in radius that won't fire.
+        var drawable = geofences
+            .Where(g => g.IsActive && !g.IsWifiBased && (g.Latitude != 0 || g.Longitude != 0) && g.RadiusMeters > 0)
+            .ToList();
+        if (drawable.Count == 0) return;
 
-        var features = new List<Mapsui.IFeature>();
         var factory = new NetTopologySuite.Geometries.GeometryFactory();
 
-        foreach (var geofence in geofenceList)
+        var others = new List<Mapsui.IFeature>();
+        var selected = new List<Mapsui.IFeature>();
+
+        foreach (var geofence in drawable)
         {
             var center = SphericalMercator.FromLonLat(geofence.Longitude, geofence.Latitude);
-
-            // Convert radius from metres to Mercator units (Mercator stretches N/S by 1/cos(lat))
+            // Mercator stretches N/S by 1/cos(lat) so the radius needs to be scaled to keep
+            // the on-screen circle close to the requested metres.
             var latRad = geofence.Latitude * Math.PI / 180.0;
             var mercatorRadius = geofence.RadiusMeters / Math.Cos(latRad);
 
-            // Create a smooth circle polygon (64 segments)
-            var centerPoint = factory.CreatePoint(
-                new NetTopologySuite.Geometries.Coordinate(center.x, center.y));
+            var centerPoint = factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(center.x, center.y));
             var circlePolygon = (NetTopologySuite.Geometries.Polygon)centerPoint.Buffer(mercatorRadius, 64);
 
             var feature = new GeometryFeature(circlePolygon);
             feature["Name"] = geofence.Name;
-            features.Add(feature);
+            (geofence.Id == selectedGeofenceId ? selected : others).Add(feature);
         }
 
-        var memoryProvider = new MemoryProvider(features);
-        var geofenceLayer = new Layer("Geofences")
+        if (others.Count > 0)
         {
-            DataSource = memoryProvider,
-            Style = new VectorStyle
+            map.Layers.Add(new Layer("Geofences")
             {
-                Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(50, 33, 150, 243) },
-                Outline = new Pen { Color = Mapsui.Styles.Color.FromArgb(200, 33, 150, 243), Width = 2 }
-            }
-        };
+                DataSource = new MemoryProvider(others),
+                Style = new VectorStyle
+                {
+                    // Navy with low alpha to read as "this is a check-in zone" without overpowering the map.
+                    Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(40, 30, 58, 138) },
+                    Outline = new Pen { Color = Mapsui.Styles.Color.FromArgb(180, 30, 58, 138), Width = 2 }
+                }
+            });
+        }
 
-        map.Layers.Add(geofenceLayer);
+        if (selected.Count > 0)
+        {
+            map.Layers.Add(new Layer("GeofenceSelected")
+            {
+                DataSource = new MemoryProvider(selected),
+                Style = new VectorStyle
+                {
+                    // Yellow accent for the geofence the user is about to clock in to — high contrast.
+                    Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.FromArgb(70, 250, 204, 21) },
+                    Outline = new Pen { Color = Mapsui.Styles.Color.FromArgb(255, 234, 179, 8), Width = 3 }
+                }
+            });
+        }
     }
 
     public void AddLocationMarker(Mapsui.Map map, double latitude, double longitude, string? label = null)

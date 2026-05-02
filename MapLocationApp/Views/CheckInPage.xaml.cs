@@ -429,6 +429,15 @@ public partial class CheckInPage : ContentPage
     {
         bool hasOpenCheckIn = _currentCheckIn != null && _currentCheckIn.CheckOutTime == null;
         CheckInButton.IsEnabled = !hasOpenCheckIn && GeofencePicker.SelectedIndex > 0;
+
+        // Highlight the selected geofence circle on the map (yellow accent) so the user
+        // can visually confirm the radius they're about to clock into.
+        if (_isMapInitialized && LocationMapControl.Map != null && _allGeofences.Count > 0)
+        {
+            var idx = GeofencePicker.SelectedIndex - 1;  // Index 0 is the "select..." placeholder.
+            var selectedId = idx >= 0 && idx < _allGeofences.Count ? _allGeofences[idx].Id : null;
+            _mapService.AddGeofenceLayer(LocationMapControl.Map, _allGeofences, selectedId);
+        }
     }
 
     private async void OnCheckInClicked(object sender, EventArgs e)
