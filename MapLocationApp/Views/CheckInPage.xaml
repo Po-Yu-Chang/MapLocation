@@ -79,25 +79,27 @@
                                Style="{StaticResource ModernCaption}"/>
                     </VerticalStackLayout>
 
-                    <!-- 位置地圖 -->
-                    <Border StrokeShape="RoundRectangle 12"
-                            Stroke="{StaticResource Gray200}"
-                            StrokeThickness="1"
-                            Padding="0"
-                            HeightRequest="220"
-                            HorizontalOptions="Fill">
-                        <Grid>
-                            <mapsui:MapControl x:Name="LocationMapControl"
-                                               HorizontalOptions="Fill"
-                                               VerticalOptions="Fill"/>
-                            <Label x:Name="MapPlaceholderLabel"
-                                   Text="{Binding [WaitingLocation], Source={x:Static svc:LocalizationManager.Instance}}"
-                                   Style="{StaticResource ModernBodySmall}"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   IsVisible="True"/>
-                        </Grid>
-                    </Border>
+                    <!-- 位置地圖：用 Grid + 動態 Clip 強制裁切到圓角，
+                         避免 MapsUi 的 SkiaSharp surface 繞過 Border 的 clip。 -->
+                    <Grid x:Name="MapContainer"
+                          HeightRequest="220"
+                          HorizontalOptions="Fill"
+                          BackgroundColor="{AppThemeBinding Light={StaticResource ModernGray100}, Dark={StaticResource ModernGray800}}"
+                          IsClippedToBounds="True"
+                          SizeChanged="OnMapContainerSizeChanged">
+                        <Grid.Clip>
+                            <RoundRectangleGeometry x:Name="MapClipGeometry" CornerRadius="12" />
+                        </Grid.Clip>
+                        <mapsui:MapControl x:Name="LocationMapControl"
+                                           HorizontalOptions="Fill"
+                                           VerticalOptions="Fill"/>
+                        <Label x:Name="MapPlaceholderLabel"
+                               Text="{Binding [WaitingLocation], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ModernBodySmall}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="True"/>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 

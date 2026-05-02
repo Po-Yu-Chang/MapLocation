@@ -9,28 +9,35 @@
         <ResourceDictionary Source="Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="0" Spacing="0" MaximumWidthRequest="640" HorizontalOptions="Center">
+    <Grid RowDefinitions="Auto,*">
 
-            <!-- Top brand bar — solid navy, app identity. -->
-            <Border BackgroundColor="{StaticResource ModernPrimary}"
-                    StrokeShape="RoundRectangle 0"
-                    Stroke="Transparent"
-                    Padding="24,28">
-                <VerticalStackLayout Spacing="6">
-                    <Label Text="DAKA"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           CharacterSpacing="3"/>
-                    <Label x:Name="GreetingLabel"
-                           Text="{Binding [GreetingMorning], Source={x:Static svc:LocalizationManager.Instance}}"
-                           FontSize="13"
-                           TextColor="#BFDBFE"/>
-                </VerticalStackLayout>
-            </Border>
+        <!-- Brand bar: spans full screen width; inner text aligns to the same gutter as cards below. -->
+        <Border Grid.Row="0"
+                BackgroundColor="{StaticResource ModernPrimary}"
+                StrokeShape="Rectangle"
+                Stroke="Transparent"
+                Padding="0">
+            <VerticalStackLayout Spacing="4"
+                                 MaximumWidthRequest="600"
+                                 HorizontalOptions="Center"
+                                 Padding="20,24">
+                <Label Text="DAKA"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       CharacterSpacing="3"/>
+                <Label x:Name="GreetingLabel"
+                       Text="{Binding [GreetingMorning], Source={x:Static svc:LocalizationManager.Instance}}"
+                       FontSize="13"
+                       TextColor="#BFDBFE"/>
+            </VerticalStackLayout>
+        </Border>
 
-            <VerticalStackLayout Padding="20,20,20,32" Spacing="16">
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,20,20,32"
+                                 Spacing="16"
+                                 MaximumWidthRequest="600"
+                                 HorizontalOptions="Center">
 
                 <!-- Today status card — primary CTA -->
                 <Border Style="{StaticResource GlassCardTinted}" Padding="20">
@@ -117,7 +124,8 @@
                        HorizontalOptions="Center"
                        Margin="0,12,0,0"/>
             </VerticalStackLayout>
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+
+    </Grid>
 
 </ContentPage>
