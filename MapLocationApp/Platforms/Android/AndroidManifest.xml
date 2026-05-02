@@ -27,4 +27,7 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
+
+	<!-- 震動權限（給點擊磁磚的觸覺回饋） -->
+	<uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

@@ -35,26 +35,32 @@
                 <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileOrange}">
-                    <Grid Padding="24,20">
-                        <Border Style="{StaticResource TilePlusBadge}"
+                    <Grid Padding="24,20" RowDefinitions="Auto,*">
+                        <!-- Plus badge top-right, can span rows so always anchored -->
+                        <Border Grid.RowSpan="2"
+                                Style="{StaticResource TilePlusBadge}"
                                 BackgroundColor="#FFFFFF">
                             <Label Text="+" FontSize="18" FontAttributes="Bold"
                                    TextColor="{StaticResource TileOrange}"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Decorative location pin drawn as Path (top-left of tile) -->
-                        <Path HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="0,4,0,0"
-                              Fill="#FFE5D4"
-                              Stroke="White" StrokeThickness="2"
-                              Data="M 16,2 C 9,2 4,7 4,14 C 4,22 16,38 16,38 C 16,38 28,22 28,14 C 28,7 23,2 16,2 Z"/>
-                        <Ellipse HorizontalOptions="Start" VerticalOptions="Start"
-                                 Margin="12,12,0,0"
-                                 Fill="{StaticResource TileOrange}"
-                                 WidthRequest="8" HeightRequest="8"/>
+                        <!-- Row 0: pin icon, contained so it never overlaps the text below -->
+                        <Grid Grid.Row="0"
+                              x:Name="HeroPinHost"
+                              HorizontalOptions="Start"
+                              WidthRequest="36" HeightRequest="44">
+                            <Path Fill="#FFE5D4"
+                                  Stroke="White" StrokeThickness="2"
+                                  Data="M 16,2 C 9,2 4,7 4,14 C 4,22 16,38 16,38 C 16,38 28,22 28,14 C 28,7 23,2 16,2 Z"/>
+                            <Ellipse Fill="{StaticResource TileOrange}"
+                                     WidthRequest="8" HeightRequest="8"
+                                     HorizontalOptions="Start" VerticalOptions="Start"
+                                     Margin="12,10,0,0"/>
+                        </Grid>
 
-                        <VerticalStackLayout VerticalOptions="End" Spacing="4">
+                        <!-- Row 1: text content, bottom-aligned in remaining space -->
+                        <VerticalStackLayout Grid.Row="1" VerticalOptions="End" Spacing="4">
                             <Label x:Name="TodayDateLabel"
                                    Text=""
                                    FontSize="13"
@@ -79,16 +85,16 @@
                 <Border Grid.Row="1" Grid.Column="0"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileLavender}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#9776B4">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#9776B4">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
                         <!-- Calendar: outer rounded rect + 6 small dots in 2x3 grid -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="2,8,0,0"
+                        <Grid Grid.Row="0"
+                              HorizontalOptions="Start"
                               WidthRequest="48" HeightRequest="44"
                               ColumnDefinitions="*,*,*" RowDefinitions="14,*,*"
                               ColumnSpacing="2" RowSpacing="2">
@@ -105,7 +111,8 @@
                             <Ellipse Grid.Row="2" Grid.Column="2" Fill="White" WidthRequest="6" HeightRequest="6" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Grid>
 
-                        <Label Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeading}"
                                TextColor="White"
                                VerticalOptions="End"/>
@@ -116,27 +123,26 @@
                     </Grid>
                 </Border>
 
-                <!-- 3. 我的請假 (mustard) — palm leaf icon -->
+                <!-- 3. 我的請假 (mustard) — sun icon -->
                 <Border Grid.Row="1" Grid.Column="1"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileMustard}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="{StaticResource TileMustard}"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Sun rays: 8 lines radiating from center -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="2,4,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="46" HeightRequest="46">
                             <Ellipse Fill="#FAEFD9" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Path Stroke="#FAEFD9" StrokeThickness="2.5" StrokeLineCap="Round"
                                   Data="M 23,2 L 23,8 M 23,38 L 23,44 M 2,23 L 8,23 M 38,23 L 44,23 M 8,8 L 12,12 M 34,34 L 38,38 M 38,8 L 34,12 M 8,38 L 12,34"/>
                         </Grid>
 
-                        <Label Text="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeading}"
                                TextColor="#FAEFD9"
                                VerticalOptions="End"/>
@@ -151,16 +157,14 @@
                 <Border Grid.Row="2" Grid.Column="0"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileBlue}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#E96B3C">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#E96B3C">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Three bars at the top showing chart pattern -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="2,4,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="48" HeightRequest="40"
                               ColumnDefinitions="*,*,*"
                               ColumnSpacing="4">
@@ -169,17 +173,19 @@
                             <RoundRectangle Grid.Column="2" CornerRadius="2" Fill="{StaticResource ModernPrimary}" HeightRequest="14" VerticalOptions="End"/>
                         </Grid>
 
-                        <Label x:Name="MonthCountLabel"
-                               Text="0"
-                               FontSize="13"
-                               TextColor="{StaticResource ModernTextSecondary}"
-                               HorizontalOptions="End" VerticalOptions="Start"
-                               Margin="0,8,28,0"/>
-
-                        <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeading}"
                                TextColor="{StaticResource ModernTextPrimary}"
                                VerticalOptions="End"/>
+
+                        <Label x:Name="MonthCountLabel"
+                               Grid.RowSpan="2"
+                               Text="0"
+                               FontSize="11"
+                               TextColor="{StaticResource ModernTextSecondary}"
+                               HorizontalOptions="End" VerticalOptions="Start"
+                               Margin="0,12,44,0"/>
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnReportClicked"/>
@@ -191,16 +197,14 @@
                 <Border Grid.Row="2" Grid.Column="1"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileCream}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#A88BC6">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#A88BC6">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Person: head circle + shoulders arc -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="2,4,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="44" HeightRequest="44">
                             <Ellipse Fill="#A88BC6" WidthRequest="18" HeightRequest="18"
                                      HorizontalOptions="Center" VerticalOptions="Start"
@@ -209,7 +213,8 @@
                                   Data="M 4,40 C 4,28 14,24 22,24 C 30,24 40,28 40,40 Z"/>
                         </Grid>
 
-                        <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeading}"
                                TextColor="{StaticResource ModernPrimary}"
                                VerticalOptions="End"/>
@@ -225,16 +230,14 @@
                         x:Name="GeofencesTile"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="#B84A26">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="#B84A26"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Three concentric rings — like a geofence radius -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="0,2,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="44" HeightRequest="44">
                             <Ellipse Stroke="#FCD9C8" StrokeThickness="2" Fill="Transparent"
                                      WidthRequest="44" HeightRequest="44"/>
@@ -246,7 +249,8 @@
                                      HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Grid>
 
-                        <Label Text="{Binding [ManageGeofences], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [ManageGeofences], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeadingSmall}"
                                TextColor="#FAEFD9"
                                VerticalOptions="End"/>
@@ -262,29 +266,25 @@
                         x:Name="EditRecordsTile"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource TileSage}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="{StaticResource TileSage}"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Pencil: yellow body + dark tip + orange eraser, drawn diagonally -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="0,2,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="48" HeightRequest="48">
-                            <!-- Pencil body (yellow rounded diagonal rectangle) -->
                             <Path Fill="#F0E0A8" Stroke="White" StrokeThickness="1.5"
                                   Data="M 8,40 L 30,18 L 36,24 L 14,46 Z"/>
-                            <!-- Black tip -->
                             <Path Fill="#2C1810"
                                   Data="M 8,40 L 14,46 L 6,48 Z"/>
-                            <!-- Orange eraser -->
                             <Path Fill="#E96B3C" Stroke="White" StrokeThickness="1.5"
                                   Data="M 30,18 L 36,24 L 40,20 L 34,14 Z"/>
                         </Grid>
 
-                        <Label Text="{Binding [MyCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [MyCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeadingSmall}"
                                TextColor="White"
                                VerticalOptions="End"/>
@@ -300,23 +300,24 @@
                         x:Name="PendingApprovalsTile"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="{StaticResource ModernSecondary}">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="{StaticResource ModernSecondary}"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <Label x:Name="PendingCountLabel"
+                        <Label Grid.Row="0"
+                               x:Name="PendingCountLabel"
                                Text="0"
                                FontSize="40"
                                FontAttributes="Bold"
                                TextColor="White"
                                FontFamily="Times New Roman"
-                               HorizontalOptions="Start" VerticalOptions="Start"
-                               Margin="0,-4,0,0"/>
+                               HorizontalOptions="Start" VerticalOptions="Center"/>
 
-                        <Label Text="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeadingSmall}"
                                TextColor="White"
                                VerticalOptions="End"/>
@@ -331,16 +332,14 @@
                 <Border Grid.Row="4" Grid.Column="1"
                         Style="{StaticResource TileCard}"
                         BackgroundColor="#F0E0A8">
-                    <Grid Padding="20,16">
-                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#C9A03A">
+                    <Grid Padding="20,16" RowDefinitions="Auto,*">
+                        <Border Grid.RowSpan="2" Style="{StaticResource TilePlusBadge}" BackgroundColor="#C9A03A">
                             <Label Text="+" FontSize="16" FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- Gear: 8-pointed flower-like shape + center hole -->
-                        <Grid HorizontalOptions="Start" VerticalOptions="Start"
-                              Margin="0,2,0,0"
+                        <Grid Grid.Row="0" HorizontalOptions="Start"
                               WidthRequest="44" HeightRequest="44">
                             <Path Fill="{StaticResource TileMustard}"
                                   Data="M 22,2 L 26,4 L 30,2 L 32,8 L 38,8 L 38,14 L 42,18 L 38,22 L 42,26 L 38,30 L 38,36 L 32,36 L 30,42 L 26,40 L 22,42 L 18,40 L 14,42 L 12,36 L 6,36 L 6,30 L 2,26 L 6,22 L 2,18 L 6,14 L 6,8 L 12,8 L 14,2 L 18,4 Z"/>
@@ -348,7 +347,8 @@
                                      HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Grid>
 
-                        <Label Text="{Binding [SettingsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                        <Label Grid.Row="1"
+                               Text="{Binding [SettingsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ScriptHeading}"
                                TextColor="{StaticResource ModernTextPrimary}"
                                VerticalOptions="End"/>

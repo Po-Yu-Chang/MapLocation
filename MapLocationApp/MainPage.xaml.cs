@@ -1,5 +1,6 @@
 using MapLocationApp.Models;
 using MapLocationApp.Services;
+using Microsoft.Maui.Devices;
 
 namespace MapLocationApp;
 
@@ -10,10 +11,38 @@ public partial class MainPage : ContentPage
         InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         UpdateDashboard();
+
+        // Subtle entry animation: hero pin gentle bounce on first paint.
+        if (HeroPinHost != null)
+        {
+            HeroPinHost.Scale = 0.5;
+            HeroPinHost.Opacity = 0;
+            await Task.WhenAll(
+                HeroPinHost.ScaleTo(1.0, 500, Easing.SpringOut),
+                HeroPinHost.FadeTo(1.0, 300, Easing.CubicOut)
+            );
+        }
+    }
+
+    /// <summary>
+    /// Pop-the-bubble feedback for tile taps — quick haptic burst + slight scale animation.
+    /// HapticFeedback.Default is a no-op on Windows (no hardware), so this safely ships cross-platform.
+    /// </summary>
+    private async Task PopAsync(View tile)
+    {
+        try
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        }
+        catch { /* unsupported / disabled */ }
+
+        // Visual "press" — squish then bounce back. Timing tuned to feel like a real button press.
+        await tile.ScaleTo(0.94, 80, Easing.CubicIn);
+        await tile.ScaleTo(1.0, 120, Easing.SpringOut);
     }
 
     private async void UpdateDashboard()
@@ -97,31 +126,50 @@ public partial class MainPage : ContentPage
     }
 
     private async void OnCheckInClicked(object? sender, EventArgs e)
-        => await NavigateAsync("//CheckInPage");
+        => await PopAndNavigate(sender, "//CheckInPage");
 
     private async void OnScheduleClicked(object? sender, EventArgs e)
-        => await NavigateAsync("SchedulePage");
+        => await PopAndNavigate(sender, "SchedulePage");
 
     private async void OnLeaveClicked(object? sender, EventArgs e)
-        => await NavigateAsync("LeavePage");
+        => await PopAndNavigate(sender, "LeavePage");
 
     private async void OnReportClicked(object? sender, EventArgs e)
-        => await NavigateAsync("ReportPage");
+        => await PopAndNavigate(sender, "ReportPage");
 
     private async void OnProfileClicked(object? sender, EventArgs e)
-        => await NavigateAsync("ProfilePage");
+        => await PopAndNavigate(sender, "ProfilePage");
 
     private async void OnGeofencesClicked(object? sender, EventArgs e)
-        => await NavigateAsync("GeofenceManagementPage");
+        => await PopAndNavigate(sender, "GeofenceManagementPage");
 
     private async void OnEditRecordsClicked(object? sender, EventArgs e)
-        => await NavigateAsync("EditCheckInPage");
+        => await PopAndNavigate(sender, "EditCheckInPage");
 
     private async void OnPendingApprovalsClicked(object? sender, EventArgs e)
-        => await NavigateAsync("PendingApprovalsPage");
+        => await PopAndNavigate(sender, "PendingApprovalsPage");
 
     private async void OnSettingsClicked(object? sender, EventArgs e)
-        => await NavigateAsync("//SettingsPage");
+        => await PopAndNavigate(sender, "//SettingsPage");
+
+    /// <summary>
+    /// "Pop the bubble" tap response — find the parent tile (Border) of the tapped Grid,
+    /// run the pop animation + haptic, then navigate.
+    /// </summary>
+    private async Task PopAndNavigate(object? sender, string route)
+    {
+        // Walk up to the parent Border (tile root). Falls back to the inner Grid if not found.
+        View? tile = sender as View;
+        while (tile?.Parent is View parent && tile is not Border)
+        {
+            tile = parent;
+        }
+        if (tile != null)
+        {
+            await PopAsync(tile);
+        }
+        await NavigateAsync(route);
+    }
 
     private async Task NavigateAsync(string route)
     {
