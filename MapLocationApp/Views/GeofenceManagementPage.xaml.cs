@@ -254,7 +254,7 @@ public partial class GeofenceManagementPage : ContentPage
             }
 
             FormTitleLabel.Text = $"{L("Edit")}: {g.Name}";
-            SaveButton.Text = $"💾 {L("UpdateBtn")}";
+            SaveButton.Text = L("UpdateBtn");
             CancelEditButton.IsVisible = true;
             await Task.CompletedTask;
         }
@@ -399,7 +399,7 @@ public partial class GeofenceManagementPage : ContentPage
         DescriptionEntry.Text = string.Empty;
         LatitudeEntry.Text = string.Empty;
         LongitudeEntry.Text = string.Empty;
-        RadiusEntry.Text = string.Empty;
+        RadiusEntry.Text = "100";
         SsidEntry.Text = string.Empty;
         BssidEntry.Text = string.Empty;
         IsActiveCheckBox.IsChecked = true;
@@ -429,7 +429,7 @@ public partial class GeofenceManagementPage : ContentPage
         if (_editingId == null)
         {
             FormTitleLabel.Text = L("AddLocation");
-            SaveButton.Text = $"💾 {L("AddBtn")}";
+            SaveButton.Text = L("AddBtn");
         }
     }
 

@@ -344,13 +344,13 @@
     <value>Enable This Location</value>
   </data>
   <data name="UseCurrentLocation" xml:space="preserve">
-    <value>📍 Use Current Location</value>
+    <value>Use Current Location</value>
   </data>
   <data name="ClearForm" xml:space="preserve">
-    <value>🗑️ Clear</value>
+    <value>Clear</value>
   </data>
   <data name="AddBtn" xml:space="preserve">
-    <value>➕ Add</value>
+    <value>Add</value>
   </data>
   <data name="CancelEdit" xml:space="preserve">
     <value>Cancel Edit</value>
@@ -365,10 +365,10 @@
     <value>Toggle</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>🔄 Refresh</value>
+    <value>Refresh</value>
   </data>
   <data name="BackToCheckIn" xml:space="preserve">
-    <value>← Back to Check-In</value>
+    <value>Back to Check-In</value>
   </data>
 
   <!-- Settings Page -->

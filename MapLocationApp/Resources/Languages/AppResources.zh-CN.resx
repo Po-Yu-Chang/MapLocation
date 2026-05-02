@@ -322,13 +322,13 @@
     <value>启用此地点</value>
   </data>
   <data name="UseCurrentLocation" xml:space="preserve">
-    <value>📍 使用目前位置</value>
+    <value>使用当前位置</value>
   </data>
   <data name="ClearForm" xml:space="preserve">
-    <value>🗑️ 清空</value>
+    <value>清空</value>
   </data>
   <data name="AddBtn" xml:space="preserve">
-    <value>➕ 新增</value>
+    <value>新增</value>
   </data>
   <data name="CancelEdit" xml:space="preserve">
     <value>取消编辑</value>
@@ -343,10 +343,10 @@
     <value>切换</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>🔄 重新整理</value>
+    <value>重新整理</value>
   </data>
   <data name="BackToCheckIn" xml:space="preserve">
-    <value>← 返回打卡页</value>
+    <value>返回打卡页</value>
   </data>
 
   <!-- Settings Page -->

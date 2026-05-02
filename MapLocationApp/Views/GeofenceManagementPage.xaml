@@ -85,6 +85,7 @@
                                    Style="{StaticResource ModernEntry}"/>
                         </Grid>
                         <Entry x:Name="RadiusEntry"
+                               Text="100"
                                Placeholder="{Binding [RadiusPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                Keyboard="Numeric"
                                Style="{StaticResource ModernEntry}"/>

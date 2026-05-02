@@ -344,13 +344,13 @@
     <value>啟用此地點</value>
   </data>
   <data name="UseCurrentLocation" xml:space="preserve">
-    <value>📍 使用目前位置</value>
+    <value>使用目前位置</value>
   </data>
   <data name="ClearForm" xml:space="preserve">
-    <value>🗑️ 清空</value>
+    <value>清空</value>
   </data>
   <data name="AddBtn" xml:space="preserve">
-    <value>➕ 新增</value>
+    <value>新增</value>
   </data>
   <data name="CancelEdit" xml:space="preserve">
     <value>取消編輯</value>
@@ -365,10 +365,10 @@
     <value>切換</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>🔄 重新整理</value>
+    <value>重新整理</value>
   </data>
   <data name="BackToCheckIn" xml:space="preserve">
-    <value>← 返回打卡頁</value>
+    <value>返回打卡頁</value>
   </data>
 
   <!-- Settings Page -->
