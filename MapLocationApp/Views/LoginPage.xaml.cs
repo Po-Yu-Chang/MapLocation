@@ -22,6 +22,73 @@ public partial class LoginPage : ContentPage
     {
         await LoadRememberedCredentials();
         await TestDatabaseConnection();
+        await UpdateBiometricLoginButtonAsync();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        // Re-check binding state when returning to login (e.g. after logout).
+        await UpdateBiometricLoginButtonAsync();
+    }
+
+    /// <summary>Show the biometric quick-login button only if a user has been bound on this device.</summary>
+    private async Task UpdateBiometricLoginButtonAsync()
+    {
+        try
+        {
+            var biometric = ServiceHelper.GetService<IBiometricService>();
+            if (biometric == null) { BiometricLoginButton.IsVisible = false; return; }
+
+            if (!await biometric.IsAvailableAsync() || !await biometric.HasBoundUserAsync())
+            {
+                BiometricLoginButton.IsVisible = false;
+                return;
+            }
+
+            var username = await biometric.GetBoundUsernameAsync();
+            BiometricLoginButton.Text = string.IsNullOrEmpty(username)
+                ? "用 Face ID / 指紋登入"
+                : $"用 Face ID / 指紋登入（{username}）";
+            BiometricLoginButton.IsVisible = true;
+        }
+        catch
+        {
+            BiometricLoginButton.IsVisible = false;
+        }
+    }
+
+    private async void OnBiometricLoginClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var biometric = ServiceHelper.GetService<IBiometricService>();
+            var sessionService = ServiceHelper.GetService<IUserSessionService>();
+            if (biometric == null || sessionService == null) return;
+
+            var userId = await biometric.AuthenticateAndGetBoundUserAsync("使用生物辨識快速登入");
+            if (userId == null)
+            {
+                await ShowErrorMessage("生物辨識失敗或被取消");
+                return;
+            }
+
+            var user = await _databaseService.GetUserByIdAsync(userId.Value);
+            if (user == null || !user.IsActive)
+            {
+                await ShowErrorMessage("帳號不存在或已停用，請改用密碼登入");
+                await biometric.UnbindAsync();  // 清除過期綁定
+                await UpdateBiometricLoginButtonAsync();
+                return;
+            }
+
+            await sessionService.LoginAsync(user);
+            await Shell.Current.GoToAsync("//CheckInPage");
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorMessage($"登入失敗：{ex.Message}");
+        }
     }
 
     private async Task LoadRememberedCredentials()
@@ -127,12 +194,30 @@ public partial class LoginPage : ContentPage
                 {
                     var userSessionService = ServiceHelper.GetService<IUserSessionService>();
                     await userSessionService.LoginAsync(loginResult.User);
+
+                    // Offer to bind biometric to this account on first successful login.
+                    // The bound user id lives in SecureStorage; biometric is the unlock gate.
+                    var biometric = ServiceHelper.GetService<IBiometricService>();
+                    if (biometric != null && await biometric.IsAvailableAsync()
+                        && !await biometric.HasBoundUserAsync())
+                    {
+                        var enable = await DisplayAlert("快速登入",
+                            $"要為「{loginResult.User.DisplayName}」啟用生物辨識（Face ID / 指紋）快速登入嗎？",
+                            "啟用", "稍後再說");
+                        if (enable)
+                        {
+                            // Verify once at enable time so we know the device biometric works for this user.
+                            var verified = await biometric.AuthenticateAsync("確認身份以啟用快速登入");
+                            if (verified)
+                            {
+                                await biometric.BindUserAsync(loginResult.User.Id, loginResult.User.Username);
+                            }
+                        }
+                    }
                 }
-                
+
                 ShowSuccessMessage("登入成功");
-                
                 await Task.Delay(500);
-                
                 await Shell.Current.GoToAsync("//CheckInPage");
 
                 // Warn if password must be changed (e.g., default admin account)

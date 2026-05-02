@@ -86,13 +86,13 @@ public static class MauiProgram
 			return new AdvancedLocationService(baseLocationService);
 		});
 
-		// 註冊人臉辨識服務
+		// 跨平台生物辨識（Face ID / Touch ID / BiometricPrompt / Windows Hello）
+		builder.Services.AddSingleton<IBiometricService, BiometricService>();
+
+		// 舊的 IFaceRecognitionService 保留 stub 以避免破壞既有 page；FaceRecognitionPage
+		// 已改用 IBiometricService。需要完整人臉特徵比對時再評估 ONNX 跨平台方案。
 		builder.Services.AddSingleton<IFaceDatabase, FaceDatabase>();
-#if WINDOWS
-		builder.Services.AddSingleton<IFaceRecognitionService, Platforms.Windows.FaceAiSharpService>();
-#else
-		builder.Services.AddSingleton<IFaceRecognitionService>(provider => null!); // 其他平台暫不支援
-#endif
+		builder.Services.AddSingleton<IFaceRecognitionService, NullFaceRecognitionService>();
 
 		// 提前註冊關閉管理服務 (必須在 Build 前)
 		builder.Services.AddSingleton<IAppShutdownService, AppShutdownService>();

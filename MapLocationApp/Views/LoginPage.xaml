@@ -176,6 +176,13 @@
                                 Style="{StaticResource ModernButtonPrimary}"
                                 Clicked="OnLoginClicked"/>
 
+                        <!-- Biometric quick login (only shown when a user is bound to this device) -->
+                        <Button x:Name="BiometricLoginButton"
+                                Text=""
+                                IsVisible="False"
+                                Style="{StaticResource ModernButtonSecondary}"
+                                Clicked="OnBiometricLoginClicked"/>
+
                     </VerticalStackLayout>
                 </Border>
 

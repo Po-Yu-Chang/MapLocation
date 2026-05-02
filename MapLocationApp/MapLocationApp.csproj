@@ -72,9 +72,8 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" /><!-- T012: BCrypt for secure password hashing -->
 		
-		<!-- Face Recognition packages for Windows -->
-		<PackageReference Include="FaceAiSharp.Bundle" Version="0.5.23" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
-		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
+		<!-- Cross-platform biometric authentication (replaces FaceAiSharp Windows-only) -->
+		<PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
 		<!-- UI Toolkit -->
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
@@ -87,11 +86,6 @@
 		<PackageReference Include="Plugin.LocalNotification" Version="11.1.4" />
 
 
-		<!-- Windows GPU / DirectML (可選，加上條件避免非必要平台體積) -->
-		<PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.0" Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'" />
-
-		<!-- Android 備援 ML Kit (若未來需要可解除註解) -->
-		<!-- <PackageReference Include="Xamarin.Google.MLKit.FaceDetection" Version="116.1.7.5" Condition="'$(TargetFramework)' == 'net9.0-android'" /> -->
 	</ItemGroup>
 
 </Project>

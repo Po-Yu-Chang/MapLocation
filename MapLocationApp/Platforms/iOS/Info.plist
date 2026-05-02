@@ -47,6 +47,10 @@
 		<string>location</string>
 		<string>background-fetch</string>
 	</array>
-	
+
+	<!-- Face ID 使用說明（iOS 11+ 必填，否則 Face ID 不會啟用） -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>使用 Face ID 快速打卡與身份驗證。</string>
+
 </dict>
 </plist>
