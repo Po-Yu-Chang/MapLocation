@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.RegisterPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [RegisterTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+             Style="{StaticResource GlassPage}"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,40,24,32" Spacing="16" MaximumWidthRequest="500" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="{Binding [RegisterTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource PageTitle}"/>
+                <Label Text="{Binding [RegisterSubtitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource PageSubtitle}"/>
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource GlassCard}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding [Username], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Entry x:Name="UsernameEntry"
+                           Style="{StaticResource ModernEntry}"
+                           Placeholder="{Binding [UsernamePlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
+                           MaxLength="50"/>
+
+                    <Label Text="{Binding [Password], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Entry x:Name="PasswordEntry"
+                           Style="{StaticResource ModernEntry}"
+                           Placeholder="{Binding [PasswordPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
+                           IsPassword="True"
+                           MaxLength="100"/>
+
+                    <Label Text="{Binding [ConfirmPassword], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Entry x:Name="ConfirmPasswordEntry"
+                           Style="{StaticResource ModernEntry}"
+                           Placeholder="{Binding [ConfirmPasswordPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
+                           IsPassword="True"
+                           MaxLength="100"/>
+
+                    <Label Text="{Binding [FullName], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Entry x:Name="FullNameEntry"
+                           Style="{StaticResource ModernEntry}"
+                           MaxLength="100"/>
+
+                    <Label Text="{Binding [EmailAddress], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                    <Entry x:Name="EmailEntry"
+                           Keyboard="Email"
+                           Style="{StaticResource ModernEntry}"
+                           MaxLength="100"/>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding [Department], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <Entry x:Name="DepartmentEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding [Position], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}"/>
+                            <Entry x:Name="PositionEntry" Style="{StaticResource ModernEntry}" MaxLength="50"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button x:Name="SubmitButton"
+                    Text="{Binding [RegisterButton], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonPrimary}"
+                    Clicked="OnSubmitClicked"
+                    Margin="0,8,0,0"/>
+
+            <Button Text="{Binding [BackToLogin], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonSecondary}"
+                    Clicked="OnBackToLoginClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -52,6 +52,12 @@
         FlyoutItemIsVisible="False" />
 
     <ShellContent
+        Title="{Binding [RegisterTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:RegisterPage}"
+        Route="RegisterPage"
+        FlyoutItemIsVisible="False" />
+
+    <ShellContent
         Title="{Binding [FaceRecognitionTitle], Source={x:Static svc:LocalizationManager.Instance}}"
         ContentTemplate="{DataTemplate views:FaceRecognitionPage}"
         Route="FaceRecognitionPage"

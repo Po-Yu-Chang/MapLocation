@@ -794,4 +794,29 @@
   <data name="RoleAdmin" xml:space="preserve"><value>管理员</value></data>
   <data name="RoleEmployee" xml:space="preserve"><value>员工</value></data>
   <data name="AdminRequired" xml:space="preserve"><value>此功能需要管理员权限</value></data>
+  <data name="RegisterTitle" xml:space="preserve"><value>申请新帐号</value></data>
+  <data name="RegisterSubtitle" xml:space="preserve"><value>建立员工帐号以开始打卡</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>确认密码</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>再次输入密码</value></data>
+  <data name="RegisterButton" xml:space="preserve"><value>申请注册</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>已有帐号？返回登入</value></data>
+  <data name="UsernameRequired" xml:space="preserve"><value>请输入用户名</value></data>
+  <data name="PasswordRequired" xml:space="preserve"><value>请输入密码</value></data>
+  <data name="PasswordTooShort" xml:space="preserve"><value>密码至少 6 个字符</value></data>
+  <data name="PasswordMismatch" xml:space="preserve"><value>两次密码不一致</value></data>
+  <data name="UsernameTaken" xml:space="preserve"><value>此用户名已被使用</value></data>
+  <data name="RegisterSuccess" xml:space="preserve"><value>注册成功，请使用新帐号登入</value></data>
+  <data name="RegisterFailed" xml:space="preserve"><value>注册失败，请稍后再试</value></data>
+  <data name="RegisterPendingApproval" xml:space="preserve"><value>申请已送出，等候管理员审核启用</value></data>
+  <data name="AccountPendingApproval" xml:space="preserve"><value>帐号审核中，请等管理员启用后再登入</value></data>
+  <data name="PendingApprovalsTitle" xml:space="preserve"><value>待审核帐号</value></data>
+  <data name="PendingApprovalsEntry" xml:space="preserve"><value>待审核帐号 ({0})</value></data>
+  <data name="PendingApprovalsEmpty" xml:space="preserve"><value>目前没有待审核帐号</value></data>
+  <data name="ApproveBtn" xml:space="preserve"><value>同意</value></data>
+  <data name="RejectBtn" xml:space="preserve"><value>拒绝</value></data>
+  <data name="ApproveConfirm" xml:space="preserve"><value>确定启用「{0}」？启用后即可登入。</value></data>
+  <data name="RejectConfirm" xml:space="preserve"><value>确定拒绝「{0}」？此帐号将被删除。</value></data>
+  <data name="UserApproved" xml:space="preserve"><value>已启用「{0}」</value></data>
+  <data name="UserRejected" xml:space="preserve"><value>已拒绝「{0}」</value></data>
+  <data name="RegisteredAt" xml:space="preserve"><value>申请时间：{0}</value></data>
 </root>

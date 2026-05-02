@@ -695,6 +695,78 @@ namespace MapLocationApp.Services
             }
         }
 
+        public async Task<List<User>> GetPendingUsersAsync()
+        {
+            var list = new List<User>();
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return list;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                var query = @"SELECT id, username, email, full_name, department, position, is_active,
+                                     COALESCE(role, 0) AS role,
+                                     created_at, last_login_at
+                              FROM users
+                              WHERE is_active = FALSE
+                              ORDER BY created_at DESC";
+                using var cmd = new MySqlCommand(query, connection);
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(MapUser(reader));
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"取得待審核使用者失敗: {ex.Message}");
+            }
+            return list;
+        }
+
+        public async Task<bool> ApproveUserAsync(int userId)
+        {
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                using var cmd = new MySqlCommand(
+                    "UPDATE users SET is_active = TRUE WHERE id = @id", connection);
+                cmd.Parameters.AddWithValue("@id", userId);
+                return await cmd.ExecuteNonQueryAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"啟用使用者失敗: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> RejectUserAsync(int userId)
+        {
+            // Hard delete the row — DeleteUserAsync just toggles is_active which would leave
+            // the rejected username "claimed" forever.
+            try
+            {
+                await InitializeConnectionStringAsync();
+                if (string.IsNullOrEmpty(_connectionString)) return false;
+                using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                using var cmd = new MySqlCommand(
+                    "DELETE FROM users WHERE id = @id AND is_active = FALSE", connection);
+                cmd.Parameters.AddWithValue("@id", userId);
+                return await cmd.ExecuteNonQueryAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"拒絕使用者失敗: {ex.Message}");
+                return false;
+            }
+        }
+
         public async Task<bool> SaveCheckInRecordAsync(CheckInRecord record)
         {
             try

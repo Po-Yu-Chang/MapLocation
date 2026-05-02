@@ -224,18 +224,15 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private void OnRegisterTapped(object sender, TappedEventArgs e)
+    private async void OnRegisterTapped(object sender, TappedEventArgs e)
     {
         try
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                System.Diagnostics.Debug.WriteLine("註冊功能尚未實作");
-            });
+            await Shell.Current.GoToAsync("RegisterPage");
         }
-        catch
+        catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("註冊功能尚未實作");
+            System.Diagnostics.Debug.WriteLine($"開啟註冊頁失敗: {ex.Message}");
         }
     }
 }

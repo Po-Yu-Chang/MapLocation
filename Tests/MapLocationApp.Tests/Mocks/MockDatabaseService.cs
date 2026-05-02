@@ -160,6 +160,17 @@ public class MockDatabaseService : IDatabaseService
         return Task.FromResult(true);
     }
 
+    public Task<List<User>> GetPendingUsersAsync()
+        => Task.FromResult(_users.Values.Where(u => !u.IsActive).OrderByDescending(u => u.CreatedAt).ToList());
+
+    public Task<bool> ApproveUserAsync(int userId)
+    {
+        if (_users.TryGetValue(userId, out var u)) { u.IsActive = true; return Task.FromResult(true); }
+        return Task.FromResult(false);
+    }
+
+    public Task<bool> RejectUserAsync(int userId) => Task.FromResult(_users.Remove(userId));
+
     public Task<bool> DeleteUserAsync(int userId)
     {
         if (!_isConnected)

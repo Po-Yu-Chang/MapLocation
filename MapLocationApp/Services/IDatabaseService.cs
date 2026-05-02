@@ -10,6 +10,11 @@ namespace MapLocationApp.Services
         Task<User?> GetUserByUsernameAsync(string username);
         Task<bool> UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int userId);
+
+        // Self-registration approval workflow
+        Task<List<User>> GetPendingUsersAsync();
+        Task<bool> ApproveUserAsync(int userId);
+        Task<bool> RejectUserAsync(int userId);
         
         Task<bool> SaveCheckInRecordAsync(CheckInRecord record);
         Task<List<CheckInRecord>> GetCheckInRecordsAsync(int userId, DateTime? date = null);

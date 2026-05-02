@@ -822,4 +822,30 @@
   <data name="RoleAdmin" xml:space="preserve"><value>管理員</value></data>
   <data name="RoleEmployee" xml:space="preserve"><value>員工</value></data>
   <data name="AdminRequired" xml:space="preserve"><value>此功能需要管理員權限</value></data>
+  <!-- 註冊頁 -->
+  <data name="RegisterTitle" xml:space="preserve"><value>申請新帳號</value></data>
+  <data name="RegisterSubtitle" xml:space="preserve"><value>建立員工帳號以開始打卡</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>確認密碼</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>再次輸入密碼</value></data>
+  <data name="RegisterButton" xml:space="preserve"><value>申請註冊</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>已有帳號？返回登入</value></data>
+  <data name="UsernameRequired" xml:space="preserve"><value>請輸入使用者名稱</value></data>
+  <data name="PasswordRequired" xml:space="preserve"><value>請輸入密碼</value></data>
+  <data name="PasswordTooShort" xml:space="preserve"><value>密碼至少 6 個字元</value></data>
+  <data name="PasswordMismatch" xml:space="preserve"><value>兩次密碼不一致</value></data>
+  <data name="UsernameTaken" xml:space="preserve"><value>此使用者名稱已被使用</value></data>
+  <data name="RegisterSuccess" xml:space="preserve"><value>註冊成功，請使用新帳號登入</value></data>
+  <data name="RegisterFailed" xml:space="preserve"><value>註冊失敗，請稍後再試</value></data>
+  <data name="RegisterPendingApproval" xml:space="preserve"><value>申請已送出，等候管理員審核啟用</value></data>
+  <data name="AccountPendingApproval" xml:space="preserve"><value>帳號審核中，請等管理員啟用後再登入</value></data>
+  <data name="PendingApprovalsTitle" xml:space="preserve"><value>待審核帳號</value></data>
+  <data name="PendingApprovalsEntry" xml:space="preserve"><value>待審核帳號 ({0})</value></data>
+  <data name="PendingApprovalsEmpty" xml:space="preserve"><value>目前沒有待審核帳號</value></data>
+  <data name="ApproveBtn" xml:space="preserve"><value>同意</value></data>
+  <data name="RejectBtn" xml:space="preserve"><value>拒絕</value></data>
+  <data name="ApproveConfirm" xml:space="preserve"><value>確定啟用「{0}」？啟用後即可登入。</value></data>
+  <data name="RejectConfirm" xml:space="preserve"><value>確定拒絕「{0}」？此帳號將被刪除。</value></data>
+  <data name="UserApproved" xml:space="preserve"><value>已啟用「{0}」</value></data>
+  <data name="UserRejected" xml:space="preserve"><value>已拒絕「{0}」</value></data>
+  <data name="RegisteredAt" xml:space="preserve"><value>申請時間：{0}</value></data>
 </root>

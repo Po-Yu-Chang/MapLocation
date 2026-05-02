@@ -794,4 +794,29 @@
   <data name="RoleAdmin" xml:space="preserve"><value>ผู้ดูแลระบบ</value></data>
   <data name="RoleEmployee" xml:space="preserve"><value>พนักงาน</value></data>
   <data name="AdminRequired" xml:space="preserve"><value>ฟีเจอร์นี้ต้องการสิทธิ์ผู้ดูแลระบบ</value></data>
+  <data name="RegisterTitle" xml:space="preserve"><value>สมัครบัญชีใหม่</value></data>
+  <data name="RegisterSubtitle" xml:space="preserve"><value>สมัครบัญชีพนักงานเพื่อเริ่มตอกบัตร</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>ยืนยันรหัสผ่าน</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>ใส่รหัสผ่านอีกครั้ง</value></data>
+  <data name="RegisterButton" xml:space="preserve"><value>ส่งคำขอสมัคร</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>มีบัญชีแล้ว? กลับไปเข้าสู่ระบบ</value></data>
+  <data name="UsernameRequired" xml:space="preserve"><value>กรุณากรอกชื่อผู้ใช้</value></data>
+  <data name="PasswordRequired" xml:space="preserve"><value>กรุณากรอกรหัสผ่าน</value></data>
+  <data name="PasswordTooShort" xml:space="preserve"><value>รหัสผ่านต้องยาวอย่างน้อย 6 ตัวอักษร</value></data>
+  <data name="PasswordMismatch" xml:space="preserve"><value>รหัสผ่านไม่ตรงกัน</value></data>
+  <data name="UsernameTaken" xml:space="preserve"><value>ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว</value></data>
+  <data name="RegisterSuccess" xml:space="preserve"><value>ส่งคำขอแล้ว รอผู้ดูแลระบบอนุมัติ</value></data>
+  <data name="RegisterFailed" xml:space="preserve"><value>การสมัครล้มเหลว กรุณาลองใหม่</value></data>
+  <data name="RegisterPendingApproval" xml:space="preserve"><value>ส่งคำขอแล้ว รอผู้ดูแลระบบอนุมัติ</value></data>
+  <data name="AccountPendingApproval" xml:space="preserve"><value>บัญชีกำลังรอการอนุมัติจากผู้ดูแลระบบ</value></data>
+  <data name="PendingApprovalsTitle" xml:space="preserve"><value>บัญชีที่รออนุมัติ</value></data>
+  <data name="PendingApprovalsEntry" xml:space="preserve"><value>รออนุมัติ ({0})</value></data>
+  <data name="PendingApprovalsEmpty" xml:space="preserve"><value>ไม่มีบัญชีที่รออนุมัติ</value></data>
+  <data name="ApproveBtn" xml:space="preserve"><value>อนุมัติ</value></data>
+  <data name="RejectBtn" xml:space="preserve"><value>ปฏิเสธ</value></data>
+  <data name="ApproveConfirm" xml:space="preserve"><value>เปิดใช้งาน "{0}" หรือไม่?</value></data>
+  <data name="RejectConfirm" xml:space="preserve"><value>ปฏิเสธ "{0}" หรือไม่? บัญชีจะถูกลบ</value></data>
+  <data name="UserApproved" xml:space="preserve"><value>เปิดใช้งาน "{0}" แล้ว</value></data>
+  <data name="UserRejected" xml:space="preserve"><value>ปฏิเสธ "{0}" แล้ว</value></data>
+  <data name="RegisteredAt" xml:space="preserve"><value>ส่งคำขอเมื่อ: {0}</value></data>
 </root>

@@ -810,4 +810,29 @@
   <data name="RoleAdmin" xml:space="preserve"><value>Admin</value></data>
   <data name="RoleEmployee" xml:space="preserve"><value>Employee</value></data>
   <data name="AdminRequired" xml:space="preserve"><value>This feature requires admin permission</value></data>
+  <data name="RegisterTitle" xml:space="preserve"><value>Create Account</value></data>
+  <data name="RegisterSubtitle" xml:space="preserve"><value>Sign up as an employee to start clocking in</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>Re-enter password</value></data>
+  <data name="RegisterButton" xml:space="preserve"><value>Register</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>Already have an account? Sign in</value></data>
+  <data name="UsernameRequired" xml:space="preserve"><value>Please enter a username</value></data>
+  <data name="PasswordRequired" xml:space="preserve"><value>Please enter a password</value></data>
+  <data name="PasswordTooShort" xml:space="preserve"><value>Password must be at least 6 characters</value></data>
+  <data name="PasswordMismatch" xml:space="preserve"><value>Passwords do not match</value></data>
+  <data name="UsernameTaken" xml:space="preserve"><value>This username is already taken</value></data>
+  <data name="RegisterSuccess" xml:space="preserve"><value>Registered successfully. Please sign in.</value></data>
+  <data name="RegisterFailed" xml:space="preserve"><value>Registration failed, please try again</value></data>
+  <data name="RegisterPendingApproval" xml:space="preserve"><value>Application submitted. Waiting for admin approval.</value></data>
+  <data name="AccountPendingApproval" xml:space="preserve"><value>Account is pending approval. Please wait for admin to activate.</value></data>
+  <data name="PendingApprovalsTitle" xml:space="preserve"><value>Pending Approvals</value></data>
+  <data name="PendingApprovalsEntry" xml:space="preserve"><value>Pending approvals ({0})</value></data>
+  <data name="PendingApprovalsEmpty" xml:space="preserve"><value>No pending approvals</value></data>
+  <data name="ApproveBtn" xml:space="preserve"><value>Approve</value></data>
+  <data name="RejectBtn" xml:space="preserve"><value>Reject</value></data>
+  <data name="ApproveConfirm" xml:space="preserve"><value>Activate "{0}"? They will be able to sign in.</value></data>
+  <data name="RejectConfirm" xml:space="preserve"><value>Reject "{0}"? This account will be deleted.</value></data>
+  <data name="UserApproved" xml:space="preserve"><value>Activated "{0}"</value></data>
+  <data name="UserRejected" xml:space="preserve"><value>Rejected "{0}"</value></data>
+  <data name="RegisteredAt" xml:space="preserve"><value>Applied at: {0}</value></data>
 </root>
