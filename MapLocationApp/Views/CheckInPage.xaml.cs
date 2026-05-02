@@ -109,6 +109,26 @@ public partial class CheckInPage : ContentPage
         try
         {
             _currentUser = await _userSessionService.GetCurrentUserAsync();
+
+            // Force a DB refresh so role / profile changes (e.g. migration set role=Admin)
+            // are picked up without requiring a logout-login cycle.
+            if (_currentUser != null)
+            {
+                try
+                {
+                    var fresh = await _databaseService.GetUserByIdAsync(_currentUser.Id);
+                    if (fresh != null)
+                    {
+                        _currentUser = fresh;
+                        await _userSessionService.LoginAsync(fresh);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"DB refresh user 失敗，使用快取: {ex.Message}");
+                }
+            }
+
             UpdateUserDisplay();
         }
         catch (Exception ex)
