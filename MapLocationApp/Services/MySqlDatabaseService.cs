@@ -13,6 +13,8 @@ namespace MapLocationApp.Services
         private readonly ISecureConfigService _secureConfig;
         private string? _connectionString;
         private bool _isInitialized;
+        private bool _schemaEnsured;
+        private readonly SemaphoreSlim _schemaLock = new(1, 1);
 
         public MySqlDatabaseService(IConfigService configService, ISecureConfigService secureConfig)
         {
@@ -64,12 +66,41 @@ namespace MapLocationApp.Services
                 _isInitialized = false;
                 throw;
             }
+
+            // First-time-per-process: ensure all tables exist and apply column migrations.
+            // Wraps in semaphore so concurrent first calls don't double-run schema setup.
+            await EnsureSchemaAsync();
+        }
+
+        private async Task EnsureSchemaAsync()
+        {
+            if (_schemaEnsured) return;
+            await _schemaLock.WaitAsync();
+            try
+            {
+                if (_schemaEnsured) return;
+                if (string.IsNullOrEmpty(_connectionString)) return;
+
+                await InitializeDatabaseAsync();
+                _schemaEnsured = true;
+            }
+            catch (Exception ex)
+            {
+                // Don't crash the app if migration partially fails — individual queries will surface
+                // the specific column error and we can recover next launch.
+                System.Diagnostics.Debug.WriteLine($"EnsureSchemaAsync failed (continuing): {ex.Message}");
+            }
+            finally
+            {
+                _schemaLock.Release();
+            }
         }
 
         public void ResetConnection()
         {
             _isInitialized = false;
             _connectionString = null;
+            _schemaEnsured = false;
         }
 
         public async Task<bool> TestConnectionAsync()
