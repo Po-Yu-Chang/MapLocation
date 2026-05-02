@@ -148,11 +148,11 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgSecondary}, Dark={StaticResource ModernBgPrimaryDark}}" />
     </Style>
 
-    <!-- Glass page: subtle radial-tinted gradient that becomes the "wallpaper" behind frosted cards -->
-    <LinearGradientBrush x:Key="GlassPageBackground" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="{AppThemeBinding Light=#EFF6FF, Dark=#0B1426}" Offset="0" />
-        <GradientStop Color="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Offset="0.4" />
-        <GradientStop Color="{AppThemeBinding Light=#FAF5FF, Dark=#1E1B4B}" Offset="1" />
+    <!-- Page background: barely-there cool gray gradient. Reads as "white" but adds depth so
+         glass cards (slightly more opaque than the background) have a visible edge. -->
+    <LinearGradientBrush x:Key="GlassPageBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{AppThemeBinding Light=#F8FAFC, Dark=#0B1220}" Offset="0" />
+        <GradientStop Color="{AppThemeBinding Light=#F1F5F9, Dark=#0F172A}" Offset="1" />
     </LinearGradientBrush>
 
     <Style x:Key="GlassPage" TargetType="ContentPage">
@@ -177,36 +177,36 @@
         </Setter>
     </Style>
 
-    <!-- Frosted glass card: translucent white with edge highlight + soft shadow.
-         Works as iOS-style "frosted glass" illusion when placed over GlassPageBackground. -->
+    <!-- Glass card: near-white surface with hairline navy-tinted border + soft shadow.
+         Subtle Mica/depth illusion without the consumer-app translucency. -->
     <Style x:Key="GlassCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D9FFFFFF, Dark=#A6FFFFFF}" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 18" />
-        <Setter Property="Stroke" Value="{AppThemeBinding Light=#80FFFFFF, Dark=#33FFFFFF}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F2FFFFFF, Dark=#CC1E293B}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light=#0F1E3A8A, Dark=#33FFFFFF}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="Padding" Value="20" />
-        <Setter Property="Margin" Value="0,6" />
+        <Setter Property="Margin" Value="0,4" />
         <Setter Property="Shadow">
             <Shadow Brush="#1E3A8A"
-                    Offset="0,4"
-                    Radius="20"
-                    Opacity="0.08" />
+                    Offset="0,2"
+                    Radius="12"
+                    Opacity="0.06" />
         </Setter>
     </Style>
 
-    <!-- Glass card variant for dark surfaces (when card sits over a colored hero region) -->
+    <!-- Tinted glass: same look but accent left edge — used to highlight the primary card -->
     <Style x:Key="GlassCardTinted" TargetType="Border" BasedOn="{StaticResource GlassCard}">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#CCEFF6FF, Dark=#992563EB}" />
-        <Setter Property="Stroke" Value="#66FFFFFF" />
+        <Setter Property="Stroke" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="StrokeThickness" Value="1" />
     </Style>
 
-    <!-- Glass-style button (translucent surface, used over glass pages) -->
+    <!-- Subtle neutral button — for low-priority actions over a glass page -->
     <Style x:Key="GlassButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="#B3FFFFFF" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F2FFFFFF, Dark=#CC1E293B}" />
         <Setter Property="TextColor" Value="{StaticResource ModernPrimary}" />
-        <Setter Property="BorderColor" Value="#80FFFFFF" />
+        <Setter Property="BorderColor" Value="#1A1E3A8A" />
         <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="20,12" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontAttributes" Value="Bold" />
@@ -217,7 +217,7 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource ModernPrimaryLighter}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

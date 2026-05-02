@@ -787,4 +787,36 @@
   <data name="QuickThisMonth" xml:space="preserve"><value>本月</value></data>
   <data name="QuickLastMonth" xml:space="preserve"><value>上月</value></data>
   <data name="QuickLast30Days" xml:space="preserve"><value>近 30 天</value></data>
+  <!-- Dashboard -->
+  <data name="GreetingMorning" xml:space="preserve"><value>早安，今天也加油</value></data>
+  <data name="GreetingAfternoon" xml:space="preserve"><value>午安，記得補充水分</value></data>
+  <data name="GreetingEvening" xml:space="preserve"><value>晚安，辛苦了</value></data>
+  <data name="GreetingNight" xml:space="preserve"><value>夜深了，注意休息</value></data>
+  <data name="NotCheckedInToday" xml:space="preserve"><value>今天還沒打卡</value></data>
+  <data name="ClockedInAt" xml:space="preserve"><value>已於 {0} 上班，未下班</value></data>
+  <data name="ClockedInOutAt" xml:space="preserve"><value>{0} 上班 · {1} 下班</value></data>
+  <data name="MonthCheckIns" xml:space="preserve"><value>本月打卡</value></data>
+  <data name="WeekHours" xml:space="preserve"><value>本週工時</value></data>
+  <data name="EnterCheckIn" xml:space="preserve"><value>進入打卡</value></data>
+  <data name="OtherFunctions" xml:space="preserve"><value>其他功能</value></data>
+  <data name="MyCheckInRecords" xml:space="preserve"><value>打卡紀錄</value></data>
+  <data name="ManageGeofences" xml:space="preserve"><value>打卡地點管理</value></data>
+  <data name="ProfileEntry" xml:space="preserve"><value>個人檔案</value></data>
+  <data name="RefreshLabel" xml:space="preserve"><value>重新整理</value></data>
+  <!-- Geofence form placeholders -->
+  <data name="NameRequiredPlaceholder" xml:space="preserve"><value>名稱（必填）</value></data>
+  <data name="CategoryPlaceholder" xml:space="preserve"><value>分類</value></data>
+  <data name="DescriptionOptionalPlaceholder" xml:space="preserve"><value>描述（選填）</value></data>
+  <data name="LatitudePlaceholder" xml:space="preserve"><value>緯度</value></data>
+  <data name="LongitudePlaceholder" xml:space="preserve"><value>經度</value></data>
+  <data name="RadiusPlaceholder" xml:space="preserve"><value>半徑（公尺，建議 30~500）</value></data>
+  <!-- CheckIn page misc -->
+  <data name="ClockInButton" xml:space="preserve"><value>打卡上班</value></data>
+  <data name="ClockOutButton" xml:space="preserve"><value>打卡下班</value></data>
+  <data name="LoginRequiredHint" xml:space="preserve"><value>請先登入才能使用打卡功能</value></data>
+  <data name="TodayRecordsTitle" xml:space="preserve"><value>今日記錄</value></data>
+  <data name="NoTodayRecords" xml:space="preserve"><value>今日尚無打卡記錄</value></data>
+  <data name="NotesPlaceholder" xml:space="preserve"><value>備註（選填）</value></data>
+  <data name="UsernamePlaceholder" xml:space="preserve"><value>輸入您的使用者名稱</value></data>
+  <data name="PasswordPlaceholder" xml:space="preserve"><value>輸入您的密碼</value></data>
 </root>

@@ -762,4 +762,33 @@
   <data name="QuickThisMonth" xml:space="preserve"><value>เดือนนี้</value></data>
   <data name="QuickLastMonth" xml:space="preserve"><value>เดือนที่แล้ว</value></data>
   <data name="QuickLast30Days" xml:space="preserve"><value>30 วันที่ผ่านมา</value></data>
+  <data name="GreetingMorning" xml:space="preserve"><value>สวัสดีตอนเช้า</value></data>
+  <data name="GreetingAfternoon" xml:space="preserve"><value>สวัสดีตอนบ่าย</value></data>
+  <data name="GreetingEvening" xml:space="preserve"><value>สวัสดีตอนเย็น</value></data>
+  <data name="GreetingNight" xml:space="preserve"><value>ดึกแล้ว พักผ่อนนะ</value></data>
+  <data name="NotCheckedInToday" xml:space="preserve"><value>ยังไม่ได้ตอกบัตรวันนี้</value></data>
+  <data name="ClockedInAt" xml:space="preserve"><value>เข้างาน {0} ยังไม่ออกงาน</value></data>
+  <data name="ClockedInOutAt" xml:space="preserve"><value>{0} เข้า · {1} ออก</value></data>
+  <data name="MonthCheckIns" xml:space="preserve"><value>เดือนนี้</value></data>
+  <data name="WeekHours" xml:space="preserve"><value>สัปดาห์นี้</value></data>
+  <data name="EnterCheckIn" xml:space="preserve"><value>เปิดหน้าตอกบัตร</value></data>
+  <data name="OtherFunctions" xml:space="preserve"><value>อื่น ๆ</value></data>
+  <data name="MyCheckInRecords" xml:space="preserve"><value>ประวัติการตอกบัตร</value></data>
+  <data name="ManageGeofences" xml:space="preserve"><value>จัดการสถานที่ตอกบัตร</value></data>
+  <data name="ProfileEntry" xml:space="preserve"><value>โปรไฟล์</value></data>
+  <data name="RefreshLabel" xml:space="preserve"><value>รีเฟรช</value></data>
+  <data name="NameRequiredPlaceholder" xml:space="preserve"><value>ชื่อ (จำเป็น)</value></data>
+  <data name="CategoryPlaceholder" xml:space="preserve"><value>หมวด</value></data>
+  <data name="DescriptionOptionalPlaceholder" xml:space="preserve"><value>คำอธิบาย (ไม่บังคับ)</value></data>
+  <data name="LatitudePlaceholder" xml:space="preserve"><value>ละติจูด</value></data>
+  <data name="LongitudePlaceholder" xml:space="preserve"><value>ลองจิจูด</value></data>
+  <data name="RadiusPlaceholder" xml:space="preserve"><value>รัศมี (เมตร, 30~500)</value></data>
+  <data name="ClockInButton" xml:space="preserve"><value>เข้างาน</value></data>
+  <data name="ClockOutButton" xml:space="preserve"><value>เลิกงาน</value></data>
+  <data name="LoginRequiredHint" xml:space="preserve"><value>กรุณาเข้าสู่ระบบเพื่อใช้งาน</value></data>
+  <data name="TodayRecordsTitle" xml:space="preserve"><value>วันนี้</value></data>
+  <data name="NoTodayRecords" xml:space="preserve"><value>ยังไม่มีการตอกบัตรวันนี้</value></data>
+  <data name="NotesPlaceholder" xml:space="preserve"><value>หมายเหตุ (ไม่บังคับ)</value></data>
+  <data name="UsernamePlaceholder" xml:space="preserve"><value>ชื่อผู้ใช้</value></data>
+  <data name="PasswordPlaceholder" xml:space="preserve"><value>รหัสผ่าน</value></data>
 </root>

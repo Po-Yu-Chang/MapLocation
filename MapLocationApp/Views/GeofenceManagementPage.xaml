@@ -42,19 +42,19 @@
                     </Grid>
 
                     <Entry x:Name="NameEntry"
-                           Placeholder="名稱（必填）"
+                           Placeholder="{Binding [NameRequiredPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource ModernEntry}"
                            MaxLength="100"/>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                         <Entry Grid.Column="0"
                                x:Name="CategoryEntry"
-                               Placeholder="分類"
+                               Placeholder="{Binding [CategoryPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernEntry}"
                                MaxLength="50"/>
                         <Entry Grid.Column="1"
                                x:Name="DescriptionEntry"
-                               Placeholder="描述（選填）"
+                               Placeholder="{Binding [DescriptionOptionalPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernEntry}"
                                MaxLength="200"/>
                     </Grid>
@@ -75,17 +75,17 @@
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Entry Grid.Column="0"
                                    x:Name="LatitudeEntry"
-                                   Placeholder="緯度"
+                                   Placeholder="{Binding [LatitudePlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Keyboard="Numeric"
                                    Style="{StaticResource ModernEntry}"/>
                             <Entry Grid.Column="1"
                                    x:Name="LongitudeEntry"
-                                   Placeholder="經度"
+                                   Placeholder="{Binding [LongitudePlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Keyboard="Numeric"
                                    Style="{StaticResource ModernEntry}"/>
                         </Grid>
                         <Entry x:Name="RadiusEntry"
-                               Placeholder="半徑（公尺，建議 30~500）"
+                               Placeholder="{Binding [RadiusPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                Keyboard="Numeric"
                                Style="{StaticResource ModernEntry}"/>
                         <Button x:Name="UseCurrentLocationButton"

@@ -18,10 +18,68 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
+        UpdateDashboard();
+
         if (!_isPageLoaded)
         {
             await InitializeAnimations();
             _isPageLoaded = true;
+        }
+    }
+
+    private async void UpdateDashboard()
+    {
+        try
+        {
+            // Localized greeting based on time of day; fallback to a neutral system label.
+            var hour = DateTime.Now.Hour;
+            string greetKey = hour < 5 ? "GreetingNight"
+                            : hour < 12 ? "GreetingMorning"
+                            : hour < 18 ? "GreetingAfternoon"
+                            : "GreetingEvening";
+            GreetingLabel.Text = Services.LocalizationService.Instance.GetLocalizedString(greetKey);
+
+            TodayDateLabel.Text = DateTime.Today.ToString("yyyy / MM / dd · ddd");
+
+            // Pull this month's records and compute simple KPIs.
+            var session = Services.ServiceHelper.GetService<Services.IUserSessionService>();
+            var db = Services.ServiceHelper.GetService<Services.IDatabaseService>();
+            var user = await (session?.GetCurrentUserAsync() ?? Task.FromResult<Models.User?>(null));
+            if (user == null || db == null)
+            {
+                MonthCountLabel.Text = "0";
+                WeekHoursLabel.Text = "0.0";
+                TodayStatusLabel.Text = Services.LocalizationService.Instance.GetLocalizedString("NotLoggedIn");
+                return;
+            }
+
+            var firstOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var monthRecords = (await db.GetCheckInRecordsAsync(user.Id))
+                .Where(r => r.CheckInTime >= firstOfMonth)
+                .ToList();
+            MonthCountLabel.Text = monthRecords.Count.ToString();
+
+            // ISO week: Monday = start.
+            var daysFromMonday = ((int)DateTime.Today.DayOfWeek + 6) % 7;
+            var weekStart = DateTime.Today.AddDays(-daysFromMonday);
+            var weekHours = monthRecords
+                .Where(r => r.CheckInTime >= weekStart && r.CheckOutTime.HasValue)
+                .Sum(r => (r.CheckOutTime!.Value - r.CheckInTime).TotalHours);
+            WeekHoursLabel.Text = weekHours.ToString("F1");
+
+            var todayRecord = monthRecords.FirstOrDefault(r => r.CheckInTime.Date == DateTime.Today);
+            TodayStatusLabel.Text = todayRecord == null
+                ? Services.LocalizationService.Instance.GetLocalizedString("NotCheckedInToday")
+                : todayRecord.CheckOutTime.HasValue
+                    ? string.Format(Services.LocalizationService.Instance.GetLocalizedString("ClockedInOutAt"),
+                        todayRecord.CheckInTime.ToString("HH:mm"),
+                        todayRecord.CheckOutTime.Value.ToString("HH:mm"))
+                    : string.Format(Services.LocalizationService.Instance.GetLocalizedString("ClockedInAt"),
+                        todayRecord.CheckInTime.ToString("HH:mm"));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"UpdateDashboard failed: {ex.Message}");
         }
     }
 

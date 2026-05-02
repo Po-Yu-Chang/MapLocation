@@ -179,7 +179,7 @@
                                 SelectedIndexChanged="OnGeofenceSelected" />
 
                         <Entry x:Name="NotesEntry"
-                               Placeholder="✍️ 備註 (選填)"
+                               Placeholder="{Binding [NotesPlaceholder], Source={x:Static svc:LocalizationManager.Instance}}"
                                Style="{StaticResource ModernEntry}"
                                MaxLength="200" />
 
@@ -187,13 +187,13 @@
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Button Grid.Column="0"
                                     x:Name="CheckInButton"
-                                    Text="🟢 打卡上班"
+                                    Text="{Binding [ClockInButton], Source={x:Static svc:LocalizationManager.Instance}}"
                                     Style="{StaticResource ModernButtonSuccess}"
                                     Clicked="OnCheckInClicked" />
 
                             <Button Grid.Column="1"
                                     x:Name="CheckOutButton"
-                                    Text="🔴 打卡下班"
+                                    Text="{Binding [ClockOutButton], Source={x:Static svc:LocalizationManager.Instance}}"
                                     Style="{StaticResource ModernButtonWarning}"
                                     Clicked="OnCheckOutClicked"
                                     IsEnabled="False" />
@@ -205,7 +205,7 @@
                         <Border BackgroundColor="{StaticResource ModernWarningLight}"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="16">
-                            <Label Text="⚠️ 請先登入才能使用打卡功能"
+                            <Label Text="{Binding [LoginRequiredHint], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBody}"
                                    TextColor="{StaticResource ModernWarning}"
                                    HorizontalTextAlignment="Center"
@@ -223,13 +223,13 @@
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📋" FontSize="24"/>
-                        <Label Text="今日記錄" Style="{StaticResource ModernH4}"/>
+                        <Label Text="{Binding [TodayRecordsTitle], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernH4}"/>
                     </HorizontalStackLayout>
 
                     <CollectionView x:Name="TodayRecordsCollectionView"
                                     MaximumHeightRequest="320">
                         <CollectionView.EmptyView>
-                            <Label Text="今日尚無打卡記錄"
+                            <Label Text="{Binding [NoTodayRecords], Source={x:Static svc:LocalizationManager.Instance}}"
                                    Style="{StaticResource ModernBodySmall}"
                                    HorizontalTextAlignment="Center"
                                    Padding="0,8"/>
@@ -286,7 +286,7 @@
             <Border Style="{StaticResource GlassCard}" Padding="0">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14" RowSpacing="0">
-                        <Label Grid.Column="0" Text="打卡紀錄" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding [MyCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnManageRecordsClicked"/>
@@ -295,7 +295,7 @@
                     <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                        <Label Grid.Column="0" Text="我的排班" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnScheduleClicked"/>
@@ -304,7 +304,7 @@
                     <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                        <Label Grid.Column="0" Text="請假紀錄" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnLeaveClicked"/>
@@ -313,7 +313,7 @@
                     <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                        <Label Grid.Column="0" Text="打卡地點管理" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding [ManageGeofences], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnManageGeofencesClicked"/>
@@ -322,7 +322,7 @@
                     <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                        <Label Grid.Column="0" Text="個人檔案" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{Binding [ProfileEntry], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnProfileClicked"/>
@@ -332,7 +332,7 @@
             </Border>
 
             <Button x:Name="RefreshButton"
-                    Text="重新整理"
+                    Text="{Binding [RefreshLabel], Source={x:Static svc:LocalizationManager.Instance}}"
                     Style="{StaticResource ModernButtonSecondary}"
                     Clicked="OnRefreshClicked"/>
 
