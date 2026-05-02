@@ -38,6 +38,20 @@
                             Style="{StaticResource ModernButtonCompact}"
                             HorizontalOptions="Center"
                             Clicked="OnChangeAvatarClicked"/>
+
+                    <!-- Role badge — yellow for admin, neutral for employee -->
+                    <Border x:Name="RoleBadge"
+                            BackgroundColor="{StaticResource ModernAccent}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="12,4"
+                            HorizontalOptions="Center">
+                        <Label x:Name="RoleBadgeLabel"
+                               Text=""
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource ModernGray900}"/>
+                    </Border>
                 </VerticalStackLayout>
             </Border>
 

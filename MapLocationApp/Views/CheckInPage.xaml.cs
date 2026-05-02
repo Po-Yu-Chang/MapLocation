@@ -57,11 +57,13 @@ public partial class CheckInPage : ContentPage
         LocalizationService.Instance.CultureChanged -= OnCultureChanged;
         LocalizationService.Instance.CultureChanged += OnCultureChanged;
         ApplyLocalizedUi();
+        ApplyRoleVisibility();
         // 從其他頁面（如登入或圍欄管理）返回時重新同步使用者狀態與地點清單
         try
         {
             await LoadCurrentUser();
             UpdateUI();
+            ApplyRoleVisibility();
             await LoadGeofences();
             await LoadTodayRecords();
         }
@@ -69,6 +71,22 @@ public partial class CheckInPage : ContentPage
         {
             System.Diagnostics.Debug.WriteLine($"OnAppearing 載入失敗: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Hide admin-only entries from the quick-action list when the current user is not admin.
+    /// Employees should not see "manage check-in points" or "edit check-in records" entries.
+    /// </summary>
+    private void ApplyRoleVisibility()
+    {
+        var role = ServiceHelper.GetService<IRoleService>();
+        var isAdmin = role?.IsCurrentUserAdmin() == true;
+
+        if (AdminRecordsRow != null) AdminRecordsRow.IsVisible = isAdmin;
+        if (AdminRecordsDivider != null) AdminRecordsDivider.IsVisible = isAdmin;
+        if (AdminGeofencesRow != null) AdminGeofencesRow.IsVisible = isAdmin;
+        // The divider above the admin-geofences row only makes sense when that row is visible.
+        if (AdminGeofencesDivider != null) AdminGeofencesDivider.IsVisible = isAdmin;
     }
 
     protected override void OnDisappearing()

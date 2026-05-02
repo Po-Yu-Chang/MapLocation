@@ -791,4 +791,7 @@
   <data name="NotesPlaceholder" xml:space="preserve"><value>备注（选填）</value></data>
   <data name="UsernamePlaceholder" xml:space="preserve"><value>输入您的用户名</value></data>
   <data name="PasswordPlaceholder" xml:space="preserve"><value>输入您的密码</value></data>
+  <data name="RoleAdmin" xml:space="preserve"><value>管理员</value></data>
+  <data name="RoleEmployee" xml:space="preserve"><value>员工</value></data>
+  <data name="AdminRequired" xml:space="preserve"><value>此功能需要管理员权限</value></data>
 </root>

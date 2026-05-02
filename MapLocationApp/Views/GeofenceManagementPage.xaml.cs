@@ -42,6 +42,17 @@ public partial class GeofenceManagementPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Admin guard — block direct navigation by non-admin users (e.g. via route URL).
+        var role = ServiceHelper.GetService<IRoleService>();
+        if (role?.IsCurrentUserAdmin() != true)
+        {
+            await DisplayAlert(L("Error"), L("AdminRequired"), L("OK"));
+            try { await Shell.Current.GoToAsync(".."); }
+            catch { await Navigation.PopAsync(); }
+            return;
+        }
+
         LocalizationService.Instance.CultureChanged -= OnCultureChanged;
         LocalizationService.Instance.CultureChanged += OnCultureChanged;
         ApplyLocalizedUi();

@@ -14,3 +14,10 @@ public enum CheckInMethod
     Wifi = 1,
     Manual = 2
 }
+
+/// <summary>使用者角色 — 管理員 / 員工。預設新建帳號為 Employee。</summary>
+public enum UserRole
+{
+    Employee = 0,
+    Admin = 1
+}

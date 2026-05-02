@@ -73,6 +73,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ISecureConfigService, SecureConfigService>(); // T011: SecureConfigService for credential management
 		builder.Services.AddSingleton<IDatabaseService, MySqlDatabaseService>();
 		builder.Services.AddSingleton<IUserSessionService, UserSessionService>();
+		builder.Services.AddSingleton<IRoleService, RoleService>();
 
 		// 註冊進階導航服務
 		builder.Services.AddSingleton<ITTSService, TTSService>();

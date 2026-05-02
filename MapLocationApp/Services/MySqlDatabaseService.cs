@@ -191,6 +191,7 @@ namespace MapLocationApp.Services
                         phone_number VARCHAR(50) NULL,
                         work_hours_start TIME NULL,
                         work_hours_end TIME NULL,
+                        role TINYINT DEFAULT 0,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         last_login_at DATETIME NULL
@@ -311,6 +312,8 @@ namespace MapLocationApp.Services
                 CreatedAt = HasColumn(reader, "created_at") && reader["created_at"] != DBNull.Value
                     ? Convert.ToDateTime(reader["created_at"]) : default,
                 LastLoginAt = HasColumn(reader, "last_login_at") ? reader["last_login_at"] as DateTime? : null,
+                Role = HasColumn(reader, "role") && reader["role"] != DBNull.Value
+                    ? (UserRole)Convert.ToInt32(reader["role"]) : UserRole.Employee,
             };
         }
 
@@ -358,6 +361,9 @@ namespace MapLocationApp.Services
                 "ALTER TABLE users ADD COLUMN work_hours_start TIME NULL",
                 "ALTER TABLE users ADD COLUMN work_hours_end TIME NULL",
                 "ALTER TABLE users ADD COLUMN must_change_password BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE users ADD COLUMN role TINYINT DEFAULT 0",
+                // Promote existing default admin account to role=Admin if it's still Employee.
+                "UPDATE users SET role = 1 WHERE username = 'admin' AND role = 0",
                 "ALTER TABLE CheckInRecords ADD COLUMN Method TINYINT DEFAULT 0",
                 "ALTER TABLE CheckInRecords ADD COLUMN WorkType TINYINT DEFAULT 0",
                 "ALTER TABLE CheckInRecords ADD COLUMN EditedAt DATETIME NULL",
@@ -406,6 +412,7 @@ namespace MapLocationApp.Services
                         Department = "IT",
                         Position = "管理員",
                         IsActive = true,
+                        Role = UserRole.Admin,
                         MustChangePassword = true  // Force password change on first login
                     };
                     
@@ -440,6 +447,7 @@ namespace MapLocationApp.Services
                     SELECT id, username, password, email, full_name, department, position, is_active,
                            COALESCE(must_change_password, FALSE) as must_change_password,
                            avatar_path, phone_number, work_hours_start, work_hours_end,
+                           COALESCE(role, 0) AS role,
                            created_at, last_login_at
                     FROM users
                     WHERE username = @username AND is_active = TRUE";
@@ -525,9 +533,9 @@ namespace MapLocationApp.Services
         {
             var query = @"
                 INSERT INTO users (username, password, email, full_name, department, position, is_active,
-                                   must_change_password, avatar_path, phone_number, work_hours_start, work_hours_end)
+                                   must_change_password, avatar_path, phone_number, work_hours_start, work_hours_end, role)
                 VALUES (@username, @password, @email, @fullName, @department, @position, @isActive,
-                        @mustChangePassword, @avatarPath, @phoneNumber, @workHoursStart, @workHoursEnd)";
+                        @mustChangePassword, @avatarPath, @phoneNumber, @workHoursStart, @workHoursEnd, @role)";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@username", user.Username);
@@ -542,6 +550,7 @@ namespace MapLocationApp.Services
             command.Parameters.AddWithValue("@phoneNumber", (object?)user.PhoneNumber ?? DBNull.Value);
             command.Parameters.AddWithValue("@workHoursStart", (object?)user.WorkHoursStart ?? DBNull.Value);
             command.Parameters.AddWithValue("@workHoursEnd", (object?)user.WorkHoursEnd ?? DBNull.Value);
+            command.Parameters.AddWithValue("@role", (int)user.Role);
 
             var result = await command.ExecuteNonQueryAsync();
             return result > 0;
@@ -560,6 +569,7 @@ namespace MapLocationApp.Services
                 var query = @"
                     SELECT id, username, email, full_name, department, position, is_active,
                            must_change_password, avatar_path, phone_number, work_hours_start, work_hours_end,
+                           COALESCE(role, 0) AS role,
                            created_at, last_login_at
                     FROM users
                     WHERE id = @userId";
@@ -596,6 +606,7 @@ namespace MapLocationApp.Services
                 var query = @"
                     SELECT id, username, email, full_name, department, position, is_active,
                            must_change_password, avatar_path, phone_number, work_hours_start, work_hours_end,
+                           COALESCE(role, 0) AS role,
                            created_at, last_login_at
                     FROM users
                     WHERE username = @username";

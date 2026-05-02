@@ -59,6 +59,12 @@ public partial class ProfilePage : ContentPage
         {
             AvatarImage.Source = null;
         }
+
+        // Role badge — admin uses yellow accent, employee uses neutral gray.
+        RoleBadgeLabel.Text = user.IsAdmin ? L("RoleAdmin") : L("RoleEmployee");
+        RoleBadge.BackgroundColor = user.IsAdmin
+            ? Color.FromArgb("#FACC15")    // ModernAccent (yellow)
+            : Color.FromArgb("#E5E7EB");   // ModernGray200
     }
 
     private async void OnChangeAvatarClicked(object sender, EventArgs e)

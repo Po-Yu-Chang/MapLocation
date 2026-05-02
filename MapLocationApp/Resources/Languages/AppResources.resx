@@ -807,4 +807,7 @@
   <data name="NotesPlaceholder" xml:space="preserve"><value>Notes (optional)</value></data>
   <data name="UsernamePlaceholder" xml:space="preserve"><value>Enter your username</value></data>
   <data name="PasswordPlaceholder" xml:space="preserve"><value>Enter your password</value></data>
+  <data name="RoleAdmin" xml:space="preserve"><value>Admin</value></data>
+  <data name="RoleEmployee" xml:space="preserve"><value>Employee</value></data>
+  <data name="AdminRequired" xml:space="preserve"><value>This feature requires admin permission</value></data>
 </root>

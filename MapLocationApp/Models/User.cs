@@ -20,6 +20,7 @@ namespace MapLocationApp.Models
         private string? _phoneNumber;
         private TimeSpan? _workHoursStart;
         private TimeSpan? _workHoursEnd;
+        private UserRole _role = UserRole.Employee;
 
         public int Id
         {
@@ -113,6 +114,15 @@ namespace MapLocationApp.Models
             get => _workHoursEnd;
             set => SetProperty(ref _workHoursEnd, value);
         }
+
+        /// <summary>使用者角色，控制 admin-only 功能可見性。</summary>
+        public UserRole Role
+        {
+            get => _role;
+            set => SetProperty(ref _role, value);
+        }
+
+        public bool IsAdmin => _role == UserRole.Admin;
 
         public string DisplayName => !string.IsNullOrEmpty(FullName) ? FullName : Username;
 

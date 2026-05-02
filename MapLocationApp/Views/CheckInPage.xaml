@@ -286,14 +286,14 @@
             <!-- 快速入口列表 -->
             <Border Style="{StaticResource GlassCard}" Padding="0">
                 <VerticalStackLayout>
-                    <Grid ColumnDefinitions="*,Auto" Padding="20,14" RowSpacing="0">
+                    <Grid x:Name="AdminRecordsRow" ColumnDefinitions="*,Auto" Padding="20,14" RowSpacing="0">
                         <Label Grid.Column="0" Text="{Binding [MyCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnManageRecordsClicked"/>
                         </Grid.GestureRecognizers>
                     </Grid>
-                    <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
+                    <BoxView x:Name="AdminRecordsDivider" Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
                         <Label Grid.Column="0" Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
@@ -311,16 +311,16 @@
                             <TapGestureRecognizer Tapped="OnLeaveClicked"/>
                         </Grid.GestureRecognizers>
                     </Grid>
-                    <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
+                    <BoxView x:Name="AdminGeofencesDivider" Style="{StaticResource CardDivider}" Margin="20,0"/>
 
-                    <Grid ColumnDefinitions="*,Auto" Padding="20,14">
+                    <Grid x:Name="AdminGeofencesRow" ColumnDefinitions="*,Auto" Padding="20,14">
                         <Label Grid.Column="0" Text="{Binding [ManageGeofences], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
                         <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnManageGeofencesClicked"/>
                         </Grid.GestureRecognizers>
                     </Grid>
-                    <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
+                    <BoxView x:Name="ProfileDivider" Style="{StaticResource CardDivider}" Margin="20,0"/>
 
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14">
                         <Label Grid.Column="0" Text="{Binding [ProfileEntry], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>

@@ -29,6 +29,17 @@ public partial class EditCheckInPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Editing past records / back-fill is admin-only — protect against direct navigation.
+        var role = ServiceHelper.GetService<IRoleService>();
+        if (role?.IsCurrentUserAdmin() != true)
+        {
+            await DisplayAlert(L("Error"), L("AdminRequired"), L("OK"));
+            try { await Shell.Current.GoToAsync(".."); }
+            catch { await Navigation.PopAsync(); }
+            return;
+        }
+
         LocalizationService.Instance.CultureChanged -= OnCultureChanged;
         LocalizationService.Instance.CultureChanged += OnCultureChanged;
         ResetForm();
