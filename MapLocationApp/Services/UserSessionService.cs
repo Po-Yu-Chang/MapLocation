@@ -16,6 +16,7 @@ namespace MapLocationApp.Services
     public class UserSessionService : IUserSessionService
     {
         private readonly IConfigService _configService;
+        private readonly Lazy<IDatabaseService?> _databaseService;
         private User? _currentUser;
 
         public bool IsLoggedIn => _currentUser != null;
@@ -27,7 +28,13 @@ namespace MapLocationApp.Services
         public UserSessionService(IConfigService configService)
         {
             _configService = configService;
-            _ = InitializeAsync(); // fire-and-forget: GetCurrentUserAsync already falls back to config if needed
+            // Resolved lazily to avoid DI-ordering issues on startup; we only need the DB at refresh time.
+            _databaseService = new Lazy<IDatabaseService?>(() =>
+            {
+                try { return MauiProgram.Services?.GetService(typeof(IDatabaseService)) as IDatabaseService; }
+                catch { return null; }
+            });
+            _ = InitializeAsync();
         }
 
         private async Task InitializeAsync()
@@ -37,6 +44,23 @@ namespace MapLocationApp.Services
                 _currentUser = await _configService.GetCurrentUserAsync();
                 if (_currentUser != null)
                 {
+                    // Refresh from DB so newly-added columns (e.g. role) overwrite stale cache.
+                    // If DB is unreachable we fall back to the cached user — better than logging out.
+                    try
+                    {
+                        var fresh = await (_databaseService.Value?.GetUserByIdAsync(_currentUser.Id)
+                                          ?? Task.FromResult<User?>(null));
+                        if (fresh != null)
+                        {
+                            _currentUser = fresh;
+                            await _configService.SaveCurrentUserAsync(fresh);
+                        }
+                    }
+                    catch (Exception refreshEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"重新整理使用者資料失敗（使用快取）: {refreshEx.Message}");
+                    }
+
                     UserLoggedIn?.Invoke(this, _currentUser);
                 }
             }
