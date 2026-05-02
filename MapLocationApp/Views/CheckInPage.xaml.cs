@@ -676,17 +676,6 @@ public partial class CheckInPage : ContentPage
         await Shell.Current.GoToAsync("//LoginPage");
     }
 
-    /// <summary>
-    /// MapsUi 的 SkiaSharp 渲染會超出 Border 的圓角 clip；改用 Grid.Clip 並隨大小同步。
-    /// </summary>
-    private void OnMapContainerSizeChanged(object? sender, EventArgs e)
-    {
-        if (sender is Grid g && MapClipGeometry != null && g.Width > 0 && g.Height > 0)
-        {
-            MapClipGeometry.Rect = new Rect(0, 0, g.Width, g.Height);
-        }
-    }
-
     private async void OnManageGeofencesClicked(object sender, EventArgs e)
     {
         try
