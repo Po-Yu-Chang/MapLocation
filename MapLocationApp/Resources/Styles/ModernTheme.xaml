@@ -148,6 +148,17 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgSecondary}, Dark={StaticResource ModernBgPrimaryDark}}" />
     </Style>
 
+    <!-- Glass page: subtle radial-tinted gradient that becomes the "wallpaper" behind frosted cards -->
+    <LinearGradientBrush x:Key="GlassPageBackground" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{AppThemeBinding Light=#EFF6FF, Dark=#0B1426}" Offset="0" />
+        <GradientStop Color="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Offset="0.4" />
+        <GradientStop Color="{AppThemeBinding Light=#FAF5FF, Dark=#1E1B4B}" Offset="1" />
+    </LinearGradientBrush>
+
+    <Style x:Key="GlassPage" TargetType="ContentPage">
+        <Setter Property="Background" Value="{StaticResource GlassPageBackground}" />
+    </Style>
+
     <!-- ==================== CARD STYLES ==================== -->
 
     <!-- Card: white surface, subtle shadow only (no border for cleaner look) -->
@@ -163,6 +174,54 @@
                     Offset="0,1"
                     Radius="3"
                     Opacity="0.04" />
+        </Setter>
+    </Style>
+
+    <!-- Frosted glass card: translucent white with edge highlight + soft shadow.
+         Works as iOS-style "frosted glass" illusion when placed over GlassPageBackground. -->
+    <Style x:Key="GlassCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D9FFFFFF, Dark=#A6FFFFFF}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light=#80FFFFFF, Dark=#33FFFFFF}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,6" />
+        <Setter Property="Shadow">
+            <Shadow Brush="#1E3A8A"
+                    Offset="0,4"
+                    Radius="20"
+                    Opacity="0.08" />
+        </Setter>
+    </Style>
+
+    <!-- Glass card variant for dark surfaces (when card sits over a colored hero region) -->
+    <Style x:Key="GlassCardTinted" TargetType="Border" BasedOn="{StaticResource GlassCard}">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#CCEFF6FF, Dark=#992563EB}" />
+        <Setter Property="Stroke" Value="#66FFFFFF" />
+    </Style>
+
+    <!-- Glass-style button (translucent surface, used over glass pages) -->
+    <Style x:Key="GlassButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#B3FFFFFF" />
+        <Setter Property="TextColor" Value="{StaticResource ModernPrimary}" />
+        <Setter Property="BorderColor" Value="#80FFFFFF" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="46" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
         </Setter>
     </Style>
 

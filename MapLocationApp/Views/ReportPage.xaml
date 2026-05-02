@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:svc="clr-namespace:MapLocationApp.Services"
              Title="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
-             Style="{StaticResource ModernPage}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
@@ -19,7 +19,7 @@
                 <Label x:Name="SummaryLabel" Style="{StaticResource PageSubtitle}"/>
             </VerticalStackLayout>
 
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{Binding [DateFilter], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource SectionTitle}"/>
 
@@ -64,7 +64,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="📤" FontSize="22" HorizontalOptions="Start"/>
                     <Button Text="{Binding [ExportExcel], Source={x:Static svc:LocalizationManager.Instance}}"

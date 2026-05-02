@@ -123,6 +123,23 @@ public static class MauiProgram
 #if WINDOWS
 			events.AddWindows(w =>
 			{
+				w.OnWindowCreated(window =>
+				{
+					try
+					{
+						// Real frosted-glass on Windows 11 — Mica backdrop.
+						// Falls back to a solid color on older Windows where the API is unavailable.
+						if (Microsoft.UI.Composition.SystemBackdrops.MicaController.IsSupported())
+						{
+							window.SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop
+							{
+								Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
+							};
+						}
+					}
+					catch { /* SystemBackdrop API not available on older WinAppSDK; ignore. */ }
+				});
+
 				w.OnClosed((win, args) =>
 				{
 					try

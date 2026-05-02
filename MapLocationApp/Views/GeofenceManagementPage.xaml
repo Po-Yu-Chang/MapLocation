@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:svc="clr-namespace:MapLocationApp.Services"
              Title="{Binding [GeofenceManagementTitle], Source={x:Static svc:LocalizationManager.Instance}}"
-             Style="{StaticResource ModernPage}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
@@ -20,7 +20,7 @@
                        Style="{StaticResource PageSubtitle}"/>
             </VerticalStackLayout>
 
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="6">
                     <Label x:Name="FormTitleLabel"
                            Text="{Binding [AddLocation], Source={x:Static svc:LocalizationManager.Instance}}"
@@ -147,7 +147,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{Binding [ExistingLocations], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource SectionTitle}"/>
                     <CollectionView x:Name="GeofencesCollectionView">

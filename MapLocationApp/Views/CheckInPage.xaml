@@ -6,7 +6,7 @@
              xmlns:svc="clr-namespace:MapLocationApp.Services"
              Title="{Binding [CheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
              Shell.NavBarIsVisible="False"
-             Style="{StaticResource ModernPage}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
@@ -16,7 +16,7 @@
         <VerticalStackLayout Padding="20,40,20,24" Spacing="16" MaximumWidthRequest="800" HorizontalOptions="Center">
 
             <!-- 用戶資訊區域 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
                     <!-- 用戶頭像 -->
                     <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
@@ -63,7 +63,7 @@
                    Margin="0,8,0,0"/>
 
             <!-- 目前位置卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📍" FontSize="24"/>
@@ -102,7 +102,7 @@
             </Border>
 
             <!-- 附近區域卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="🎯" FontSize="24"/>
@@ -145,7 +145,7 @@
             </Border>
 
             <!-- 打卡操作卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="20">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="⚡" FontSize="24"/>
@@ -219,7 +219,7 @@
             </Border>
 
             <!-- 今日記錄卡片 -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="16">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="📋" FontSize="24"/>
@@ -283,7 +283,7 @@
             </Border>
 
             <!-- 快速入口列表 -->
-            <Border Style="{StaticResource ModernCard}" Padding="0">
+            <Border Style="{StaticResource GlassCard}" Padding="0">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto" Padding="20,14" RowSpacing="0">
                         <Label Grid.Column="0" Text="打卡紀錄" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>

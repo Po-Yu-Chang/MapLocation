@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:svc="clr-namespace:MapLocationApp.Services"
              Title="{Binding [EditCheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
-             Style="{StaticResource ModernPage}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
@@ -21,7 +21,7 @@
             </VerticalStackLayout>
 
             <!-- Form card -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="6">
                     <Label x:Name="FormTitleLabel"
                            Text="{Binding [ManualCheckInTitle], Source={x:Static svc:LocalizationManager.Instance}}"
@@ -93,7 +93,7 @@
             </Border>
 
             <!-- Filter + List -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" VerticalOptions="Center">
                         <Label Grid.Column="0"

@@ -2,63 +2,78 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MapLocationApp.MainPage"
-             BackgroundColor="{StaticResource ModernBgSecondary}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="24,32,24,32" Spacing="24" MaximumWidthRequest="560" HorizontalOptions="Center">
+    <Grid>
+        <!-- Decorative blurred glow blobs sit behind the glass cards (the "wallpaper") -->
+        <Ellipse Fill="#3B82F633"
+                 WidthRequest="280" HeightRequest="280"
+                 HorizontalOptions="Start" VerticalOptions="Start"
+                 Margin="-80,-60,0,0"/>
+        <Ellipse Fill="#FACC1533"
+                 WidthRequest="220" HeightRequest="220"
+                 HorizontalOptions="End" VerticalOptions="Start"
+                 Margin="0,80,-40,0"/>
+        <Ellipse Fill="#A855F733"
+                 WidthRequest="320" HeightRequest="320"
+                 HorizontalOptions="Center" VerticalOptions="End"
+                 Margin="0,0,0,-100"/>
 
-            <!-- Brand -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="DAKA"
-                       FontSize="40"
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource ModernPrimary}"
-                       CharacterSpacing="3"/>
-                <Label Text="智慧定位打卡"
-                       Style="{StaticResource PageSubtitle}"/>
-            </VerticalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout Padding="24,32,24,32" Spacing="20" MaximumWidthRequest="560" HorizontalOptions="Center">
 
-            <!-- Primary card: 打卡 -->
-            <Border Style="{StaticResource ModernCard}" Padding="24">
-                <VerticalStackLayout Spacing="16">
-                    <Label Text="今天還沒打卡"
-                           Style="{StaticResource SectionTitle}"/>
-                    <Label Text="自動偵測 GPS / Wi-Fi 打卡點，一鍵記錄上下班時間。"
-                           Style="{StaticResource ModernBodySmall}"
-                           LineBreakMode="WordWrap"/>
-                    <Button Text="進入打卡"
-                            Style="{StaticResource ModernButtonPrimary}"
-                            Clicked="OnCheckInClicked"/>
+                <!-- Brand -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="DAKA"
+                           FontSize="44"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource ModernPrimary}"
+                           CharacterSpacing="4"/>
+                    <Label Text="智慧定位打卡"
+                           Style="{StaticResource PageSubtitle}"/>
                 </VerticalStackLayout>
-            </Border>
 
-            <!-- Secondary actions -->
-            <VerticalStackLayout Spacing="10">
-                <Label Text="其他功能" Style="{StaticResource FieldLabel}"/>
-                <Button Text="人臉辨識"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        HorizontalOptions="Fill"
-                        Clicked="OnFaceRecognitionClicked"/>
-                <Button Text="隱私政策"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        HorizontalOptions="Fill"
-                        Clicked="OnPrivacyClicked"/>
-                <Button Text="系統設定"
-                        Style="{StaticResource ModernButtonSecondary}"
-                        HorizontalOptions="Fill"
-                        Clicked="OnSettingsClicked"/>
+                <!-- Primary glass card: 打卡 -->
+                <Border Style="{StaticResource GlassCard}" Padding="24">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="今天還沒打卡"
+                               Style="{StaticResource SectionTitle}"/>
+                        <Label Text="自動偵測 GPS / Wi-Fi 打卡點，一鍵記錄上下班時間。"
+                               Style="{StaticResource ModernBodySmall}"
+                               LineBreakMode="WordWrap"/>
+                        <Button Text="進入打卡"
+                                Style="{StaticResource ModernButtonPrimary}"
+                                Clicked="OnCheckInClicked"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Secondary actions on glass -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="其他功能" Style="{StaticResource FieldLabel}"/>
+                    <Button Text="人臉辨識"
+                            Style="{StaticResource GlassButton}"
+                            HorizontalOptions="Fill"
+                            Clicked="OnFaceRecognitionClicked"/>
+                    <Button Text="隱私政策"
+                            Style="{StaticResource GlassButton}"
+                            HorizontalOptions="Fill"
+                            Clicked="OnPrivacyClicked"/>
+                    <Button Text="系統設定"
+                            Style="{StaticResource GlassButton}"
+                            HorizontalOptions="Fill"
+                            Clicked="OnSettingsClicked"/>
+                </VerticalStackLayout>
+
+                <Label Text="MapLocation v1.0"
+                       Style="{StaticResource ModernCaption}"
+                       HorizontalOptions="Center"
+                       Margin="0,16,0,0"/>
             </VerticalStackLayout>
-
-            <!-- Version footer -->
-            <Label Text="MapLocation v1.0"
-                   Style="{StaticResource ModernCaption}"
-                   HorizontalOptions="Center"
-                   Margin="0,16,0,0"/>
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </Grid>
 
 </ContentPage>

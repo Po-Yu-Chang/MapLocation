@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:svc="clr-namespace:MapLocationApp.Services"
              Title="{Binding [ProfileTitle], Source={x:Static svc:LocalizationManager.Instance}}"
-             Style="{StaticResource ModernPage}">
+             Style="{StaticResource GlassPage}">
 
     <ContentPage.Resources>
         <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
@@ -22,7 +22,7 @@
             </VerticalStackLayout>
 
             <!-- Avatar card -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
                     <Border BackgroundColor="{StaticResource ModernPrimaryLighter}"
                             StrokeShape="RoundRectangle 60"
@@ -42,7 +42,7 @@
             </Border>
 
             <!-- Basic info -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="6">
                     <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
@@ -70,7 +70,7 @@
             </Border>
 
             <!-- Work hours -->
-            <Border Style="{StaticResource ModernCard}">
+            <Border Style="{StaticResource GlassCard}">
                 <VerticalStackLayout Spacing="6">
                     <Label Text="{Binding [WorkType], Source={x:Static svc:LocalizationManager.Instance}}"
                            Style="{StaticResource SectionTitle}" Margin="0,0,0,4"/>
