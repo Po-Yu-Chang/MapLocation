@@ -450,7 +450,7 @@ namespace MapLocationApp.Services
                            COALESCE(role, 0) AS role,
                            created_at, last_login_at
                     FROM users
-                    WHERE username = @username AND is_active = TRUE";
+                    WHERE username = @username";
 
                 using var command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
@@ -465,6 +465,17 @@ namespace MapLocationApp.Services
 
                     if (storedPasswordHash == inputPasswordHash)
                     {
+                        // Pending approval — credentials are right but admin hasn't activated yet.
+                        var isActive = Convert.ToBoolean(reader["is_active"]);
+                        if (!isActive)
+                        {
+                            return new LoginResult
+                            {
+                                Success = false,
+                                ErrorMessage = "AccountPendingApproval"  // i18n key, resolved by LoginPage
+                            };
+                        }
+
                         var user = MapUser(reader);
 
                         reader.Close();

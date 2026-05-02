@@ -149,7 +149,9 @@ public partial class LoginPage : ContentPage
                 // Categorize the error for better UX
                 var errorMsg = loginResult.ErrorMessage ?? string.Empty;
                 string displayMsg;
-                if (errorMsg.Contains("資料庫連線未設定") || errorMsg.Contains("連線") || errorMsg.Contains("connection", StringComparison.OrdinalIgnoreCase))
+                if (errorMsg == "AccountPendingApproval")
+                    displayMsg = MapLocationApp.Services.LocalizationService.Instance.GetLocalizedString("AccountPendingApproval");
+                else if (errorMsg.Contains("資料庫連線未設定") || errorMsg.Contains("連線") || errorMsg.Contains("connection", StringComparison.OrdinalIgnoreCase))
                     displayMsg = "⚠️ 無法連線到資料庫，請先在設定中配置 MySQL 連線，或檢查網路狀態。";
                 else if (errorMsg.Contains("帳號或密碼錯誤"))
                     displayMsg = "❌ 帳號或密碼錯誤，請再試一次。";

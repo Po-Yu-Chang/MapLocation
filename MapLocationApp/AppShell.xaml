@@ -58,6 +58,12 @@
         FlyoutItemIsVisible="False" />
 
     <ShellContent
+        Title="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+        ContentTemplate="{DataTemplate views:PendingApprovalsPage}"
+        Route="PendingApprovalsPage"
+        FlyoutItemIsVisible="False" />
+
+    <ShellContent
         Title="{Binding [FaceRecognitionTitle], Source={x:Static svc:LocalizationManager.Instance}}"
         ContentTemplate="{DataTemplate views:FaceRecognitionPage}"
         Route="FaceRecognitionPage"

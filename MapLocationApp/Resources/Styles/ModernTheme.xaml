@@ -4,27 +4,35 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- ==================== DAKACLOCK-INSPIRED DESIGN SYSTEM ==================== -->
-    <!-- Navy primary + bright yellow accent — clean, professional, friendly -->
+    <!-- ==================== WYGINS+ INSPIRED DESIGN SYSTEM ==================== -->
+    <!-- Warm cream background + retro tile palette + decorative serif typography -->
 
     <!-- ==================== COLOR PALETTE ==================== -->
 
-    <!-- Primary - Dakaclock Navy -->
-    <Color x:Key="ModernPrimary">#1E3A8A</Color>
-    <Color x:Key="ModernPrimaryHover">#1E40AF</Color>
-    <Color x:Key="ModernPrimaryLight">#DBEAFE</Color>
-    <Color x:Key="ModernPrimaryLighter">#EFF6FF</Color>
-    <Color x:Key="ModernPrimaryDark">#172554</Color>
+    <!-- Primary action — vermillion orange (matches the icon's phone outline) -->
+    <Color x:Key="ModernPrimary">#E96B3C</Color>
+    <Color x:Key="ModernPrimaryHover">#D85A2D</Color>
+    <Color x:Key="ModernPrimaryLight">#FCD9C8</Color>
+    <Color x:Key="ModernPrimaryLighter">#FFF1E8</Color>
+    <Color x:Key="ModernPrimaryDark">#B84A26</Color>
 
-    <!-- Secondary - Lighter Blue -->
-    <Color x:Key="ModernSecondary">#2563EB</Color>
-    <Color x:Key="ModernSecondaryHover">#1D4ED8</Color>
-    <Color x:Key="ModernSecondaryLight">#BFDBFE</Color>
+    <!-- Secondary — lavender (icon's checkmark accent) -->
+    <Color x:Key="ModernSecondary">#A88BC6</Color>
+    <Color x:Key="ModernSecondaryHover">#9776B4</Color>
+    <Color x:Key="ModernSecondaryLight">#E5D4F0</Color>
 
-    <!-- Accent - Dakaclock Yellow -->
-    <Color x:Key="ModernAccent">#FACC15</Color>
-    <Color x:Key="ModernAccentHover">#EAB308</Color>
-    <Color x:Key="ModernAccentLight">#FEF9C3</Color>
+    <!-- Accent — mustard gold -->
+    <Color x:Key="ModernAccent">#C9A03A</Color>
+    <Color x:Key="ModernAccentHover">#B08D2D</Color>
+    <Color x:Key="ModernAccentLight">#F0E0A8</Color>
+
+    <!-- WYGINS+ tile palette (used by TileCard styles) -->
+    <Color x:Key="TileLavender">#D4B7E8</Color>
+    <Color x:Key="TileMustard">#C9A03A</Color>
+    <Color x:Key="TileOrange">#E96B3C</Color>
+    <Color x:Key="TileBlue">#BFD9F2</Color>
+    <Color x:Key="TileCream">#F4E5C9</Color>
+    <Color x:Key="TileSage">#A8C5A1</Color>
 
     <!-- Semantic Colors -->
     <Color x:Key="ModernSuccess">#10B981</Color>
@@ -48,20 +56,20 @@
     <Color x:Key="ModernGray800">#1F2937</Color>
     <Color x:Key="ModernGray900">#111827</Color>
 
-    <!-- Background Colors -->
+    <!-- Background Colors — warm cream WYGINS+ vibe -->
     <Color x:Key="ModernBgPrimary">#FFFFFF</Color>
-    <Color x:Key="ModernBgSecondary">#F8FAFC</Color>
-    <Color x:Key="ModernBgTertiary">#F1F5F9</Color>
+    <Color x:Key="ModernBgSecondary">#FAEFD9</Color>
+    <Color x:Key="ModernBgTertiary">#F4E5C9</Color>
 
     <!-- Dark Mode Colors -->
     <Color x:Key="ModernBgPrimaryDark">#0F172A</Color>
     <Color x:Key="ModernBgSecondaryDark">#1E293B</Color>
     <Color x:Key="ModernBgTertiaryDark">#334155</Color>
 
-    <!-- Text Colors -->
-    <Color x:Key="ModernTextPrimary">#111827</Color>
-    <Color x:Key="ModernTextSecondary">#6B7280</Color>
-    <Color x:Key="ModernTextTertiary">#9CA3AF</Color>
+    <!-- Text Colors — warm dark brown instead of pure black, matches the cream theme -->
+    <Color x:Key="ModernTextPrimary">#2C1810</Color>
+    <Color x:Key="ModernTextSecondary">#6B5848</Color>
+    <Color x:Key="ModernTextTertiary">#A89380</Color>
     <Color x:Key="ModernTextPrimaryDark">#F9FAFB</Color>
     <Color x:Key="ModernTextSecondaryDark">#D1D5DB</Color>
 
@@ -148,15 +156,9 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ModernBgSecondary}, Dark={StaticResource ModernBgPrimaryDark}}" />
     </Style>
 
-    <!-- Page background: barely-there cool gray gradient. Reads as "white" but adds depth so
-         glass cards (slightly more opaque than the background) have a visible edge. -->
-    <LinearGradientBrush x:Key="GlassPageBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{AppThemeBinding Light=#F8FAFC, Dark=#0B1220}" Offset="0" />
-        <GradientStop Color="{AppThemeBinding Light=#F1F5F9, Dark=#0F172A}" Offset="1" />
-    </LinearGradientBrush>
-
+    <!-- Page background: warm cream — anchors the WYGINS+ retro vibe across all pages. -->
     <Style x:Key="GlassPage" TargetType="ContentPage">
-        <Setter Property="Background" Value="{StaticResource GlassPageBackground}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FAEFD9, Dark=#1F1812}" />
     </Style>
 
     <!-- ==================== CARD STYLES ==================== -->
@@ -626,6 +628,57 @@
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource ModernGray100}, Dark={StaticResource ModernGray800}}" />
         <Setter Property="HeightRequest" Value="1" />
         <Setter Property="Margin" Value="0,12" />
+    </Style>
+
+    <!-- ==================== WYGINS+ TILE PATTERNS ==================== -->
+
+    <!-- Decorative serif heading — matches the WYGINS+ "Employee Handbook" style.
+         Times New Roman with italic adds the swashy retro flavor on systems
+         without a custom font installed. -->
+    <Style x:Key="ScriptHeading" TargetType="Label">
+        <Setter Property="FontFamily" Value="Times New Roman" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontAttributes" Value="Bold,Italic" />
+        <Setter Property="LineHeight" Value="1.0" />
+        <Setter Property="CharacterSpacing" Value="-0.5" />
+    </Style>
+
+    <Style x:Key="ScriptHeadingLarge" TargetType="Label" BasedOn="{StaticResource ScriptHeading}">
+        <Setter Property="FontSize" Value="44" />
+    </Style>
+
+    <Style x:Key="ScriptHeadingSmall" TargetType="Label" BasedOn="{StaticResource ScriptHeading}">
+        <Setter Property="FontSize" Value="22" />
+    </Style>
+
+    <!-- Brand wordmark — DAKA+ logo style -->
+    <Style x:Key="BrandWordmark" TargetType="Label">
+        <Setter Property="FontFamily" Value="Times New Roman" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontAttributes" Value="Bold,Italic" />
+        <Setter Property="TextColor" Value="{StaticResource ModernTextPrimary}" />
+        <Setter Property="CharacterSpacing" Value="2" />
+    </Style>
+
+    <!-- Tile card: large square button with bold serif title bottom-left + "+" button top-right -->
+    <Style x:Key="TileCard" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- Small "+" badge — sits in a tile's top-right corner -->
+    <Style x:Key="TilePlusBadge" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#E96B3C" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="WidthRequest" Value="28" />
+        <Setter Property="HeightRequest" Value="28" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="Start" />
+        <Setter Property="Margin" Value="12" />
     </Style>
 
     <!-- Accent button: yellow CTA — used sparingly (only for highest-priority single action) -->

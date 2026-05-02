@@ -9,123 +9,296 @@
         <ResourceDictionary Source="Resources/Styles/ModernTheme.xaml" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,28,20,28" Spacing="16" MaximumWidthRequest="900" HorizontalOptions="Center">
 
-        <!-- Brand bar: spans full screen width; inner text aligns to the same gutter as cards below. -->
-        <Border Grid.Row="0"
-                BackgroundColor="{StaticResource ModernPrimary}"
-                StrokeShape="Rectangle"
-                Stroke="Transparent"
-                Padding="0">
-            <VerticalStackLayout Spacing="4"
-                                 MaximumWidthRequest="600"
-                                 HorizontalOptions="Center"
-                                 Padding="20,24">
-                <Label Text="DAKA"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       TextColor="White"
-                       CharacterSpacing="3"/>
-                <Label x:Name="GreetingLabel"
+            <!-- Brand wordmark + greeting -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalOptions="Start">
+                <Label Grid.Column="0"
+                       Text="DAKA+"
+                       Style="{StaticResource BrandWordmark}"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       x:Name="GreetingLabel"
                        Text="{Binding [GreetingMorning], Source={x:Static svc:LocalizationManager.Instance}}"
                        FontSize="13"
-                       TextColor="#BFDBFE"/>
-            </VerticalStackLayout>
-        </Border>
+                       TextColor="{StaticResource ModernTextSecondary}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"/>
+            </Grid>
 
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="20,20,20,32"
-                                 Spacing="16"
-                                 MaximumWidthRequest="600"
-                                 HorizontalOptions="Center">
+            <!-- Tile grid: 2 columns, varied colors WYGINS+ style -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="160,160,160,160,160" RowSpacing="14" ColumnSpacing="14">
 
-                <!-- Today status card — primary CTA -->
-                <Border Style="{StaticResource GlassCardTinted}" Padding="20">
-                    <VerticalStackLayout Spacing="14">
-                        <HorizontalStackLayout Spacing="8">
-                            <BoxView WidthRequest="3"
-                                     HeightRequest="16"
-                                     Color="{StaticResource ModernPrimary}"
-                                     VerticalOptions="Center"/>
-                            <Label Text="{Binding [Today], Source={x:Static svc:LocalizationManager.Instance}}"
-                                   Style="{StaticResource FieldLabel}"
-                                   Margin="0"/>
-                        </HorizontalStackLayout>
+                <!-- 1. Hero: 進入打卡 (orange, full-width) -->
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileOrange}">
+                    <Grid Padding="24,20">
+                        <Border Style="{StaticResource TilePlusBadge}"
+                                BackgroundColor="#FFFFFF">
+                            <Label Text="+" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource TileOrange}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
 
-                        <Label x:Name="TodayDateLabel"
-                               Style="{StaticResource SectionTitle}"
-                               FontSize="22"/>
-                        <Label x:Name="TodayStatusLabel"
-                               Text="{Binding [NotCheckedInToday], Source={x:Static svc:LocalizationManager.Instance}}"
-                               Style="{StaticResource ModernBodySmall}"/>
+                        <VerticalStackLayout VerticalOptions="End" Spacing="4">
+                            <Label x:Name="TodayDateLabel"
+                                   Text=""
+                                   FontSize="13"
+                                   TextColor="#FFE5D4"
+                                   FontAttributes="Italic"/>
+                            <Label Text="{Binding [EnterCheckIn], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ScriptHeadingLarge}"
+                                   TextColor="White"/>
+                            <Label x:Name="TodayStatusLabel"
+                                   Text="{Binding [NotCheckedInToday], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   FontSize="13"
+                                   TextColor="#FFF5EC"/>
+                        </VerticalStackLayout>
 
-                        <Button Text="{Binding [EnterCheckIn], Source={x:Static svc:LocalizationManager.Instance}}"
-                                Style="{StaticResource ModernButtonPrimary}"
-                                Clicked="OnCheckInClicked"
-                                Margin="0,4,0,0"/>
-                    </VerticalStackLayout>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCheckInClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
                 </Border>
 
-                <!-- Quick stats row -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                    <Border Grid.Column="0" Style="{StaticResource GlassCard}" Padding="16">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding [MonthCheckIns], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}" Margin="0"/>
+                <!-- 2. 我的紀錄 (lavender) -->
+                <Border Grid.Row="1" Grid.Column="0"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileLavender}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#9776B4">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Decorative shape: hand-drawn-ish circle -->
+                        <Ellipse Stroke="White" StrokeThickness="3" Fill="Transparent"
+                                 WidthRequest="50" HeightRequest="50"
+                                 HorizontalOptions="Start" VerticalOptions="Start"
+                                 Margin="6,8,0,0"/>
+
+                        <Label Text="{Binding [MyShift], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeading}"
+                               TextColor="White"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnScheduleClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 3. 我的請假 (mustard) -->
+                <Border Grid.Row="1" Grid.Column="1"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileMustard}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="{StaticResource TileMustard}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Decorative leaves -->
+                        <Label Text="✦" FontSize="40" TextColor="#FAEFD9"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,4,0,0"/>
+
+                        <Label Text="{Binding [LeaveTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeading}"
+                               TextColor="#FAEFD9"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLeaveClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 4. 報表 (pastel blue) -->
+                <Border Grid.Row="2" Grid.Column="0"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileBlue}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#E96B3C">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <VerticalStackLayout HorizontalOptions="Start" VerticalOptions="Start" Spacing="2" Margin="2,4,0,0">
                             <Label x:Name="MonthCountLabel"
                                    Text="0"
-                                   FontSize="28"
+                                   FontSize="32"
                                    FontAttributes="Bold"
-                                   TextColor="{StaticResource ModernPrimary}"/>
+                                   TextColor="{StaticResource ModernTextPrimary}"
+                                   FontFamily="Times New Roman"/>
+                            <Label Text="{Binding [MonthCheckIns], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource ModernTextSecondary}"/>
                         </VerticalStackLayout>
-                    </Border>
-                    <Border Grid.Column="1" Style="{StaticResource GlassCard}" Padding="16">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding [WeekHours], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource FieldLabel}" Margin="0"/>
-                            <Label x:Name="WeekHoursLabel"
-                                   Text="0.0"
-                                   FontSize="28"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource ModernPrimary}"/>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
 
-                <!-- Other actions -->
-                <Border Style="{StaticResource GlassCard}" Padding="0">
-                    <VerticalStackLayout>
-                        <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                            <Label Grid.Column="0" Text="{Binding [FaceRecognitionTitle], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnFaceRecognitionClicked"/>
-                            </Grid.GestureRecognizers>
-                        </Grid>
-                        <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
-                        <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                            <Label Grid.Column="0" Text="{Binding [SettingsTitle], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnSettingsClicked"/>
-                            </Grid.GestureRecognizers>
-                        </Grid>
-                        <BoxView Style="{StaticResource CardDivider}" Margin="20,0"/>
-                        <Grid ColumnDefinitions="*,Auto" Padding="20,14">
-                            <Label Grid.Column="0" Text="{Binding [PrivacyTitle], Source={x:Static svc:LocalizationManager.Instance}}" Style="{StaticResource ModernBody}" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{StaticResource ModernGray400}" VerticalOptions="Center"/>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnPrivacyClicked"/>
-                            </Grid.GestureRecognizers>
-                        </Grid>
-                    </VerticalStackLayout>
+                        <Label Text="{Binding [MyReport], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeading}"
+                               TextColor="{StaticResource ModernTextPrimary}"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnReportClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
                 </Border>
 
-                <Label Text="MapLocation v1.0"
-                       Style="{StaticResource ModernCaption}"
-                       HorizontalOptions="Center"
-                       Margin="0,12,0,0"/>
-            </VerticalStackLayout>
-        </ScrollView>
+                <!-- 5. 個人檔案 (cream) -->
+                <Border Grid.Row="2" Grid.Column="1"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileCream}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#A88BC6">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
 
-    </Grid>
+                        <Label Text="❀" FontSize="36" TextColor="#A88BC6"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,4,0,0"/>
+
+                        <Label Text="{Binding [MyProfile], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeading}"
+                               TextColor="{StaticResource ModernPrimary}"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 6. Admin: 打卡點管理 (orange darker) -->
+                <Border Grid.Row="3" Grid.Column="0"
+                        x:Name="GeofencesTile"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="#B84A26">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="#B84A26"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <Label Text="◉" FontSize="38" TextColor="#FCD9C8"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,2,0,0"/>
+
+                        <Label Text="{Binding [ManageGeofences], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeadingSmall}"
+                               TextColor="#FAEFD9"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGeofencesClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 7. Admin: 編輯/補打卡 (sage green) -->
+                <Border Grid.Row="3" Grid.Column="1"
+                        x:Name="EditRecordsTile"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource TileSage}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="{StaticResource TileSage}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <Label Text="✎" FontSize="36" TextColor="#FAEFD9"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,2,0,0"/>
+
+                        <Label Text="{Binding [MyCheckInRecords], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeadingSmall}"
+                               TextColor="White"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEditRecordsClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 8. Admin: 待審核帳號 (lavender darker) -->
+                <Border Grid.Row="4" Grid.Column="0"
+                        x:Name="PendingApprovalsTile"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="{StaticResource ModernSecondary}">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#FAEFD9">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="{StaticResource ModernSecondary}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <Label x:Name="PendingCountLabel"
+                               Text="0"
+                               FontSize="40"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               FontFamily="Times New Roman"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,-4,0,0"/>
+
+                        <Label Text="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeadingSmall}"
+                               TextColor="White"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPendingApprovalsClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+                <!-- 9. 設定 (cream variant) -->
+                <Border Grid.Row="4" Grid.Column="1"
+                        Style="{StaticResource TileCard}"
+                        BackgroundColor="#F0E0A8">
+                    <Grid Padding="20,16">
+                        <Border Style="{StaticResource TilePlusBadge}" BackgroundColor="#C9A03A">
+                            <Label Text="+" FontSize="16" FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <Label Text="◐" FontSize="36" TextColor="{StaticResource TileMustard}"
+                               HorizontalOptions="Start" VerticalOptions="Start"
+                               Margin="0,2,0,0"/>
+
+                        <Label Text="{Binding [SettingsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                               Style="{StaticResource ScriptHeading}"
+                               TextColor="{StaticResource ModernTextPrimary}"
+                               VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSettingsClicked"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
+
+            </Grid>
+
+            <Label Text="DAKA+ v1.0"
+                   FontSize="10"
+                   FontAttributes="Italic"
+                   TextColor="{StaticResource ModernTextTertiary}"
+                   HorizontalOptions="Center"
+                   Margin="0,16,0,0"/>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

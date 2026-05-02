@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MapLocationApp.Views.PendingApprovalsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:svc="clr-namespace:MapLocationApp.Services"
+             Title="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+             Style="{StaticResource GlassPage}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary Source="../Resources/Styles/ModernTheme.xaml" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,28,20,28" Spacing="16" MaximumWidthRequest="640" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="{Binding [PendingApprovalsTitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource ScriptHeading}"
+                       TextColor="{StaticResource ModernPrimary}"/>
+                <Label Text="{Binding [RegisterSubtitle], Source={x:Static svc:LocalizationManager.Instance}}"
+                       Style="{StaticResource PageSubtitle}"/>
+            </VerticalStackLayout>
+
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{StaticResource ModernBorder}"
+                    StrokeThickness="1"
+                    Padding="0">
+                <VerticalStackLayout>
+                    <CollectionView x:Name="UsersCollectionView">
+                        <CollectionView.EmptyView>
+                            <Label Text="{Binding [PendingApprovalsEmpty], Source={x:Static svc:LocalizationManager.Instance}}"
+                                   Style="{StaticResource ModernBodySmall}"
+                                   HorizontalTextAlignment="Center"
+                                   Padding="0,32"/>
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto,Auto" Padding="20,16" ColumnSpacing="8" RowSpacing="0">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Username}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource ModernTextPrimary}"/>
+                                        <Label Text="{Binding DisplayInfo}"
+                                               FontSize="13"
+                                               TextColor="{StaticResource ModernTextSecondary}"/>
+                                        <Label Text="{Binding RegisteredAt}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource ModernTextTertiary}"/>
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1"
+                                            Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[ApproveBtn]}"
+                                            BackgroundColor="{StaticResource TileSage}"
+                                            TextColor="White"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            CornerRadius="8"
+                                            Padding="14,6"
+                                            HeightRequest="34"
+                                            Clicked="OnApproveClicked"
+                                            CommandParameter="{Binding Id}"/>
+                                    <Button Grid.Column="2"
+                                            Text="{Binding Source={x:Static svc:LocalizationManager.Instance}, Path=[RejectBtn]}"
+                                            BackgroundColor="{StaticResource ModernPrimaryLighter}"
+                                            TextColor="{StaticResource ModernPrimary}"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            CornerRadius="8"
+                                            Padding="14,6"
+                                            HeightRequest="34"
+                                            Clicked="OnRejectClicked"
+                                            CommandParameter="{Binding Id}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="{Binding [Refresh], Source={x:Static svc:LocalizationManager.Instance}}"
+                    Style="{StaticResource ModernButtonSecondary}"
+                    Clicked="OnRefreshClicked"
+                    HorizontalOptions="Start"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -113,6 +113,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<LeavePage>();
 		builder.Services.AddTransient<ReportPage>();
 		builder.Services.AddTransient<RegisterPage>();
+		builder.Services.AddTransient<PendingApprovalsPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

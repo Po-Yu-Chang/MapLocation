@@ -37,11 +37,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<!-- App Icon: WYGINS+ 風格 PNG（icon 已含奶油底，Color 設為相同色避免邊緣異色） -->
+		<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#FAEFD9" />
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!-- Splash Screen: 同 icon -->
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#FAEFD9" BaseSize="200,200" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
